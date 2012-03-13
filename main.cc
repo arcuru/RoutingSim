@@ -92,7 +92,10 @@ void RunSimulation( uint32_t simulation_end, double injection_chance )
 	cout << packet_ejections << ", ";
 	cout << ((double)packet_injections)/simulation_end << ", ";
 	cout << ((double)packet_ejections)/simulation_end << ", ";
-	//cout << sim.GetCollisions() << ", ";
+	uint32_t packet_collisions = 0;
+	for (int i=0; i < NetworkInfo.width*NetworkInfo.height; i++)
+		packet_collisions += sim[i].GetCollisions();
+	cout << packet_collisions << ", ";
 	cout << simulation_end << ", ";
 	cout << injection_chance << endl;
 	packet_injections = 0;

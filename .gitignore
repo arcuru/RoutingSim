@@ -1,3 +1,6 @@
 # Exclude object files and generated documentation
 *.o
+*.swp
 docs
+RoutingSim
+

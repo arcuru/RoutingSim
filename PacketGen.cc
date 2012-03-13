@@ -110,7 +110,7 @@ void PacketGen::GenPacket ( )
 	// Add packet to output buffer
 	packet_injections++;
 	if (obuf->PacketsRemaining() < 32) {
-		obuf->ProcessPacket(p);
+		obuf->InsertPacket(p);
 		packets_sent++;
 	}
 	else {

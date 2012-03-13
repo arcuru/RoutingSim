@@ -72,7 +72,11 @@ void Router::Process ( )
 			Direction d = ibuf[i].GetRoute();
 			if ( false == sent[d] ) {
 				if (obuf[d].PacketsRemaining() < obuf[d].Size()-1) {
-					Global_Queue.Add(p, &obuf[d], Global_Time+1);
+					Address dest = {p.GetX(), p.GetY()};
+					Address origin = {p.GetOriginX(), p.GetOriginY()};
+					Packet* f = new Packet(dest, origin, p.GetHead(), p.GetCredit(), p.GetData());
+					Event e = {DATA, f};
+					Global_Queue.Add(e, &obuf[d], Global_Time+1);
 					sent[d] = true;
 					ibuf[i].PopPacket();
 				}

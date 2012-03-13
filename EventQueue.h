@@ -9,7 +9,7 @@ class EventQueue
 		EventQueue ( );
 		~EventQueue ( );
 
-		void Add ( Packet p, EventTarget* target, uint32_t arrival );
+		void Add ( Event e, EventTarget* target, uint32_t arrival );
 		void Process ( );
 		void Clear ( );
 

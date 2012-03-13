@@ -10,7 +10,8 @@ class Buffer : public EventTarget
 		virtual ~Buffer ();
 
 		uint32_t Size ( );
-		void ProcessPacket ( Packet p );
+		void ProcessEvent ( Event e );
+		void InsertPacket ( Packet p );
 		void PopPacket ( );
 		Packet GetPacket ( );
 		uint32_t PacketsRemaining ( );

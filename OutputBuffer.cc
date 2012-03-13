@@ -27,7 +27,13 @@ void OutputBuffer::ProcessBuffer (  )
 		return;
 	if ( 0 == available_space )
 		return;
-	Global_Queue.Add(GetPacket(), t, Global_Time+1); 
+	Packet p = GetPacket();
+	Address dest = {p.GetX(), p.GetY()};
+	Address origin = {p.GetOriginX(), p.GetOriginY()};
+
+	Packet* f = new Packet(dest, origin, p.GetHead(), p.GetCredit(), p.GetData());
+	Event e = {DATA, f};
+	Global_Queue.Add(e, t, Global_Time+1); 
 	available_space--;
 	PopPacket();
 	return ;
@@ -45,14 +51,15 @@ void OutputBuffer::Connect ( EventTarget* target )
 	return ;
 }
 
-/** ProcessPacket
- *  overwrites Buffer::ProcessPacket for credit based flow control
+/** ProcessEvent
+ *  overwrites Buffer::ProcessEvent for credit based flow control
  *
+ *  @arg e  Event to process
  */
-void OutputBuffer::ProcessPacket ( Packet p )
+void OutputBuffer::ProcessEvent ( Event e )
 {
-	if ( p.GetCredit() )
-		available_space += p.GetData();
+	if ( CREDIT == e.t )
+		available_space += ((Packet*)e.d)->GetData();
 	else
-		Buffer::ProcessPacket(p);
+		Buffer::InsertPacket(*(Packet*)e.d);
 }

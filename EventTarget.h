@@ -7,7 +7,7 @@ class EventTarget
 		EventTarget ()  {}
 		~EventTarget () {}
 
-		virtual void ProcessPacket( Packet p ) = 0;
+		virtual void ProcessEvent ( Event e ) = 0;
 
 	protected:
 

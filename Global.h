@@ -30,6 +30,16 @@ struct address {
 
 typedef struct address Address;
 
+typedef enum EventType {
+	DATA,   //!< Data arrival
+	CREDIT  //!< Credit arrival for flow control
+} EventType; //!< Used to specify type of event
+
+typedef struct Event {
+	EventType t;  //!< Event type
+	void* d;      //!< Data to be delivered
+} Event; //!< Event definition
+
 #include "Packet.h"
 #include "EventTarget.h"
 #include "EventQueue.h"

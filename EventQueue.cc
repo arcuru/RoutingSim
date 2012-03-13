@@ -1,13 +1,11 @@
 #include "Global.h"
 
-struct sll_t {
-	Packet p;
-	EventTarget* t;
-	uint32_t arrival;
-	struct sll_t* next;
-};
-
-typedef struct sll_t sll_t;
+typedef struct sll_t {
+	Event payload;    //!< Payload to deliver
+	EventTarget* t;   //!< Target of event
+	uint32_t arrival; //!< Arrival time
+	sll_t* next;      //!< Next node in linked list
+} sll_t; //!< Node of event queue
 
 EventQueue::EventQueue ()
 {
@@ -22,15 +20,15 @@ EventQueue::~EventQueue ()
 /** Add
  *  schedules a new event
  *
- *  @arg p       Packet to be delivered
+ *  @arg d       Data to be delivered
  *  @arg target  Device that will receive the packet
  *  @arg arrival Arrival time step
  */
-void EventQueue::Add ( Packet p, EventTarget* target, uint32_t arrival )
+void EventQueue::Add ( Event d, EventTarget* target, uint32_t arrival )
 {
 	assert(target);
 	sll_t* n = (sll_t*) malloc(sizeof(sll_t));
-	n->p = p;
+	n->payload = d;
 	n->t = target;
 	n->arrival = arrival;
 	n->next = NULL;
@@ -60,7 +58,7 @@ void EventQueue::Process ( )
 	while (head && head->arrival <= Global_Time) {
 		assert(head->arrival == Global_Time);
 		assert(head->t);
-		head->t->ProcessPacket(head->p);
+		head->t->ProcessEvent(head->payload);
 		sll_t* tmp = head->next;
 		free(head);
 		head = tmp;

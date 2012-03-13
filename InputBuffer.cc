@@ -39,8 +39,9 @@ void InputBuffer::PopPacket ( )
 {
 	Address tmp = {0, 0};
 	Address tmpa = {0, 0};
-	Packet p( tmp, tmpa, true, true, 1 );
-	Global_Queue.Add(p, obuf, Global_Time+1);
+	Packet* p = new Packet( tmp, tmpa, true, true, 1 );
+	Event e = {CREDIT, p};
+	Global_Queue.Add(e, obuf, Global_Time+1);
 	if ( buf_route == buf_valid )
 		buf_route = SIZE_MAX;
 	Buffer::PopPacket();
@@ -105,7 +106,3 @@ size_t InputBuffer::Routed ( )
 	return tmp - buf_route;
 }
 
-void InputBuffer::ProcessPacket (Packet p)
-{
-	Buffer::ProcessPacket(p);
-}

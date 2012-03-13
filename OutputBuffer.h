@@ -11,7 +11,7 @@ class OutputBuffer : public Buffer
 
 		void ProcessBuffer ( );
 		void Connect ( EventTarget* target );
-		void ProcessPacket ( Packet p );
+		void ProcessEvent ( Event e );
 
 	protected:
 

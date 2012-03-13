@@ -31,12 +31,22 @@ uint32_t Buffer::Size ( )
 	return buf_size;
 }
 
-/** ProcessPacket
+/** ProcessEvent
  *  handles an incoming packet by adding it to the buffer
  *
- *  @p  Packet to add into buffer
+ *  @arg e  Incoming event
  */
-void Buffer::ProcessPacket ( Packet p )
+void Buffer::ProcessEvent ( Event e )
+{
+	InsertPacket( *(Packet*)e.d );
+}
+
+/** InsertPacket
+ *  handles an incoming packet by adding it to the buffer
+ *
+ *  @arg p  Packet to add into buffer
+ */
+void Buffer::InsertPacket ( Packet p )
 {
 	assert( buf_index != buf_valid ); // Buffer full
 	assert( buf_index < buf_size ); // Buffer indexing invalid

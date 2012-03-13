@@ -74,7 +74,7 @@ void Router::Process ( )
 				if (obuf[d].PacketsRemaining() < obuf[d].Size()-1) {
 					Address dest = {p.GetX(), p.GetY()};
 					Address origin = {p.GetOriginX(), p.GetOriginY()};
-					Packet* f = new Packet(dest, origin, p.GetHead(), p.GetCredit(), p.GetData());
+					Packet* f = new Packet(dest, origin, p.GetHead(), p.GetData());
 					Event e = {DATA, f};
 					Global_Queue.Add(e, &obuf[d], Global_Time+1);
 					sent[d] = true;

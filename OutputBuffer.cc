@@ -31,7 +31,7 @@ void OutputBuffer::ProcessBuffer (  )
 	Address dest = {p.GetX(), p.GetY()};
 	Address origin = {p.GetOriginX(), p.GetOriginY()};
 
-	Packet* f = new Packet(dest, origin, p.GetHead(), p.GetCredit(), p.GetData());
+	Packet* f = new Packet(dest, origin, p.GetHead(), p.GetData());
 	Event e = {DATA, f};
 	Global_Queue.Add(e, t, Global_Time+1); 
 	available_space--;
@@ -58,8 +58,10 @@ void OutputBuffer::Connect ( EventTarget* target )
  */
 void OutputBuffer::ProcessEvent ( Event e )
 {
-	if ( CREDIT == e.t )
-		available_space += ((Packet*)e.d)->GetData();
+	if ( CREDIT == e.t ) {
+		available_space += *(uint32_t*)e.d;
+		free(e.d);
+	}
 	else
 		Buffer::InsertPacket(*(Packet*)e.d);
 }

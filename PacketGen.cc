@@ -102,7 +102,7 @@ void PacketGen::GenPacket ( )
 		assert(false);
 
 	// Generate packet and load appropriate data
-	Packet p( dest, addr, true, false, rand() & 0xFFFFFFFF);
+	Packet p( dest, addr, true, rand() & 0xFFFFFFFF);
 
 	// Check to make sure we aren't routing to (5, 5)
 	assert((p.GetX() != p.GetY()) || (p.GetX() != 5));

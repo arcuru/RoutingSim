@@ -4,7 +4,7 @@
 class Packet
 {
 	public:
-		Packet ( Address destination, Address origin, bool head, bool credit, uint32_t data);
+		Packet ( Address destination, Address origin, bool head, uint32_t data);
 		~Packet ();
 
 		uint8_t GetX ( );
@@ -12,7 +12,6 @@ class Packet
 		uint8_t GetOriginX ( );
 		uint8_t GetOriginY ( );
 		bool GetHead ( );
-		bool GetCredit ( );
 		uint32_t GetData ( );
 
 	protected:

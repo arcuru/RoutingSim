@@ -37,10 +37,8 @@ void InputBuffer::WriteBack ( OutputBuffer* write_back )
  */
 void InputBuffer::PopPacket ( )
 {
-	Address tmp = {0, 0};
-	Address tmpa = {0, 0};
-	Packet* p = new Packet( tmp, tmpa, true, true, 1 );
-	Event e = {CREDIT, p};
+	uint32_t* i = new uint32_t(1); //Send back 1 credit
+	Event e = {CREDIT, i};
 	Global_Queue.Add(e, obuf, Global_Time+1);
 	if ( buf_route == buf_valid )
 		buf_route = SIZE_MAX;

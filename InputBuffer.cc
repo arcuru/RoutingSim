@@ -74,7 +74,7 @@ void InputBuffer::RoutePacket ( Address routerAddr )
 		else if ( buf[buf_route]->GetY() > routerAddr.y )
 			routes[buf_route] = NORTH;
 		else
-			assert(false); // Packet should never be routed to this address
+			routes[buf_route] = HERE;
 	}
 }
 

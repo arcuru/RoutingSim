@@ -18,7 +18,8 @@ enum direction {
 	NORTH = 0,
 	SOUTH = 1,
 	EAST  = 2,
-	WEST  = 3
+	WEST  = 3,
+	HERE  = 4
 }; //!< Cardinal direction for use in 2D Mesh
 
 typedef enum direction Direction;

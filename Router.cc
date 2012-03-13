@@ -7,7 +7,6 @@ Router::Router ( Address setAddress )
 	packet_collision = 0;
 }
 
-
 Router::~Router ()
 {
 }
@@ -56,16 +55,20 @@ void Router::Process ( )
 	// Process all the output buffers
 	for (int i=0; i < 4; i++)
 		obuf[i].ProcessBuffer();
+	if ( obuf[HERE].PacketsRemaining() != 0 ) {
+		obuf[HERE].PopPacket();
+		assert(obuf[HERE].PacketsRemaining() == 0);
+	}
 
 	// Traverse packets through the switch
-	bool sent[4];
-	for (int i=0; i < 4; i++)
+	bool sent[5];
+	for (int i=0; i < 5; i++)
 		sent[i] = false;
 
 	// Start sending from a random side
-	int start = rand() % 4;
-	for (int k=start; k < 4+start; k++) {
-		int i = k % 4;
+	int start = rand() % 5;
+	for (int k=start; k < 5+start; k++) {
+		int i = k % 5;
 		if (ibuf[i].Routed() > 0) {
 			// Valid packets are routed
 			Packet* p = ibuf[i].GetPacket();
@@ -86,53 +89,10 @@ void Router::Process ( )
 				packet_collision++;
 			}
 		}
-		/*
-		if (ibuf[i].PacketsRemaining() > 0) {
-			// Process packet
-			Packet p = ibuf[i].GetPacket();
-			if ( (p.GetX() < addr_x) && (false == sent[WEST]) ) {
-				if ( obuf[WEST].PacketsRemaining() < obuf[WEST].Size() ) {
-					Global_Queue.Add(p, &obuf[WEST], Global_Time+1);
-					sent[WEST] = true;
-					ibuf[i].PopPacket();
-				}
-			}
-			else if ( (p.GetX() > addr_x) && (false == sent[EAST]) ) {
-				if ( obuf[EAST].PacketsRemaining() < obuf[EAST].Size() ) {
-					Global_Queue.Add(p, &obuf[EAST], Global_Time+1);
-					sent[EAST] = true;
-					ibuf[i].PopPacket();
-				}
-			}
-			else if ( (p.y < addr_y) && (false == sent[SOUTH]) ) {
-				if ( obuf[SOUTH].PacketsRemaining() < obuf[SOUTH].Size() ) {
-					Global_Queue.Add(p, &obuf[SOUTH], Global_Time+1);
-					sent[SOUTH] = true;
-					ibuf[i].PopPacket();
-				}
-			}
-			else if ( (p.y > addr_y) && (false == sent[NORTH]) ) {
-				if ( obuf[NORTH].PacketsRemaining() < obuf[NORTH].Size() ) {
-					Global_Queue.Add(p, &obuf[NORTH], Global_Time+1);
-					sent[NORTH] = true;
-					ibuf[i].PopPacket();
-				}
-			}
-			else if ( (p.GetX() == addr_x) && (p.y == addr_y) ) {
-				// Packet routed to this address
-				// Shouldn't happen in this simulation yet
-				assert(false);
-			}
-			else {
-				// Outgoing buffer full
-				packet_collision++;
-			}
-		}
-		*/
 	}
 
 	// Route packets
-	for (int i=0; i < 4; i++)
+	for (int i=0; i < 5; i++)
 		ibuf[i].RoutePacket( addr );
 
 	return ;

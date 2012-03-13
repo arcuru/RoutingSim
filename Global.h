@@ -10,7 +10,7 @@
 using namespace std;
 #include <cstdlib>
 
-#define END_TIME 1000000
+#define END_TIME 1000
 
 extern uint32_t Global_Time; //!< Current time step
 

@@ -4,14 +4,14 @@
 InputBuffer::InputBuffer ()
 {
 	obuf = NULL;
-	buf_route = -1;
+	buf_route = SIZE_MAX;
 	routes = (Direction*) malloc(sizeof(Direction) * 4);
 }
 
 InputBuffer::InputBuffer ( size_t entries ) : Buffer(entries)
 {
 	obuf = NULL;
-	buf_route = -1;
+	buf_route = SIZE_MAX;
 	routes = (Direction*) malloc(sizeof(Direction) * entries);
 }
 
@@ -40,7 +40,7 @@ void InputBuffer::PopPacket ( )
 	Packet p( 0, 0, 0, 0, true, true, 1 );
 	Global_Queue.Add(p, obuf, Global_Time+1);
 	if ( buf_route == buf_valid )
-		buf_route = -1;
+		buf_route = SIZE_MAX;
 	Buffer::PopPacket();
 }
 
@@ -54,14 +54,15 @@ void InputBuffer::RoutePacket ( uint32_t router_x, uint32_t router_y )
 {
 	if ( Routed() < PacketsRemaining() ) {
 		// Routing packet buf[buf_route]
-		if ( -1 == buf_route )
+		if ( buf_route >= buf_size )
 			buf_route = buf_valid;
 		else {
 			buf_route++;
 			buf_route %= buf_size;
 		}
-		if ( -1 == buf_route )
-			assert(false); // No valid packets
+
+		assert( buf_route < buf_size ); // No valid packets
+		assert( (buf[buf_route].GetX() != router_x) || (buf[buf_route].GetY() != router_y) );
 
 		// Route packet stored in buf[buf_route]
 		if ( buf[buf_route].GetX() < router_x )
@@ -84,10 +85,7 @@ void InputBuffer::RoutePacket ( uint32_t router_x, uint32_t router_y )
  */
 Direction InputBuffer::GetRoute ( )
 {
-	if ( -1 == buf_valid || -1 == buf_route ) {
-		// No routed packets
-		assert(false);
-	}
+	assert( (buf_valid <= buf_size) && (buf_route <= buf_size) ); // No routed packets
 	return routes[buf_valid];
 }
 
@@ -98,9 +96,9 @@ Direction InputBuffer::GetRoute ( )
  */
 size_t InputBuffer::Routed ( )
 {
-	if ( -1 == buf_route )
+	if ( buf_route >= buf_size )
 		return 0;
-	int tmp = buf_index;
+	size_t tmp = buf_index;
 	if (tmp <= buf_route)
 		tmp += buf_size;
 	return tmp - buf_route;

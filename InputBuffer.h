@@ -20,7 +20,7 @@ class InputBuffer : public Buffer
 	private:
 		Direction* routes;   //!< Buffer holding the routes of all the packets
 		OutputBuffer* obuf;  //!< Paired Output Buffer for writeback information
-		int buf_route;       //!< Pointer to next buffer space that needs to be routed
+		size_t buf_route;    //!< Pointer to next buffer space that needs to be routed
 
 };
 

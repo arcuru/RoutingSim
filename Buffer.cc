@@ -3,7 +3,7 @@
 Buffer::Buffer ()
 {
 	buf_index = 0;
-	buf_valid = -1;
+	buf_valid = SIZE_MAX;
 	buf_size = 4;
 	buf = (Packet*) malloc(sizeof(Packet) * buf_size);
 }
@@ -11,7 +11,7 @@ Buffer::Buffer ()
 Buffer::Buffer ( size_t entries )
 {
 	buf_index = 0;
-	buf_valid = -1;
+	buf_valid = SIZE_MAX;
 	buf_size = entries;
 	buf = (Packet*) malloc(sizeof(Packet) * buf_size);
 }
@@ -38,15 +38,10 @@ uint32_t Buffer::Size ( )
  */
 void Buffer::ProcessPacket ( Packet p )
 {
-	if (buf_index == buf_valid) {
-		// Buffer full
-		assert(false);
-		return ;
-	}
-	if (buf_index < 0)
-		assert(false);
+	assert( buf_index != buf_valid ); // Buffer full
+	assert( buf_index < buf_size ); // Buffer indexing invalid
 	buf[buf_index] = p;
-	if (-1 == buf_valid)
+	if ( buf_valid >= buf_size )
 		buf_valid = buf_index;
 	buf_index++;
 	buf_index %= buf_size;
@@ -59,15 +54,11 @@ void Buffer::ProcessPacket ( Packet p )
  */
 void Buffer::PopPacket ( )
 {
-	if (-1 == buf_valid) {
-		// No valid packets
-		assert(false);
-		return ;
-	}
+	assert( buf_valid < buf_size ); // No valid packets
 	buf_valid++;
 	buf_valid %= buf_size;
-	if (buf_valid == buf_index) {
-		buf_valid = -1;
+	if ( buf_valid == buf_index ) {
+		buf_valid = SIZE_MAX;
 	}
 	return ;
 }
@@ -79,10 +70,7 @@ void Buffer::PopPacket ( )
  */
 Packet Buffer::GetPacket ( )
 {
-	if (-1 == buf_valid) {
-		// No valid packets
-		assert(false);
-	}
+	assert( buf_valid < buf_size ); // No valid packets
 	return buf[buf_valid];
 }
 
@@ -93,10 +81,10 @@ Packet Buffer::GetPacket ( )
  */
 uint32_t Buffer::PacketsRemaining ( )
 {
-	if (-1 == buf_valid)
+	if ( buf_valid >= buf_size )
 		return 0;
-	int tmp = buf_index;
-	if (tmp <= buf_valid)
+	size_t tmp = buf_index;
+	if ( tmp <= buf_valid )
 		tmp += buf_size;
 	return tmp - buf_valid;
 }

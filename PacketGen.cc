@@ -9,9 +9,9 @@ PacketGen::PacketGen ( )
 	packets_blocked = 0;
 }
 
-PacketGen::PacketGen ( uint32_t X, uint32_t Y )
+PacketGen::PacketGen ( Address setAddress )
 {
-	SetAddr(X, Y);
+	SetAddr( setAddress );
 	ibuf = new InputBuffer(32);
 	obuf = new OutputBuffer(32);
 	packets_out = 0;
@@ -25,10 +25,9 @@ PacketGen::~PacketGen ()
 	delete obuf;
 }
 
-void PacketGen::SetAddr ( uint32_t X, uint32_t Y )
+void PacketGen::SetAddr ( Address setAddress )
 {
-	addr_x = X;
-	addr_y = Y;
+	addr = setAddress;
 }
 
 /** SetDirection
@@ -72,39 +71,38 @@ void PacketGen::Connect ( EventTarget* target )
  */
 void PacketGen::GenPacket ( )
 {
-	uint32_t dest_x = addr_x;
-	uint32_t dest_y = addr_y;
+	Address dest = addr;
 	if (NORTH == dir)
-		dest_y += 2;
+		dest.y += 2;
 	else if (SOUTH == dir)
-		dest_y -= 2;
+		dest.y -= 2;
 	else if (WEST == dir || EAST == dir) {
 		if ( rand() > (RAND_MAX/4) ) { // Higher chance of continuing straight
 			if (WEST == dir)
-				dest_x -= 2;
+				dest.x -= 2;
 			else if (EAST == dir)
-				dest_x += 2;
+				dest.x += 2;
 			else
 				assert(false);
 		}
 		else {
 			if (WEST == dir)
-				dest_x--;
+				dest.x--;
 			else if (EAST == dir)
-				dest_x++;
+				dest.x++;
 			else
 				assert(false);
 			if ( rand() < (RAND_MAX/2) )
-				dest_y++;
+				dest.y++;
 			else
-				dest_y--;
+				dest.y--;
 		}
 	}
 	else
 		assert(false);
 
 	// Generate packet and load appropriate data
-	Packet p( dest_x, dest_y, addr_x, addr_y, true, false, rand() & 0xFFFFFFFF);
+	Packet p( dest, addr, true, false, rand() & 0xFFFFFFFF);
 
 	// Check to make sure we aren't routing to (5, 5)
 	assert((p.GetX() != p.GetY()) || (p.GetX() != 5));
@@ -143,8 +141,8 @@ void PacketGen::Process ( )
 	if (ibuf->PacketsRemaining() != 0) {
 		assert(1 == ibuf->PacketsRemaining());
 		Packet p = ibuf->GetPacket();
-		assert(p.GetX() == addr_x);
-		assert(p.GetY() == addr_y);
+		assert(p.GetX() == addr.x);
+		assert(p.GetY() == addr.y);
 		ibuf->PopPacket();
 		packets_out++;
 		packet_ejections++;

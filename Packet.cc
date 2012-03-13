@@ -1,27 +1,27 @@
 #include "Global.h"
 
 
-Packet::Packet ( uint8_t addr_x, uint8_t addr_y, uint8_t origin_x, uint8_t origin_y, bool head, bool credit, uint32_t data)
+Packet::Packet ( Address destination, Address origin, bool head, bool credit, uint32_t data)
 {
 	// Make sure all data fits into packet
-	assert(addr_x < 0x10);
-	assert(addr_y < 0x10);
-	assert(origin_x < 0x10);
-	assert(origin_y < 0x10);
+	assert(destination.x < 0x10);
+	assert(destination.y < 0x10);
+	assert(origin.x < 0x10);
+	assert(origin.y < 0x10);
 	info = data;
 	info <<= 32;
-	info |= addr_x;
-	info |= addr_y << 4;
-	info |= origin_x << 8;
-	info |= origin_y << 12;
+	info |= destination.x;
+	info |= destination.y << 4;
+	info |= origin.x << 8;
+	info |= origin.y << 12;
 	info |= (head ? 1 : 0) << 16;
 	info |= (credit ? 1 : 0) << 17;
 
 	// Make sure all retrieval methods work
-	assert(GetX() == addr_x);
-	assert(GetY() == addr_y);
-	assert(GetOriginX() == origin_x);
-	assert(GetOriginY() == origin_y);
+	assert(GetX() == destination.x);
+	assert(GetY() == destination.y);
+	assert(GetOriginX() == origin.x);
+	assert(GetOriginY() == origin.y);
 	assert(GetHead() == head);
 	assert(GetCredit() == credit);
 	assert(GetData() == data);

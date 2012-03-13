@@ -5,10 +5,10 @@ class PacketGen
 {
 	public:
 		PacketGen ( );
-		PacketGen ( uint32_t X, uint32_t Y );
+		PacketGen ( Address setAddress );
 		~PacketGen ();
 
-		void SetAddr ( uint32_t X, uint32_t Y);
+		void SetAddr ( Address setAddress );
 		void SetDirection ( Direction edge );
 		EventTarget* GetTarget ( );
 		void Connect ( EventTarget* target );
@@ -23,8 +23,7 @@ class PacketGen
 		InputBuffer* ibuf;       //!< Ejection queue 
 		OutputBuffer* obuf;      //!< Injection queue
 		Direction dir;           //!< Direction this generator is pointing
-		uint32_t addr_x;         //!< X address of this generator
-		uint32_t addr_y;         //!< Y address of this generator
+		Address addr;            //!< Address of this generator
 		uint32_t packets_out;    //!< Total packets that arrived in the ejection queue
 		uint32_t packets_sent;   //!< Total packets sent injected into the network
 		uint32_t packets_blocked;//!< Total packets blocked from being inserted

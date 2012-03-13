@@ -1,10 +1,9 @@
 #include "Global.h"
 
 
-Router::Router (uint32_t X, uint32_t Y)
+Router::Router ( Address setAddress )
 {
-	addr_x = X;
-	addr_y = Y;
+	addr = setAddress;
 	packet_collision = 0;
 }
 
@@ -133,7 +132,7 @@ void Router::Process ( )
 
 	// Route packets
 	for (int i=0; i < 4; i++)
-		ibuf[i].RoutePacket( addr_x, addr_y );
+		ibuf[i].RoutePacket( addr );
 
 	return ;
 }

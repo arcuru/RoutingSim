@@ -37,7 +37,9 @@ void InputBuffer::WriteBack ( OutputBuffer* write_back )
  */
 void InputBuffer::PopPacket ( )
 {
-	Packet p( 0, 0, 0, 0, true, true, 1 );
+	Address tmp = {0, 0};
+	Address tmpa = {0, 0};
+	Packet p( tmp, tmpa, true, true, 1 );
 	Global_Queue.Add(p, obuf, Global_Time+1);
 	if ( buf_route == buf_valid )
 		buf_route = SIZE_MAX;
@@ -47,10 +49,9 @@ void InputBuffer::PopPacket ( )
 /** RoutePacket
  *  performs routing computation on the next packet to be routed
  *
- *  @args router_x X address of router
- *  @args router_y Y address of router
+ *  @args routerAddr XY address of router
  */
-void InputBuffer::RoutePacket ( uint32_t router_x, uint32_t router_y )
+void InputBuffer::RoutePacket ( Address routerAddr )
 {
 	if ( Routed() < PacketsRemaining() ) {
 		// Routing packet buf[buf_route]
@@ -62,16 +63,16 @@ void InputBuffer::RoutePacket ( uint32_t router_x, uint32_t router_y )
 		}
 
 		assert( buf_route < buf_size ); // No valid packets
-		assert( (buf[buf_route].GetX() != router_x) || (buf[buf_route].GetY() != router_y) );
+		assert( (buf[buf_route].GetX() != routerAddr.x) || (buf[buf_route].GetY() != routerAddr.y) );
 
 		// Route packet stored in buf[buf_route]
-		if ( buf[buf_route].GetX() < router_x )
+		if ( buf[buf_route].GetX() < routerAddr.x)
 			routes[buf_route] = WEST;
-		else if ( buf[buf_route].GetX() > router_x )
+		else if ( buf[buf_route].GetX() > routerAddr.x )
 			routes[buf_route] = EAST;
-		else if ( buf[buf_route].GetY() < router_y )
+		else if ( buf[buf_route].GetY() < routerAddr.y )
 			routes[buf_route] = SOUTH;
-		else if ( buf[buf_route].GetY() > router_y )
+		else if ( buf[buf_route].GetY() > routerAddr.y )
 			routes[buf_route] = NORTH;
 		else
 			assert(false); // Packet should never be routed to this address

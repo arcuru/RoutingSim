@@ -23,6 +23,13 @@ enum direction {
 
 typedef enum direction Direction;
 
+struct address {
+	uint8_t x; //!< X address in mesh
+	uint8_t y; //!< Y address in mesh
+}; //!< Address in 2D mesh
+
+typedef struct address Address;
+
 #include "Packet.h"
 #include "EventTarget.h"
 #include "EventQueue.h"

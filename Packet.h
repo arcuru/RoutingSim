@@ -4,7 +4,7 @@
 class Packet
 {
 	public:
-		Packet ( uint8_t addr_x, uint8_t addr_y, uint8_t origin_x, uint8_t origin_y, bool head, bool credit, uint32_t data);
+		Packet ( Address destination, Address origin, bool head, bool credit, uint32_t data);
 		~Packet ();
 
 		uint8_t GetX ( );

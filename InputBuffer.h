@@ -10,7 +10,7 @@ class InputBuffer : public Buffer
 
 		void WriteBack ( OutputBuffer* write_back );
 		void PopPacket ( );
-		void RoutePacket ( uint32_t router_x, uint32_t router_y );
+		void RoutePacket ( Address routerAddr );
 		Direction GetRoute ( );
 		size_t Routed ( );
 		void ProcessPacket(Packet p);

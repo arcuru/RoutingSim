@@ -55,23 +55,28 @@ void RunSimulation( uint32_t simulation_end, double injection_chance )
 	srand(time(NULL));
 
 	// Create Router and packet generators
-	Router sim(5, 5);
+	Address tmp = {5, 5};
+	Router sim( tmp );
 	PacketGen pg[4];
 
 	// Set up generators
-	pg[NORTH].SetAddr(5, 6);
+	Address n = {5, 6};
+	pg[NORTH].SetAddr( n );
 	pg[NORTH].SetDirection(SOUTH);
 	pg[NORTH].Connect( sim.GetTarget(NORTH) );
 
-	pg[SOUTH].SetAddr(5, 4);
+	Address s = {5, 4};
+	pg[SOUTH].SetAddr( s );
 	pg[SOUTH].SetDirection(NORTH);
 	pg[SOUTH].Connect( sim.GetTarget(SOUTH) );
 
-	pg[EAST].SetAddr(6, 5);
+	Address e = {6, 5};
+	pg[EAST].SetAddr( e );
 	pg[EAST].SetDirection(WEST);
 	pg[EAST].Connect( sim.GetTarget(EAST) );
 
-	pg[WEST].SetAddr(4, 5);
+	Address w = {4, 5};
+	pg[WEST].SetAddr( w );
 	pg[WEST].SetDirection(EAST);
 	pg[WEST].Connect( sim.GetTarget(WEST) );
 

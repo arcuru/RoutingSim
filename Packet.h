@@ -7,12 +7,12 @@ class Packet
 		Packet ( Address destination, Address origin, bool head, uint32_t data);
 		~Packet ();
 
-		uint8_t GetX ( );
-		uint8_t GetY ( );
-		uint8_t GetOriginX ( );
-		uint8_t GetOriginY ( );
-		bool GetHead ( );
-		uint32_t GetData ( );
+		uint8_t GetX ( ) const;
+		uint8_t GetY ( ) const;
+		uint8_t GetOriginX ( ) const;
+		uint8_t GetOriginY ( ) const;
+		bool GetHead ( ) const;
+		uint32_t GetData ( ) const;
 
 	protected:
 

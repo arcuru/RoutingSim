@@ -102,10 +102,10 @@ void PacketGen::GenPacket ( )
 		assert(false);
 
 	// Generate packet and load appropriate data
-	Packet p( dest, addr, true, rand() & 0xFFFFFFFF);
+	Packet* p = new Packet( dest, addr, true, rand() & 0xFFFFFFFF);
 
 	// Check to make sure we aren't routing to (5, 5)
-	assert((p.GetX() != p.GetY()) || (p.GetX() != 5));
+	assert((p->GetX() != p->GetY()) || (p->GetX() != 5));
 
 	// Add packet to output buffer
 	packet_injections++;
@@ -140,9 +140,10 @@ void PacketGen::Process ( )
 {
 	if (ibuf->PacketsRemaining() != 0) {
 		assert(1 == ibuf->PacketsRemaining());
-		Packet p = ibuf->GetPacket();
-		assert(p.GetX() == addr.x);
-		assert(p.GetY() == addr.y);
+		Packet* p = ibuf->GetPacket();
+		assert(p->GetX() == addr.x);
+		assert(p->GetY() == addr.y);
+		delete p;
 		ibuf->PopPacket();
 		packets_out++;
 		packet_ejections++;

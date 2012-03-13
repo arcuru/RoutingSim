@@ -68,14 +68,11 @@ void Router::Process ( )
 		int i = k % 4;
 		if (ibuf[i].Routed() > 0) {
 			// Valid packets are routed
-			Packet p = ibuf[i].GetPacket();
+			Packet* p = ibuf[i].GetPacket();
 			Direction d = ibuf[i].GetRoute();
 			if ( false == sent[d] ) {
 				if (obuf[d].PacketsRemaining() < obuf[d].Size()-1) {
-					Address dest = {p.GetX(), p.GetY()};
-					Address origin = {p.GetOriginX(), p.GetOriginY()};
-					Packet* f = new Packet(dest, origin, p.GetHead(), p.GetData());
-					Event e = {DATA, f};
+					Event e = {DATA, p};
 					Global_Queue.Add(e, &obuf[d], Global_Time+1);
 					sent[d] = true;
 					ibuf[i].PopPacket();

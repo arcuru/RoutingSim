@@ -27,12 +27,7 @@ void OutputBuffer::ProcessBuffer (  )
 		return;
 	if ( 0 == available_space )
 		return;
-	Packet p = GetPacket();
-	Address dest = {p.GetX(), p.GetY()};
-	Address origin = {p.GetOriginX(), p.GetOriginY()};
-
-	Packet* f = new Packet(dest, origin, p.GetHead(), p.GetData());
-	Event e = {DATA, f};
+	Event e = {DATA, GetPacket()};
 	Global_Queue.Add(e, t, Global_Time+1); 
 	available_space--;
 	PopPacket();
@@ -60,8 +55,8 @@ void OutputBuffer::ProcessEvent ( Event e )
 {
 	if ( CREDIT == e.t ) {
 		available_space += *(uint32_t*)e.d;
-		free(e.d);
+		delete (uint32_t*)e.d;
 	}
 	else
-		Buffer::InsertPacket(*(Packet*)e.d);
+		Buffer::InsertPacket((Packet*)e.d);
 }

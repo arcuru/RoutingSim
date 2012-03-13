@@ -11,13 +11,13 @@ class Buffer : public EventTarget
 
 		uint32_t Size ( );
 		void ProcessEvent ( Event e );
-		void InsertPacket ( Packet p );
+		void InsertPacket ( Packet* p );
 		void PopPacket ( );
-		Packet GetPacket ( );
+		Packet* GetPacket ( );
 		uint32_t PacketsRemaining ( );
 
 	protected:
-		Packet* buf;        //!< Pointer to buffer space
+		Packet** buf;       //!< Pointer to buffer space
 		size_t buf_index;   //!< Pointer to next empty buffer space
 		size_t buf_valid;   //!< Pointer to oldest valid data
 		size_t buf_size;    //!< Size of buffer

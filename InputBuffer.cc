@@ -62,16 +62,16 @@ void InputBuffer::RoutePacket ( Address routerAddr )
 		}
 
 		assert( buf_route < buf_size ); // No valid packets
-		assert( (buf[buf_route].GetX() != routerAddr.x) || (buf[buf_route].GetY() != routerAddr.y) );
+		assert( (buf[buf_route]->GetX() != routerAddr.x) || (buf[buf_route]->GetY() != routerAddr.y) );
 
 		// Route packet stored in buf[buf_route]
-		if ( buf[buf_route].GetX() < routerAddr.x)
+		if ( buf[buf_route]->GetX() < routerAddr.x)
 			routes[buf_route] = WEST;
-		else if ( buf[buf_route].GetX() > routerAddr.x )
+		else if ( buf[buf_route]->GetX() > routerAddr.x )
 			routes[buf_route] = EAST;
-		else if ( buf[buf_route].GetY() < routerAddr.y )
+		else if ( buf[buf_route]->GetY() < routerAddr.y )
 			routes[buf_route] = SOUTH;
-		else if ( buf[buf_route].GetY() > routerAddr.y )
+		else if ( buf[buf_route]->GetY() > routerAddr.y )
 			routes[buf_route] = NORTH;
 		else
 			assert(false); // Packet should never be routed to this address

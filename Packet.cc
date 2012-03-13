@@ -33,7 +33,7 @@ Packet::~Packet ()
  *  returns the value of the destination x address stored in the system
  *
  */
-uint8_t Packet::GetX ( )
+uint8_t Packet::GetX ( ) const
 {
 	return info & 0xF;
 }
@@ -42,7 +42,7 @@ uint8_t Packet::GetX ( )
  *  returns the value of the destination y address stored in the system
  *
  */
-uint8_t Packet::GetY ( )
+uint8_t Packet::GetY ( ) const
 {
 	return (info >> 4) & 0xF;
 }
@@ -51,7 +51,7 @@ uint8_t Packet::GetY ( )
  *  returns the value of the originating x address stored in the system
  *
  */
-uint8_t Packet::GetOriginX ( )
+uint8_t Packet::GetOriginX ( ) const
 {
 	return (info >> 8) & 0xF;
 }
@@ -60,7 +60,7 @@ uint8_t Packet::GetOriginX ( )
  *  returns the value of the originating y address stored in the system
  *
  */
-uint8_t Packet::GetOriginY ( )
+uint8_t Packet::GetOriginY ( ) const
 {
 	return (info >> 12) & 0xF;
 }
@@ -69,7 +69,7 @@ uint8_t Packet::GetOriginY ( )
  *  returns true or false depending on if this packet is a head packet
  *
  */
-bool Packet::GetHead ( )
+bool Packet::GetHead ( ) const
 {
 	if ( (info >> 16) & 0x1 )
 		return true;
@@ -80,7 +80,7 @@ bool Packet::GetHead ( )
  *  returns the data stored in this packet
  *
  */
-uint32_t Packet::GetData ( )
+uint32_t Packet::GetData ( ) const
 {
 	return info >> 32;
 }

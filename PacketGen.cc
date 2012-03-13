@@ -79,9 +79,6 @@ void PacketGen::GenPacket ( )
 	// Generate packet and load appropriate data
 	Packet* p = new Packet( dest, addr, true, rand() & 0xFFFFFFFF);
 
-	// Check to make sure we aren't routing to (5, 5)
-	assert((p->GetX() != p->GetY()) || (p->GetX() != 5));
-
 	// Add packet to output buffer
 	packet_injections++;
 	if (ibuf->PacketsRemaining() < 32) {

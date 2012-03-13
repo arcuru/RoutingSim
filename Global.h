@@ -2,7 +2,7 @@
 #define GLOBAL_H
 
 // Uncomment to disable assert's
-#define NDEBUG
+//#define NDEBUG
 
 #include <cstdint>
 #include <cassert>

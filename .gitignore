@@ -1,0 +1,3 @@
+# Exclude object files and generated documentation
+*.o
+docs

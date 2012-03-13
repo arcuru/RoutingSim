@@ -1,3 +1,5 @@
+Important Note: Commits to the repo between releases are not fully tested and may not function properly.
+
 Building and testing can be done using the included Makefile.
 
 To compile the program, run 'make' in the project directory.

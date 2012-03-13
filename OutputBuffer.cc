@@ -20,7 +20,6 @@ OutputBuffer::~OutputBuffer ()
  *  processes the current buffer in the event that we need to do something
  *
  */
-
 void OutputBuffer::ProcessBuffer (  )
 {
 	if (PacketsRemaining() == 0)

@@ -19,7 +19,7 @@ enum direction {
 	SOUTH = 1,
 	EAST  = 2,
 	WEST  = 3,
-	HERE  = 4
+	HERE  = 4   //!< Indicates current router. VALUE MUST BE 4 FOR Router::Process TO WORK PROPERLY.
 }; //!< Cardinal direction for use in 2D Mesh
 
 typedef enum direction Direction;
@@ -40,6 +40,14 @@ typedef struct Event {
 	EventType t;  //!< Event type
 	void* d;      //!< Data to be delivered
 } Event; //!< Event definition
+
+typedef struct {
+	uint8_t width;  //!< Width of network (X max + 1)
+	uint8_t height; //!< Height of network (Y max + 1)
+	double chance;  //!< Chance of packet injection every cycle
+} NInfo;
+
+extern NInfo NetworkInfo;
 
 #include "Packet.h"
 #include "EventTarget.h"

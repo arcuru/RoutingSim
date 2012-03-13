@@ -42,26 +42,24 @@ void PacketGen::SetDirection ( Direction edge )
 	return ;
 }
 
-/** GetTarget
- *  returns the inputbuffer for this packet generator
+/** GetInjection
+ *  returns the injection queue for this packet generator
  *
- *  @return   Target input buffer
+ *  @return   Target injection queue
  */
-EventTarget* PacketGen::GetTarget ( )
+InputBuffer* PacketGen::GetInjection ( ) const
 {
 	return ibuf;
 }
 
-/** Connect
- *  sets up the wire from the output buffer to an input buffer
+/** GetEjection
+ *  returns the ejection queue for this packet generator
  *
- *  @arg target The connected input buffer
+ *  @return   Target ejection queue
  */
-void PacketGen::Connect ( EventTarget* target )
+OutputBuffer* PacketGen::GetEjection ( ) const
 {
-	obuf->Connect(target);
-	((InputBuffer*)target)->WriteBack(obuf);
-	return ;
+	return obuf;
 }
 
 /** GenPacket
@@ -71,35 +69,12 @@ void PacketGen::Connect ( EventTarget* target )
  */
 void PacketGen::GenPacket ( )
 {
+	// Generate destination address as a random address in the network
 	Address dest = addr;
-	if (NORTH == dir)
-		dest.y += 2;
-	else if (SOUTH == dir)
-		dest.y -= 2;
-	else if (WEST == dir || EAST == dir) {
-		if ( rand() > (RAND_MAX/4) ) { // Higher chance of continuing straight
-			if (WEST == dir)
-				dest.x -= 2;
-			else if (EAST == dir)
-				dest.x += 2;
-			else
-				assert(false);
-		}
-		else {
-			if (WEST == dir)
-				dest.x--;
-			else if (EAST == dir)
-				dest.x++;
-			else
-				assert(false);
-			if ( rand() < (RAND_MAX/2) )
-				dest.y++;
-			else
-				dest.y--;
-		}
+	while ( (dest.x == addr.x) && (dest.y == addr.y) ) {
+		dest.x = rand() % NetworkInfo.width;
+		dest.y = rand() % NetworkInfo.height;
 	}
-	else
-		assert(false);
 
 	// Generate packet and load appropriate data
 	Packet* p = new Packet( dest, addr, true, rand() & 0xFFFFFFFF);
@@ -109,8 +84,8 @@ void PacketGen::GenPacket ( )
 
 	// Add packet to output buffer
 	packet_injections++;
-	if (obuf->PacketsRemaining() < 32) {
-		obuf->InsertPacket(p);
+	if (ibuf->PacketsRemaining() < 32) {
+		ibuf->InsertPacket(p);
 		packets_sent++;
 	}
 	else {
@@ -138,17 +113,16 @@ void PacketGen::RandomGenPacket ( double chances )
  */
 void PacketGen::Process ( )
 {
-	if (ibuf->PacketsRemaining() != 0) {
-		assert(1 == ibuf->PacketsRemaining());
-		Packet* p = ibuf->GetPacket();
+	if (obuf->PacketsRemaining() != 0) {
+		assert(1 == obuf->PacketsRemaining());
+		Packet* p = obuf->GetPacket();
 		assert(p->GetX() == addr.x);
 		assert(p->GetY() == addr.y);
+		obuf->PopPacket();
 		delete p;
-		ibuf->PopPacket();
 		packets_out++;
 		packet_ejections++;
 	}
-	obuf->ProcessBuffer();
 	return ;
 }
 

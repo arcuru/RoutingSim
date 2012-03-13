@@ -4,19 +4,24 @@
 class Router
 {
 	public:
+		Router ( );
 		Router ( Address setAddress );
 		~Router ();
 
-		void Connect( Direction edge, PacketGen* target);
-		EventTarget* GetTarget ( Direction edge );
+		void SetAddr ( Address newAddress );
+		void Connect( Direction edge, Router* target);
+		InputBuffer* GetTarget ( Direction edge );
 		uint32_t GetCollisions ( );
 		void Process ( );
 
 	protected:
 
 	private:
-		InputBuffer ibuf[5];       //!< Input buffers situated in this router
-		OutputBuffer obuf[5];      //!< Output buffers situated in this router
+		void InitBuffers ( );
+
+		InputBuffer** ibuf;        //!< Input buffers situated in this router
+		OutputBuffer** obuf;       //!< Output buffers situated in this router
+		PacketGen* pgen;           //!< Packet generator to handle I/O for whole network
 		Address addr;              //!< Address for this router
 		uint32_t packet_collision; //!< Count of packet collisions
 

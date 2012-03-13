@@ -37,9 +37,12 @@ void InputBuffer::WriteBack ( OutputBuffer* write_back )
  */
 void InputBuffer::PopPacket ( )
 {
-	uint32_t* i = new uint32_t(1); //Send back 1 credit
-	Event e = {CREDIT, i};
-	Global_Queue.Add(e, obuf, Global_Time+1);
+	// Send credit back if we are connected to somewhere
+	if ( obuf ) {
+		uint32_t* i = new uint32_t(1); //Send back 1 credit
+		Event e = {CREDIT, i};
+		Global_Queue.Add(e, obuf, Global_Time+1);
+	}
 	if ( buf_route == buf_valid )
 		buf_route = SIZE_MAX;
 	Buffer::PopPacket();
@@ -62,7 +65,6 @@ void InputBuffer::RoutePacket ( Address routerAddr )
 		}
 
 		assert( buf_route < buf_size ); // No valid packets
-		assert( (buf[buf_route]->GetX() != routerAddr.x) || (buf[buf_route]->GetY() != routerAddr.y) );
 
 		// Route packet stored in buf[buf_route]
 		if ( buf[buf_route]->GetX() < routerAddr.x)

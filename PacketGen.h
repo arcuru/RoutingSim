@@ -10,8 +10,8 @@ class PacketGen
 
 		void SetAddr ( Address setAddress );
 		void SetDirection ( Direction edge );
-		EventTarget* GetTarget ( );
-		void Connect ( EventTarget* target );
+		InputBuffer* GetInjection ( ) const;
+		OutputBuffer* GetEjection ( ) const;
 		void GenPacket ( );
 		void RandomGenPacket ( double chances );
 		void Process ( );

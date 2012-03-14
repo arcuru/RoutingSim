@@ -14,22 +14,18 @@ using namespace std;
 
 extern uint32_t Global_Time; //!< Current time step
 
-enum direction {
+typedef enum {
 	NORTH = 0,
 	SOUTH = 1,
 	EAST  = 2,
 	WEST  = 3,
 	HERE  = 4   //!< Indicates current router. VALUE MUST BE 4 FOR Router::Process TO WORK PROPERLY.
-}; //!< Cardinal direction for use in 2D Mesh
+} Direction; //!< Cardinal direction for use in 2D Mesh
 
-typedef enum direction Direction;
-
-struct address {
+typedef struct {
 	uint8_t x; //!< X address in mesh
 	uint8_t y; //!< Y address in mesh
-}; //!< Address in 2D mesh
-
-typedef struct address Address;
+} Address; //!< Address in 2D mesh
 
 typedef enum EventType {
 	DATA,   //!< Data arrival

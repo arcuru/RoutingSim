@@ -72,8 +72,8 @@ void PacketGen::GenPacket ( )
 	// Generate destination address as a random address in the network
 	Address dest = addr;
 	while ( (dest.x == addr.x) && (dest.y == addr.y) ) {
-		dest.x = rand() % NetworkInfo.width;
-		dest.y = rand() % NetworkInfo.height;
+		dest.x = rand() % NInfo.width;
+		dest.y = rand() % NInfo.height;
 	}
 
 	// Generate packet and load appropriate data

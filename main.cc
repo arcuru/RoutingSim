@@ -1,9 +1,9 @@
 #include "Global.h"
 
-#define IND(x,y) (((y) * NetworkInfo.width) + (x))
+#define IND(x,y) (((y) * NInfo.width) + (x))
 
 uint32_t Global_Time;
-NInfo NetworkInfo;
+NetworkInfo NInfo;
 EventQueue Global_Queue;
 uint32_t packet_injections = 0;
 uint32_t packet_ejections = 0;
@@ -58,19 +58,19 @@ void RunSimulation( uint32_t simulation_end, double injection_chance )
 	srand(time(NULL));
 
 	// Initialize network settings
-	NetworkInfo.width = 2;
-	NetworkInfo.height = 2;
-	NetworkInfo.chance = injection_chance;
+	NInfo.width = 2;
+	NInfo.height = 2;
+	NInfo.chance = injection_chance;
 
 	// Create Router and packet generators
-	Router* sim = new Router[NetworkInfo.width * NetworkInfo.height];
-	for (uint8_t i=0; i < NetworkInfo.width; i++) {
-		for (uint8_t j=0; j < NetworkInfo.height; j++) {
+	Router* sim = new Router[NInfo.width * NInfo.height];
+	for (uint8_t i=0; i < NInfo.width; i++) {
+		for (uint8_t j=0; j < NInfo.height; j++) {
 			Address addr = {i, j};
 			sim[IND(i,j)].SetAddr( addr );
-			if ( j+1 < NetworkInfo.height )
+			if ( j+1 < NInfo.height )
 				sim[IND(i,j)].Connect( NORTH, &sim[IND(i,j+1)] );
-			if ( i+1 < NetworkInfo.width )
+			if ( i+1 < NInfo.width )
 				sim[IND(i,j)].Connect( EAST, &sim[IND(i+1,j)] );
 			if ( j > 0 )
 				sim[IND(i,j)].Connect( SOUTH, &sim[IND(i,j-1)] );
@@ -81,8 +81,8 @@ void RunSimulation( uint32_t simulation_end, double injection_chance )
 
 	for (Global_Time = 0; Global_Time < simulation_end; Global_Time++) {
 		Global_Queue.Process(); // Process all packet movements in the queue
-		for (uint8_t i=0; i < NetworkInfo.width; i++) {
-			for (uint8_t j=0; j < NetworkInfo.height; j++) {
+		for (uint8_t i=0; i < NInfo.width; i++) {
+			for (uint8_t j=0; j < NInfo.height; j++) {
 				sim[IND(i,j)].Process(); // Process each router for a time step
 			}
 		}
@@ -93,7 +93,7 @@ void RunSimulation( uint32_t simulation_end, double injection_chance )
 	cout << ((double)packet_injections)/simulation_end << ", ";
 	cout << ((double)packet_ejections)/simulation_end << ", ";
 	uint32_t packet_collisions = 0;
-	for (int i=0; i < NetworkInfo.width*NetworkInfo.height; i++)
+	for (int i=0; i < NInfo.width*NInfo.height; i++)
 		packet_collisions += sim[i].GetCollisions();
 	cout << packet_collisions << ", ";
 	cout << simulation_end << ", ";

@@ -45,9 +45,9 @@ typedef struct {
 	uint8_t width;  //!< Width of network (X max + 1)
 	uint8_t height; //!< Height of network (Y max + 1)
 	double chance;  //!< Chance of packet injection every cycle
-} NInfo;
+} NetworkInfo;
 
-extern NInfo NetworkInfo;
+extern NetworkInfo NInfo;
 
 #include "Packet.h"
 #include "EventTarget.h"

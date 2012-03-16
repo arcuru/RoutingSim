@@ -69,14 +69,10 @@ void RunSimulation( uint32_t simulation_end, double injection_chance )
 		for (uint8_t j=0; j < NInfo.height; j++) {
 			Address addr = {i, j};
 			sim[IND(i,j)].SetAddr( addr );
-			if ( j+1 < NInfo.height )
-				sim[IND(i,j)].Connect( NORTH, &sim[IND(i,j+1)] );
-			if ( i+1 < NInfo.width )
-				sim[IND(i,j)].Connect( EAST, &sim[IND(i+1,j)] );
-			if ( j > 0 )
-				sim[IND(i,j)].Connect( SOUTH, &sim[IND(i,j-1)] );
-			if ( i > 0 )
-				sim[IND(i,j)].Connect( WEST, &sim[IND(i-1,j)] );
+			sim[IND(i,j)].Connect( NORTH, &sim[IND(i,(j+1)%NInfo.height)] );
+			sim[IND(i,j)].Connect( EAST, &sim[IND((i+1)%NInfo.width,j)] );
+			sim[IND(i,j)].Connect( SOUTH, &sim[IND(i,(j+NInfo.height-1)%NInfo.height)] );
+			sim[IND(i,j)].Connect( WEST, &sim[IND((i+NInfo.width-1)%NInfo.width,j)] );
 		}
 	}
 

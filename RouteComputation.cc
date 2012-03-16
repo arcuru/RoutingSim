@@ -80,6 +80,34 @@ void RouteComputation::ProcessEvent ( Event e )
 	InputBuffer* ib = (InputBuffer*)e.o;
 
 	// Route packet
+	if ( addr.x > p->GetX() ) {
+		if ( addr.x - (NInfo.width/2) > p->GetX() )
+			Insert( ib, EAST ); 
+		else
+			Insert( ib, WEST ); 
+	}
+	else if ( addr.x < p->GetX() ) {
+		if ( addr.x + (NInfo.width/2) < p->GetX() )
+			Insert( ib, WEST );
+		else
+			Insert( ib, EAST );
+	}
+	else if ( addr.y > p->GetY() ) {
+		if ( addr.y - (NInfo.height/2) > p->GetY() )
+			Insert( ib, NORTH ); 
+		else
+			Insert( ib, SOUTH ); 
+	}
+	else if ( addr.y < p->GetY() ) {
+		if ( addr.y + (NInfo.height/2) < p->GetY() )
+			Insert( ib, SOUTH );
+		else
+			Insert( ib, NORTH );
+	}
+	else if ( addr.x == p->GetX() && addr.y == p->GetY() )
+		Insert( ib, HERE );
+	
+	/*
 	if ( p->GetX() < addr.x)
 		Insert( ib, WEST ); 
 	else if ( p->GetX() > addr.x )
@@ -90,6 +118,7 @@ void RouteComputation::ProcessEvent ( Event e )
 		Insert( ib, NORTH ); 
 	else
 		Insert( ib, HERE ); 
+	*/
 }
 
 /** getnext

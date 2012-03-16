@@ -1,32 +1,66 @@
 #include "Global.h"
 
 
-Packet::Packet ( Address destination, Address origin, bool head, uint32_t data)
+Packet::Packet ( Address destination, Address origin, size_t packet_size )
 {
 	// Make sure all data fits into packet
 	assert(destination.x < 0x10);
 	assert(destination.y < 0x10);
 	assert(origin.x < 0x10);
 	assert(origin.y < 0x10);
-	info = data;
-	info <<= 32;
+	//info = data;
+	//info <<= 32;
+	info = 0;
 	info |= destination.x;
 	info |= destination.y << 4;
 	info |= origin.x << 8;
 	info |= origin.y << 12;
-	info |= (head ? 1 : 0) << 16;
+	//info |= (head ? 1 : 0) << 16;
 
 	// Make sure all retrieval methods work
 	assert(GetX() == destination.x);
 	assert(GetY() == destination.y);
 	assert(GetOriginX() == origin.x);
 	assert(GetOriginY() == origin.y);
-	assert(GetHead() == head);
-	assert(GetData() == data);
+	//assert(GetHead() == head);
+	//assert(GetData() == data);
+	
+
+	flit_count = packet_size / 4;
+	assert( packet_size%4 == 0 );
+	//flits = (Flit*)malloc(sizeof(Flit)*(flit_count));
+	flits = new Flit[flit_count];
+
+	flits[0].setPacket( this );
+	flits[0].setHead( true );
+	for (size_t i=1; i < flit_count; i++) {
+		flits[i].setPacket( this );
+		flits[i].setHead( false );
+	}
+	created = Global_Time;
 }
 
 Packet::~Packet ()
 {
+}
+
+/** GetFlit
+ *  returns a pointer to the specified flit
+ *
+ *  @arg index  Index of the flit to return
+ *  @return Pointer to specified flit
+ */
+Flit* Packet::GetFlit ( size_t index ) const
+{
+	return &flits[index];
+}
+
+/** GetSize
+ *  returns the size of the packet in flits
+ */
+size_t Packet::GetSize ( ) const
+{
+	return flit_count;
 }
 
 /** GetX
@@ -51,7 +85,7 @@ uint8_t Packet::GetY ( ) const
  *  returns the value of the originating x address stored in the system
  *
  */
-uint8_t Packet::GetOriginX ( ) const
+uint32_t Packet::GetOriginX ( ) const
 {
 	return (info >> 8) & 0xF;
 }
@@ -60,7 +94,7 @@ uint8_t Packet::GetOriginX ( ) const
  *  returns the value of the originating y address stored in the system
  *
  */
-uint8_t Packet::GetOriginY ( ) const
+uint32_t Packet::GetOriginY ( ) const
 {
 	return (info >> 12) & 0xF;
 }
@@ -83,5 +117,14 @@ bool Packet::GetHead ( ) const
 uint32_t Packet::GetData ( ) const
 {
 	return info >> 32;
+}
+
+/** GetCreated
+ *  returns the creation time of this packet
+ *
+ */
+uint32_t Packet::GetCreated ( ) const
+{
+	return created;
 }
 

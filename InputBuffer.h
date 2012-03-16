@@ -1,6 +1,8 @@
 #ifndef INPUTBUFFER_H
 #define INPUTBUFFER_H
 
+class RouteComputation;
+
 class InputBuffer : public Buffer
 {
 	public:
@@ -8,18 +10,16 @@ class InputBuffer : public Buffer
 		InputBuffer ( size_t entries );
 		~InputBuffer ();
 
+		void setRC ( RouteComputation* rcomp );
 		void WriteBack ( OutputBuffer* write_back );
-		void PopPacket ( );
-		void RoutePacket ( Address routerAddr );
-		Direction GetRoute ( );
-		size_t Routed ( );
+		void PopFlit ( );
+		void ProcessEvent ( Event e );
 
 	protected:
 
 	private:
-		Direction* routes;   //!< Buffer holding the routes of all the packets
 		OutputBuffer* obuf;  //!< Paired Output Buffer for writeback information
-		size_t buf_route;    //!< Pointer to next buffer space that needs to be routed
+		RouteComputation* RC; //!< Pointer to Route Computation component
 
 };
 

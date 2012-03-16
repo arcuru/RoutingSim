@@ -61,6 +61,7 @@ void RunSimulation( uint32_t simulation_end, double injection_chance )
 	NInfo.width = 2;
 	NInfo.height = 2;
 	NInfo.chance = injection_chance;
+	NInfo.dest_func = CROSS;
 
 	// Create Router and packet generators
 	Router* sim = new Router[NInfo.width * NInfo.height];

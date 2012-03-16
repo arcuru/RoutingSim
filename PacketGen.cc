@@ -72,18 +72,43 @@ void PacketGen::GenPacket ( )
 	// Generate destination address as a random address in the network
 	Address dest = addr;
 	while ( (dest.x == addr.x) && (dest.y == addr.y) ) {
-		dest.x = rand() % NInfo.width;
-		dest.y = rand() % NInfo.height;
+		switch ( NInfo.dest_func ) {
+			case RAND:	
+				dest.x = rand() % NInfo.width;
+				dest.y = rand() % NInfo.height;
+				break;
+
+			case BIT_REVERSE:	
+				break;
+
+			case BIT_COMP:	
+				break;
+
+			case CROSS:	
+				dest.x = NInfo.width - 1 - addr.x;
+				dest.y = NInfo.height - 1 - addr.y;
+				break;
+
+			default:	
+				break;
+		}
 	}
 
 	// Generate packet and load appropriate data
-	Packet* p = new Packet( dest, addr, true, rand() & 0xFFFFFFFF);
+	Packet* p = new Packet( dest, addr, 64 );
 
 	// Add packet to output buffer
 	packet_injections++;
-	if (ibuf->PacketsRemaining() < 32) {
-		ibuf->InsertPacket(p);
-		packets_sent++;
+	if ( p->GetSize() <= 32 - ibuf->FlitsRemaining() ) {
+		if ( ibuf->FlitsRemaining() == 0) { // For now only insert to empty buffer
+			for (size_t i = 0; i < p->GetSize(); i++) {
+				Event e = { DATA, p->GetFlit( i ), this };
+				ibuf->ProcessEvent( e ); // Don't wait before inserting
+			}
+			packets_sent++;
+		}
+		else
+			packets_blocked++;
 	}
 	else {
 	//	cout << "PacketGen OutputBuffer full" << endl;
@@ -110,13 +135,13 @@ void PacketGen::RandomGenPacket ( double chances )
  */
 void PacketGen::Process ( )
 {
-	if (obuf->PacketsRemaining() != 0) {
-		assert(1 == obuf->PacketsRemaining());
-		Packet* p = obuf->GetPacket();
+	if (obuf->FlitsRemaining() != 0) {
+		assert(1 == obuf->FlitsRemaining());
+		Packet* p = obuf->GetFlit()->getPacket();
 		assert(p->GetX() == addr.x);
 		assert(p->GetY() == addr.y);
-		obuf->PopPacket();
-		delete p;
+		obuf->ProcessBuffer();
+		//delete p;
 		packets_out++;
 		packet_ejections++;
 	}

@@ -3,11 +3,13 @@ CFLAGS=-std=c++0x -Wall -Wextra -Werror -g -pedantic -O0
 INCLUDE_DIR=
 LIBS=
 HEADERS=Global.h
-SOURCES=Packet.cc \
+SOURCES=Flit.cc \
+		Packet.cc \
 		EventQueue.cc \
 		Buffer.cc \
 		InputBuffer.cc \
 		OutputBuffer.cc \
+		RouteComputation.cc \
 		Router.cc \
 		PacketGen.cc \
 		main.cc

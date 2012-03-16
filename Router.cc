@@ -3,6 +3,7 @@
 Router::Router ( )
 {
 	packet_collision = 0;
+	RC = new RouteComputation();
 	InitBuffers();
 }
 
@@ -10,7 +11,9 @@ Router::Router ( Address setAddress )
 {
 	addr = setAddress;
 	packet_collision = 0;
+	RC = new RouteComputation();
 	SetAddr(addr);
+	InitBuffers();
 }
 
 Router::~Router ()
@@ -26,7 +29,8 @@ Router::~Router ()
 }
 
 /** InitBuffers
- *  handles initialization for the packet generator and input / output buffers
+ *  handles initialization for the packet generator, input / output buffers,
+ *  and Route Computation device
  */
 void Router::InitBuffers ( )
 {
@@ -42,7 +46,13 @@ void Router::InitBuffers ( )
 			ibuf[i] = new InputBuffer();
 			obuf[i] = new OutputBuffer();
 		}
+		ibuf[i]->setRC( RC );
 	}
+	RC->setObuf( EAST, obuf[EAST] );
+	RC->setObuf( WEST, obuf[WEST] );
+	RC->setObuf( SOUTH, obuf[SOUTH] );
+	RC->setObuf( NORTH, obuf[NORTH] );
+	RC->setObuf( HERE, obuf[HERE] );
 }
 
 /** SetAddr
@@ -53,6 +63,7 @@ void Router::SetAddr ( Address newAddress )
 {
 	addr = newAddress;
 	pgen->SetAddr(addr);
+	RC->setAddr(addr);
 }
 
 /** GetTarget
@@ -131,38 +142,50 @@ void Router::Process ( )
 
 	// Traverse packets through the switch
 	bool sent[5];
-	for (int i=0; i < 5; i++)
+	for (size_t i=0; i < 5; i++)
 		sent[i] = false;
 
-	// Start sending from a random side
-	int start = rand() % 5;
-	for (int k=start; k < 5+start; k++) {
-		int i = k % 5;
-		if (ibuf[i]->Routed() > 0) {
-			// Valid packets are routed
-			Packet* p = ibuf[i]->GetPacket();
-			Direction d = ibuf[i]->GetRoute();
-			if ( false == sent[d] ) {
-				if (obuf[d]->PacketsRemaining() < obuf[d]->Size()-1) {
-					Event e = {DATA, p};
-					Global_Queue.Add(e, obuf[d], Global_Time+1);
-					sent[d] = true;
-					ibuf[i]->PopPacket();
-				}
-				else {
-					packet_collision++;
+	//cout << "(" << addr.x << ", " << addr.y << ") ";
+
+	// Start Receiving from a random side
+	size_t start = rand() % 5;
+	start = 0;
+	for (size_t k=start; k < 5+start; k++) {
+		size_t i = k % 5;
+		if ( obuf[i]->FlitsRemaining() == obuf[i]->Size() ) {
+			//cout << "1 ";
+			continue; // This output buffer is full
+		}
+		if ( obuf[i]->GetP() != NULL ) {
+			//cout << "2 ";
+			// In the process of moving packet, send individual flit
+			InputBuffer* b = obuf[i]->GetPrev();
+			if ( b->FlitsRemaining() > 0 ) {
+				if ( b->GetFlit()->getPacket() == obuf[i]->GetP() ) {
+					Flit* f = b->GetFlit();
+					Event e = {DATA, f, b};
+					Global_Queue.Add(e, obuf[i], Global_Time+1);
+					b->PopFlit();
 				}
 			}
-			else {
-				// Outgoing buffer full
-				packet_collision++;
+		}
+		else {
+			//cout << "3 ";
+			// Need to see if there is a valid packet waiting to be routed here
+			InputBuffer* b = RC->getNext( i );
+			if ( b != NULL ) {
+				// Valid InputBuffer exists
+				assert(b->FlitsRemaining() > 0);
+
+				Flit* f = b->GetFlit();
+				Event e = {DATA, f, b};
+				Global_Queue.Add(e, obuf[i], Global_Time+1);
+				b->PopFlit();
+				RC->Remove( b );
 			}
 		}
 	}
-
-	// Route packets
-	for (int i=0; i < 5; i++)
-		ibuf[i]->RoutePacket( addr );
+	//cout << endl;
 
 	return ;
 }

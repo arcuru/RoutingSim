@@ -24,6 +24,7 @@ class Router
 		PacketGen* pgen;           //!< Packet generator to handle I/O for whole network
 		Address addr;              //!< Address for this router
 		uint32_t packet_collision; //!< Count of packet collisions
+		RouteComputation* RC;      //!< Pointer to Route Computation component
 
 };
 

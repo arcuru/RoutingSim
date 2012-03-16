@@ -140,11 +140,6 @@ void Router::Process ( )
 		obuf[i]->ProcessBuffer();
 	pgen->Process(); // Eject packets from the output queue
 
-	// Traverse packets through the switch
-	bool sent[5];
-	for (size_t i=0; i < 5; i++)
-		sent[i] = false;
-
 	//cout << "(" << addr.x << ", " << addr.y << ") ";
 
 	// Start Receiving from a random side

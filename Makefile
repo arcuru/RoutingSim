@@ -29,4 +29,6 @@ clean:
 	rm -rf $(OBJECTS) $(TARGET)
 
 test: all
-	./$(TARGET)
+	time ./$(TARGET) > output.txt
+	diff output.txt saved.txt
+

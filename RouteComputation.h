@@ -10,6 +10,7 @@ class RouteComputation : public EventTarget
 
 		void setAddr ( Address a );
 		void setObuf ( Direction edge, OutputBuffer* ob );
+		void Insert ( InputBuffer* ib, Direction d );
 		void ProcessEvent ( Event e );
 		InputBuffer* getNext ( size_t dir ) const;
 		void Remove ( InputBuffer* ib );

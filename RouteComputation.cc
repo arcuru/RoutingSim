@@ -3,9 +3,12 @@
 RouteComputation::RouteComputation ()
 {
 	for (size_t i=0; i < 5; i++) {
-		obuf[i] = NULL;
-		for (size_t j = 0; j < 5; j++)
-			ibuf[i][j] = NULL;
+		ovc_xy[i] = NULL;
+		ovc_ad[i] = NULL;
+		for (size_t j = 0; j < 5; j++) {
+			ivc_xy[i][j] = NULL;
+			ivc_ad[i][j] = NULL;
+		}
 	}
 }
 
@@ -13,9 +16,12 @@ RouteComputation::RouteComputation ( Address a )
 {
 	addr = a;
 	for (size_t i=0; i < 5; i++) {
-		obuf[i] = NULL;
-		for (size_t j = 0; j < 5; j++)
-			ibuf[i][j] = NULL;
+		ovc_xy[i] = NULL;
+		ovc_ad[i] = NULL;
+		for (size_t j = 0; j < 5; j++) {
+			ivc_xy[i][j] = NULL;
+			ivc_ad[i][j] = NULL;
+		}
 	}
 }
 
@@ -43,23 +49,41 @@ void RouteComputation::setObuf ( Direction edge, OutputBuffer* ob )
 {
 	assert( NULL != ob );
 	assert( edge < 5 );
-	obuf[edge] = ob;
+	ovc_xy[edge] = ob->getVC( 0 );;
+	ovc_ad[edge] = ob->getVC( 1 );;
 }
 
 /** Insert
- *  sets up the given InputBuffer to allow for routing in the given direction
+ *  sets up the given VirtualChannel to allow for routing in the given direction
+ *  and output channel
  *
- *  @arg ib Pointer to the InputBuffer
+ *  @arg vc Pointer to the VirtualChannel to add
  *  @arg d  Direction of possible route
+ *  @arg c  Output channel, either XY or adaptive
  */
-void RouteComputation::Insert ( InputBuffer* ib, Direction d )
+void RouteComputation::Insert ( VirtualChannel* vc, Direction d, size_t c )
 {
 	assert( INVALID != d );
+
 	size_t i = 0;
-	while ( NULL != ibuf[d][i] )
-		i++;
-	assert( i < 5 );
-	ibuf[d][i] = ib;
+	switch ( c ) {
+		case 0:	
+			while ( NULL != ivc_xy[d][i] )
+				i++;
+			assert( i < 5 );
+			ivc_xy[d][i] = vc;
+			break;
+
+		case 1:	
+			while ( NULL != ivc_ad[d][i] )
+				i++;
+			assert( i < 5 );
+			ivc_ad[d][i] = vc;
+			break;
+
+		default:	
+			break;
+	}
 }
 
 /** ProcessEvent
@@ -77,84 +101,97 @@ void RouteComputation::ProcessEvent ( Event e )
 	// Get pointer to packet corresponding to flit in buffer
 	Packet* p = ((Flit*)e.d)->getPacket();
 
-	InputBuffer* ib = (InputBuffer*)e.o;
+	VirtualChannel* vc = (VirtualChannel*)e.o;
 
-	// Route packet
+	// Route packet adaptively
 	if ( addr.x > p->GetX() ) {
 		if ( addr.x - (NInfo.width/2) > p->GetX() )
-			Insert( ib, EAST ); 
+			Insert( vc, EAST, 1); 
 		else
-			Insert( ib, WEST ); 
+			Insert( vc, WEST, 1 ); 
 	}
 	else if ( addr.x < p->GetX() ) {
 		if ( addr.x + (NInfo.width/2) < p->GetX() )
-			Insert( ib, WEST );
+			Insert( vc, WEST, 1 );
 		else
-			Insert( ib, EAST );
+			Insert( vc, EAST, 1 );
 	}
-	else if ( addr.y > p->GetY() ) {
+	if ( addr.y > p->GetY() ) {
 		if ( addr.y - (NInfo.height/2) > p->GetY() )
-			Insert( ib, NORTH ); 
+			Insert( vc, NORTH, 1 ); 
 		else
-			Insert( ib, SOUTH ); 
+			Insert( vc, SOUTH, 1 ); 
 	}
 	else if ( addr.y < p->GetY() ) {
 		if ( addr.y + (NInfo.height/2) < p->GetY() )
-			Insert( ib, SOUTH );
+			Insert( vc, SOUTH, 1 );
 		else
-			Insert( ib, NORTH );
+			Insert( vc, NORTH, 1 );
 	}
-	else if ( addr.x == p->GetX() && addr.y == p->GetY() )
-		Insert( ib, HERE );
 	
-	/*
+	// Route packet for XY escape network
 	if ( p->GetX() < addr.x)
-		Insert( ib, WEST ); 
+		Insert( vc, WEST, 0 ); 
 	else if ( p->GetX() > addr.x )
-		Insert( ib, EAST ); 
+		Insert( vc, EAST, 0 ); 
 	else if ( p->GetY() < addr.y )
-		Insert( ib, SOUTH ); 
+		Insert( vc, SOUTH, 0 ); 
 	else if ( p->GetY() > addr.y )
-		Insert( ib, NORTH ); 
+		Insert( vc, NORTH, 0 ); 
 	else
-		Insert( ib, HERE ); 
-	*/
+		Insert( vc, HERE, 0 ); 
 }
 
-/** getnext
- *  returns the next valid InputBuffer that needs to be routed to the input
- *  OutputBuffer
+/** getNext
+ *  returns the next valid VirtualChannel that has requested to be 
+ *  routed to the input direction and channel
  *
- *  @arg ob Target OutputBuffer
+ *  @arg dir Direction of routing
+ *  @arg c   Channel requested, either XY or adaptiver
  *  @return Pointer to valid InputBuffer
  */
-InputBuffer* RouteComputation::getNext ( size_t dir ) const
+VirtualChannel* RouteComputation::getNext ( size_t dir, size_t c ) const
 {
-	return ibuf[dir][0];
+	if ( 0 == c )
+		return ivc_xy[dir][0];
+	return ivc_ad[dir][0];
 }
 
 /** Remove
- *  invalidates all the saved routes from the given InputBuffer
+ *  invalidates all the saved routes from the given VirtualChannel
  *
- *  @arg ib Pointer to InputBuffer that is no longer to be routed
+ *  @arg vc Pointer to VirtualChannel that is no longer to be routed
  */
-void RouteComputation::Remove ( InputBuffer* ib )
+void RouteComputation::Remove ( VirtualChannel* vc )
 {
-	assert( NULL != ib );
+	_Remove( vc, ivc_xy );
+	_Remove( vc, ivc_ad );
+}
+
+/** _Remove
+ *  invalidates all the saved routes from the given VirtualChannel
+ *  only in the input output array
+ *
+ *  @arg vc Pointer to VirtualChannel that is no longer to be routed
+ *  @arg arr Poniter to array of VC's that it should be removed from
+ */
+void RouteComputation::_Remove ( VirtualChannel* vc, VirtualChannel* arr[5][5] )
+{
+	assert( NULL != vc );
 	
 	for (size_t i = 0; i < 5; i++) {
-		// Search for ibuf
+		// Search for vc
 		size_t j;
 		for (j = 0; j < 5; j++) {
-			if ( NULL == ibuf[i][j] )
+			if ( NULL == arr[i][j] )
 				break;
-			if ( ib == ibuf[i][j] ) {
+			if ( vc == arr[i][j] ) {
 				// Move everything above it down
-				ibuf[i][j] = NULL;
+				arr[i][j] = NULL;
 				for (size_t k = j+1; k < 5; k++) {
-					ibuf[i][k-1] = ibuf[i][k];
+					arr[i][k-1] = arr[i][k];
 				}
-				ibuf[i][4] = NULL;
+				arr[i][4] = NULL;
 				break;
 			}
 		}

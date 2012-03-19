@@ -145,38 +145,33 @@ void Router::Process ( )
 	// Start Receiving from a random side
 	size_t start = rand() % 5;
 	start = 0;
-	for (size_t k=start; k < 5+start; k++) {
-		size_t i = k % 5;
-		if ( obuf[i]->FlitsRemaining() == obuf[i]->Size() ) {
-			//cout << "1 ";
-			continue; // This output buffer is full
-		}
-		if ( obuf[i]->GetP() != NULL ) {
-			//cout << "2 ";
-			// In the process of moving packet, send individual flit
-			InputBuffer* b = obuf[i]->GetPrev();
-			if ( b->FlitsRemaining() > 0 ) {
-				if ( b->GetFlit()->getPacket() == obuf[i]->GetP() ) {
-					Flit* f = b->GetFlit();
-					Event e = {DATA, f, b};
-					Global_Queue.Add(e, obuf[i], Global_Time+1);
-					b->PopFlit();
-				}
+	for (int j = 1; j >= 0; j--) {
+		for (size_t k=start; k < 5+start; k++) {
+			size_t i = k % 5;
+			VirtualChannel* vc = obuf[i]->getVC( j );
+			if ( vc->FlitsRemaining() == vc->Size() ) {
+				//cout << "1 ";
+				continue; // This VC is full
 			}
-		}
-		else {
-			//cout << "3 ";
-			// Need to see if there is a valid packet waiting to be routed here
-			InputBuffer* b = RC->getNext( i );
-			if ( b != NULL ) {
-				// Valid InputBuffer exists
-				assert(b->FlitsRemaining() > 0);
-
-				Flit* f = b->GetFlit();
-				Event e = {DATA, f, b};
-				Global_Queue.Add(e, obuf[i], Global_Time+1);
-				b->PopFlit();
-				RC->Remove( b );
+			else if ( vc->GetPacket() != NULL ) {
+				//cout << "2 ";
+				// In the process of moving packet, send individual flit
+				VirtualChannel* b = vc->getWB();
+				assert( b->GetPacket() == vc->GetPacket() );
+				if ( b->FlitsRemaining() > 0 )
+					b->sendFlit();
+			}
+			else {
+				//cout << "3 ";
+				// Need to see if there is a valid packet waiting to be routed here
+				VirtualChannel* b = RC->getNext( i, j );
+				if ( b != NULL ) {
+					// Valid VC exists
+					assert(b->FlitsRemaining() > 0);
+					b->SetTarget( vc );
+					b->sendFlit();
+					RC->Remove( b );
+				}
 			}
 		}
 	}

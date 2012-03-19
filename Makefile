@@ -6,7 +6,7 @@ HEADERS=Global.h
 SOURCES=Flit.cc \
 		Packet.cc \
 		EventQueue.cc \
-		Buffer.cc \
+		VirtualChannel.cc \
 		InputBuffer.cc \
 		OutputBuffer.cc \
 		RouteComputation.cc \

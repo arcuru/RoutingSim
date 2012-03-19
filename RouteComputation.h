@@ -10,17 +10,21 @@ class RouteComputation : public EventTarget
 
 		void setAddr ( Address a );
 		void setObuf ( Direction edge, OutputBuffer* ob );
-		void Insert ( InputBuffer* ib, Direction d );
 		void ProcessEvent ( Event e );
-		InputBuffer* getNext ( size_t dir ) const;
-		void Remove ( InputBuffer* ib );
+		VirtualChannel* getNext ( size_t dir, size_t c ) const ;
+		void Remove ( VirtualChannel* vc  );
 
 	protected:
 
 	private:
+		void Insert ( VirtualChannel* vc, Direction d, size_t c );
+		void _Remove ( VirtualChannel* vc, VirtualChannel* arr[5][5] );
+
 		Address addr;          //!< Address of router
-		OutputBuffer* obuf[5]; //!< Pointers to all OutputBuffers
-		InputBuffer* ibuf[5][5]; //!< Pointer to InputBuffers that desire each OutputBuffer
+		VirtualChannel* ovc_xy[5]; //!< Pointers to output XY VC's
+		VirtualChannel* ivc_xy[5][5]; //!< Pointer to InputBuffers that desire each OutputBuffer
+		VirtualChannel* ovc_ad[5]; //!< Pointers to output VC's for adaptive
+		VirtualChannel* ivc_ad[5][5]; //!< Pointer to input VC's that desire each adaptive output VC
 };
 
 

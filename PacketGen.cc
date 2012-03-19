@@ -4,6 +4,8 @@ PacketGen::PacketGen ( )
 {
 	ibuf = new InputBuffer(32);
 	obuf = new OutputBuffer(32);
+	ibuf->getVC( 0 )->setType( VC_INJ );
+	obuf->getVC( 0 )->setType( VC_EJ );
 	packets_out = 0;
 	packets_sent = 0;
 	packets_blocked = 0;
@@ -14,6 +16,8 @@ PacketGen::PacketGen ( Address setAddress )
 	SetAddr( setAddress );
 	ibuf = new InputBuffer(32);
 	obuf = new OutputBuffer(32);
+	ibuf->getVC( 0 )->setType( VC_INJ );
+	obuf->getVC( 0 )->setType( VC_EJ );
 	packets_out = 0;
 	packets_sent = 0;
 	packets_blocked = 0;
@@ -98,12 +102,13 @@ void PacketGen::GenPacket ( )
 	Packet* p = new Packet( dest, addr, 64 );
 
 	// Add packet to output buffer
+	VirtualChannel* vc = ibuf->getVC( 0 );
 	packet_injections++;
-	if ( p->GetSize() <= 32 - ibuf->FlitsRemaining() ) {
-		if ( ibuf->FlitsRemaining() == 0) { // For now only insert to empty buffer
+	if ( p->GetSize() <= vc->Size() - vc->FlitsRemaining() ) {
+		if ( vc->FlitsRemaining() == 0) { // For now only insert to empty buffer
 			for (size_t i = 0; i < p->GetSize(); i++) {
 				Event e = { DATA, p->GetFlit( i ), this };
-				ibuf->ProcessEvent( e ); // Don't wait before inserting
+				vc->ProcessEvent( e ); // Don't wait before inserting
 			}
 			packets_sent++;
 		}
@@ -135,13 +140,13 @@ void PacketGen::RandomGenPacket ( double chances )
  */
 void PacketGen::Process ( )
 {
-	if (obuf->FlitsRemaining() != 0) {
-		assert(1 == obuf->FlitsRemaining());
-		Packet* p = obuf->GetFlit()->getPacket();
-		assert(p->GetX() == addr.x);
-		assert(p->GetY() == addr.y);
-		obuf->ProcessBuffer();
-		//delete p;
+	VirtualChannel* vc = obuf->getVC( 0 );
+	if ( vc->FlitsRemaining() != 0 ) {
+		assert( 1 == vc->FlitsRemaining() );
+		Packet* p = vc->GetPacket();
+		assert( p->GetX() == addr.x );
+		assert( p->GetY() == addr.y );
+		vc->PopFlit();
 		packets_out++;
 		packet_ejections++;
 	}

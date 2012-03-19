@@ -58,8 +58,8 @@ void RunSimulation( uint32_t simulation_end, double injection_chance )
 	//srand(time(NULL));
 
 	// Initialize network settings
-	NInfo.width = 8;
-	NInfo.height = 8;
+	NInfo.width = 2;
+	NInfo.height = 2;
 	NInfo.chance = injection_chance;
 	NInfo.dest_func = RAND;
 

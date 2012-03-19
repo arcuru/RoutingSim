@@ -59,7 +59,7 @@ extern NetworkInfo NInfo;
 #include "Packet.h"
 #include "EventTarget.h"
 #include "EventQueue.h"
-#include "Buffer.h"
+#include "VirtualChannel.h"
 #include "OutputBuffer.h"
 #include "InputBuffer.h"
 #include "RouteComputation.h"

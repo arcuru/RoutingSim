@@ -3,16 +3,29 @@
 
 InputBuffer::InputBuffer ()
 {
-	obuf = NULL;
+	channel_count = 2;
+	vc = new VirtualChannel[channel_count];
+	for (size_t i = 0; i < channel_count; i++) {
+		vc[i].setSize( 4 );
+		vc[i].setType( VC_IN );
+		vc[i].setID( i );
+	}
 }
 
-InputBuffer::InputBuffer ( size_t entries ) : Buffer(entries)
+InputBuffer::InputBuffer ( size_t entries )
 {
-	obuf = NULL;
+	channel_count = 2;
+	vc = new VirtualChannel[channel_count];
+	for (size_t i = 0; i < channel_count; i++) {
+		vc[i].setSize( entries );
+		vc[i].setType( VC_IN );
+		vc[i].setID( i );
+	}
 }
 
 InputBuffer::~InputBuffer ()
 {
+	delete [] vc;
 }
 
 /** setRC
@@ -22,7 +35,9 @@ InputBuffer::~InputBuffer ()
  */
 void InputBuffer::setRC ( RouteComputation* rcomp )
 {
-	RC = rcomp;
+	for (size_t i = 0; i < channel_count; i++) {
+		vc[i].setRC( rcomp );
+	}
 }
 
 /** WriteBack
@@ -32,7 +47,9 @@ void InputBuffer::setRC ( RouteComputation* rcomp )
  */
 void InputBuffer::WriteBack ( OutputBuffer* write_back )
 {
-	obuf = write_back;
+	for (size_t i = 0; i < channel_count; i++) {
+		vc[i].setWB( write_back->getVC( i ) );
+	}
 	return ;
 }
 
@@ -40,22 +57,18 @@ void InputBuffer::WriteBack ( OutputBuffer* write_back )
  *  overwrites Buffer::PopFlit for credit based flow control
  *
  */
+/*
 void InputBuffer::PopFlit ( )
 {
-	// Send credit back if we are connected to somewhere
-	if ( obuf ) {
-		uint32_t* i = new uint32_t(1); //Send back 1 credit
-		Event e = {CREDIT, i, this};
-		Global_Queue.Add(e, obuf, Global_Time+1);
-	}
-	Buffer::PopFlit();
 }
+*/
 
 /** ProcessEvent
  *  overwrites Buffer::ProcessEvent to set up route computation
  *
  *  @arg e Event to be processed
  */
+/*
 void InputBuffer::ProcessEvent ( Event e )
 {
 	assert( DATA == e.t );
@@ -68,5 +81,18 @@ void InputBuffer::ProcessEvent ( Event e )
 		Global_Queue.Add( q, RC, Global_Time+1 );
 	}
 	Buffer::ProcessEvent( e );
+}
+*/
+
+/** getVC
+ *  retrieve a pointer to the requisite virtual channel
+ *
+ *  @arg channel  VC identifer to return
+ *  @return  Pointer to virtual channel specified in input
+ */
+VirtualChannel* InputBuffer::getVC ( size_t channel ) const
+{
+	assert( channel < 2 );
+	return &vc[channel];
 }
 

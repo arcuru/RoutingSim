@@ -2,24 +2,29 @@
 
 OutputBuffer::OutputBuffer ()
 {
-	t = NULL;
-	available_space = 4;
-	p = NULL;
-	ib = NULL;
-	flits_sent = 0;
+	channel_count = 2;
+	vc = new VirtualChannel[channel_count];
+	for (size_t i = 0; i < channel_count; i++) {
+		vc[i].setSize( 4 );
+		vc[i].setType( VC_OUT );
+		vc[i].setID( i );
+	}
 }
 
-OutputBuffer::OutputBuffer ( size_t entries ) : Buffer(entries)
+OutputBuffer::OutputBuffer ( size_t entries )
 {
-	t = NULL;
-	available_space = 4;
-	p = NULL;
-	ib = NULL;
-	flits_sent = 0;
+	channel_count = 2;
+	vc = new VirtualChannel[channel_count];
+	for (size_t i = 0; i < channel_count; i++) {
+		vc[i].setSize( entries );
+		vc[i].setType( VC_OUT );
+		vc[i].setID( i );
+	}
 }
 
 OutputBuffer::~OutputBuffer ()
 {
+	delete [] vc;
 }
 
 /** ProcessBuffer
@@ -28,29 +33,8 @@ OutputBuffer::~OutputBuffer ()
  */
 void OutputBuffer::ProcessBuffer (  )
 {
-	if (FlitsRemaining() == 0)
-		return;
-	if ( 0 == available_space )
-		return;
-	if ( GetFlit()->isHead() ) {
-		// Have to wait for empty corresponding input buffer
-		if ( 4 != available_space ) {
-			return ;
-		}
-	}
-	if ( NULL != t ) {
-		Event e = {DATA, GetFlit(), this};
-		Global_Queue.Add(e, t, Global_Time+1); 
-		available_space--;
-	}
-	PopFlit();
-	flits_sent++;
-	if ( flits_sent == p->GetSize() ) {
-		assert( FlitsRemaining() == 0 );
-		p = NULL;
-		ib = NULL;
-		flits_sent = 0;
-		//cout << "Cleared obuf" << endl;
+	for (size_t i = 0; i < channel_count; i++) {
+		vc[i].sendFlit();
 	}
 	return ;
 }
@@ -60,9 +44,11 @@ void OutputBuffer::ProcessBuffer (  )
  *
  *  @arg target The connected input buffer
  */
-void OutputBuffer::Connect ( EventTarget* target )
+void OutputBuffer::Connect ( InputBuffer* target )
 {
-	t = target;
+	for (size_t i = 0; i < channel_count; i++) {
+		vc[i].SetTarget( target->getVC( i ) );
+	}
 	return ;
 }
 
@@ -71,6 +57,7 @@ void OutputBuffer::Connect ( EventTarget* target )
  *
  *  @arg e  Event to process
  */
+/*
 void OutputBuffer::ProcessEvent ( Event e )
 {
 	if ( CREDIT == e.t ) {
@@ -92,23 +79,40 @@ void OutputBuffer::ProcessEvent ( Event e )
 		Buffer::InsertFlit( (Flit*)e.d );
 	}
 }
+*/
 
 /** GetPrev
  *  returns a pointer to the InputBuffer that is currently sending to this
  *  OutputBuffer
  *
  */
+/*
 InputBuffer* OutputBuffer::GetPrev ( ) const
 {
 	return ib;
 }
+*/
 
 /** GetPacket
  *  returns a pointer to the Packet that is currently in this buffer
  *
  */
+/*
 Packet* OutputBuffer::GetP ( ) const
 {
 	return p;
+}
+*/
+
+/** getVC
+ *  retrieve a pointer to the requisite virtual channel
+ *
+ *  @arg channel  VC identifer to return
+ *  @return  Pointer to virtual channel specified in input
+ */
+VirtualChannel* OutputBuffer::getVC ( size_t channel ) const
+{
+	assert( channel < 2 );
+	return &vc[channel];
 }
 

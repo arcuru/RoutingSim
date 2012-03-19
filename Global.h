@@ -42,8 +42,7 @@ typedef struct Event {
 typedef enum {
 	RAND,
 	BIT_REVERSE,
-	BIT_COMP,
-	CROSS
+	BIT_COMP
 } Destination_Function; //!< Function for generating destinations
 
 typedef struct {

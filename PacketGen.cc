@@ -86,9 +86,6 @@ void PacketGen::GenPacket ( )
 				break;
 
 			case BIT_COMP:	
-				break;
-
-			case CROSS:	
 				dest.x = NInfo.width - 1 - addr.x;
 				dest.y = NInfo.height - 1 - addr.y;
 				break;

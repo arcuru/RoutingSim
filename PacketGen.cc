@@ -141,18 +141,16 @@ void PacketGen::Process ( )
 		assert( p->GetY() == addr.y );
 		if (flits_received == p->GetSize()) {
 			flits_received = 0;
-			vc->PopFlit();
+			vc->sendFlit();
 			delete p;
 			cout << "Got full packet at (" << addr.x << ", " << addr.y << ")" << endl;
 		}
 		else
-			vc->PopFlit();
+			vc->sendFlit();
 		assert( vc->FlitsRemaining() == 0 );
 		packets_out++;
 		packet_ejections++;
 	}
 	return ;
 }
-
-
 

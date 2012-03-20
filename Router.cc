@@ -164,7 +164,7 @@ void Router::Process ( )
 					}
 				}
 			}
-			else {
+			else if ( vc->isReady() ) {
 				//cout << "3 ";
 				// Need to see if there is a valid packet waiting to be routed here
 				InputChannel* b = RC->getNext( i, j );
@@ -177,6 +177,8 @@ void Router::Process ( )
 					RC->Remove( b );
 				}
 			}
+			else
+				assert(false);
 		}
 	}
 	//cout << endl;

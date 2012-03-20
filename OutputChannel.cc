@@ -143,10 +143,13 @@ bool OutputChannel::isWorking ( ) const
 {
 	if ( FlitsRemaining() > 0 )
 		return true;
-	if ( NULL == target )
+	else if ( NULL == target )
 		return false;
-	if ( available_space != target->Size() )
+	else if ( available_space != target->Size() )
 		return true;
-	return false;
+	else if ( NULL != cur_packet && flits_sent < cur_packet->GetSize() )
+		return true;
+	else
+		return false;
 }
 

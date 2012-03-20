@@ -133,19 +133,21 @@ void PacketGen::RandomGenPacket ( double chances )
  */
 void PacketGen::Process ( )
 {
-	VirtualChannel* vc = obuf->getOC( 0 );
+	OutputChannel* vc = obuf->getOC( 0 );
 	if ( vc->FlitsRemaining() != 0 ) {
 		flits_received++;
 		Packet* p = vc->GetPacket();
 		assert( p->GetX() == addr.x );
 		assert( p->GetY() == addr.y );
 		if (flits_received == p->GetSize()) {
-			for (size_t i = 0; i < p->GetSize(); i++)
-				vc->PopFlit();
-			assert( vc->FlitsRemaining() == 0 );
 			flits_received = 0;
-			//cout << "Got full packet at (" << addr.x << ", " << addr.y << ")" << endl;
+			vc->PopFlit();
+			delete p;
+			cout << "Got full packet at (" << addr.x << ", " << addr.y << ")" << endl;
 		}
+		else
+			vc->PopFlit();
+		assert( vc->FlitsRemaining() == 0 );
 		packets_out++;
 		packet_ejections++;
 	}

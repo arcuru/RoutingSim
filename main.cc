@@ -58,10 +58,10 @@ void RunSimulation( uint32_t simulation_end, double injection_chance )
 	srand(time(NULL));
 
 	// Initialize network settings
-	NInfo.width = 6;
-	NInfo.height = 6;
+	NInfo.width = 8;
+	NInfo.height = 8;
 	NInfo.chance = injection_chance;
-	NInfo.dest_func = BIT_COMP;
+	NInfo.dest_func = RAND;
 
 	// Create Router and packet generators
 	Router* sim = new Router[NInfo.width * NInfo.height];

@@ -71,5 +71,7 @@ extern EventQueue Global_Queue; //!< Single global queue handling all events
 
 extern uint32_t packet_injections;
 extern uint32_t packet_ejections;
+extern uint32_t packets_blocked;
+extern uint32_t packets_sent;
 
 #endif

@@ -10,6 +10,7 @@ class InputBuffer
 		InputBuffer ( size_t entries );
 		~InputBuffer ();
 
+		void setAddr ( Address newAddr );
 		void setRC ( RouteComputation* rcomp );
 		void WriteBack ( OutputBuffer* write_back );
 		InputChannel* getIC ( size_t channel ) const ;

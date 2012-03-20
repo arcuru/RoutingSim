@@ -54,12 +54,12 @@ int main ( int argc, char** argv )
 void RunSimulation( uint32_t simulation_end, double injection_chance )
 {
 	// Seed random number generator
-	srand(4);
-	//srand(time(NULL));
+	//srand(4);
+	srand(time(NULL));
 
 	// Initialize network settings
-	NInfo.width = 2;
-	NInfo.height = 2;
+	NInfo.width = 6;
+	NInfo.height = 6;
 	NInfo.chance = injection_chance;
 	NInfo.dest_func = BIT_COMP;
 

@@ -3,7 +3,7 @@
 RouteComputation::RouteComputation ()
 {
 	for (size_t i=0; i < 5; i++) {
-		for (size_t j = 0; j < 5; j++) {
+		for (size_t j = 0; j < 9; j++) {
 			ivc_xy[i][j] = NULL;
 			ivc_ad[i][j] = NULL;
 		}
@@ -14,7 +14,7 @@ RouteComputation::RouteComputation ( Address a )
 {
 	addr = a;
 	for (size_t i=0; i < 5; i++) {
-		for (size_t j = 0; j < 5; j++) {
+		for (size_t j = 0; j < 9; j++) {
 			ivc_xy[i][j] = NULL;
 			ivc_ad[i][j] = NULL;
 		}
@@ -52,14 +52,14 @@ void RouteComputation::Insert ( InputChannel* vc, Direction d, size_t c )
 		case 0:	
 			while ( NULL != ivc_xy[d][i] )
 				i++;
-			assert( i < 5 );
+			assert( i < 9 );
 			ivc_xy[d][i] = vc;
 			break;
 
 		case 1:	
 			while ( NULL != ivc_ad[d][i] )
 				i++;
-			assert( i < 5 );
+			assert( i < 9 );
 			ivc_ad[d][i] = vc;
 			break;
 
@@ -88,42 +88,67 @@ void RouteComputation::ProcessEvent ( Event e )
 	//cout << "Addr: (" << addr.x << ", " << addr.y << ")" << endl;
 
 	// Route packet adaptively
-	if ( addr.x > p->GetX() ) {
-		if ( addr.x - (NInfo.width/2) > p->GetX() )
-			Insert( vc, EAST, 1); 
-		else
-			Insert( vc, WEST, 1 ); 
-	}
-	else if ( addr.x < p->GetX() ) {
-		if ( addr.x + (NInfo.width/2) < p->GetX() )
-			Insert( vc, WEST, 1 );
-		else
+	bool xfin = false;
+	bool yfin = false;
+	size_t tmp = p->GetX();
+	if ( tmp < addr.x ) {
+		tmp += NInfo.width/2;
+		if ( tmp < addr.x ) {
 			Insert( vc, EAST, 1 );
+			Insert( vc, EAST, 0 );
+		}
+		else {
+			Insert( vc, WEST, 1 );
+			Insert( vc, WEST, 0 );
+		}
 	}
-	if ( addr.y > p->GetY() ) {
-		if ( addr.y - (NInfo.height/2) > p->GetY() )
-			Insert( vc, NORTH, 1 ); 
-		else
-			Insert( vc, SOUTH, 1 ); 
+	else if ( tmp > addr.x ) {
+		tmp -= NInfo.width/2;
+		if ( tmp > addr.x ) {
+			Insert( vc, WEST, 1 );
+			Insert( vc, WEST, 0 );
+		}
+		else {
+			Insert( vc, EAST, 1 );
+			Insert( vc, EAST, 0 );
+		}
 	}
-	else if ( addr.y < p->GetY() ) {
-		if ( addr.y + (NInfo.height/2) < p->GetY() )
-			Insert( vc, SOUTH, 1 );
-		else
-			Insert( vc, NORTH, 1 );
-	}
-	
-	// Route packet for XY escape network
-	if ( p->GetX() < addr.x)
-		Insert( vc, WEST, 0 ); 
-	else if ( p->GetX() > addr.x )
-		Insert( vc, EAST, 0 ); 
-	else if ( p->GetY() < addr.y )
-		Insert( vc, SOUTH, 0 ); 
-	else if ( p->GetY() > addr.y )
-		Insert( vc, NORTH, 0 ); 
 	else
+		xfin = true;
+
+	tmp = p->GetY();
+	if ( tmp < addr.y ) {
+		tmp += NInfo.height/2;
+		if ( tmp < addr.y ) {
+			Insert( vc, NORTH, 1 );
+			if ( xfin )
+				Insert( vc, NORTH, 0 );
+		}
+		else {
+			Insert( vc, SOUTH, 1 );
+			if ( xfin )
+				Insert( vc, SOUTH, 0 );
+		}
+	}
+	else if ( tmp > addr.y ) {
+		tmp -= NInfo.height/2;
+		if ( tmp > addr.y ) {
+			Insert( vc, SOUTH, 1 );
+			if ( xfin )
+				Insert( vc, SOUTH, 0 );
+		}
+		else {
+			Insert( vc, NORTH, 1 );
+			if ( xfin )
+				Insert( vc, NORTH, 0 );
+		}
+	}
+	else
+		yfin = true;
+
+	if ( xfin && yfin )
 		Insert( vc, HERE, 0 ); 
+
 }
 
 /** getNext
@@ -159,23 +184,23 @@ void RouteComputation::Remove ( InputChannel* vc )
  *  @arg vc Pointer to VirtualChannel that is no longer to be routed
  *  @arg arr Poniter to array of VC's that it should be removed from
  */
-void RouteComputation::_Remove ( InputChannel* vc, InputChannel* arr[5][5] )
+void RouteComputation::_Remove ( InputChannel* vc, InputChannel* arr[5][9] )
 {
 	assert( NULL != vc );
 	
 	for (size_t i = 0; i < 5; i++) {
 		// Search for vc
 		size_t j;
-		for (j = 0; j < 5; j++) {
+		for (j = 0; j < 9; j++) {
 			if ( NULL == arr[i][j] )
 				break;
 			if ( vc == arr[i][j] ) {
 				// Move everything above it down
 				arr[i][j] = NULL;
-				for (size_t k = j+1; k < 5; k++) {
+				for (size_t k = j+1; k < 9; k++) {
 					arr[i][k-1] = arr[i][k];
 				}
-				arr[i][4] = NULL;
+				arr[i][8] = NULL;
 				break;
 			}
 		}

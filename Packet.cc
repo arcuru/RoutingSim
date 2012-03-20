@@ -38,6 +38,7 @@ Packet::Packet ( Address destination, Address origin, size_t packet_size )
 		flits[i].setHead( false );
 	}
 	created = Global_Time;
+	route_pointer = 0;
 }
 
 Packet::~Packet ()
@@ -126,5 +127,17 @@ uint32_t Packet::GetData ( ) const
 uint32_t Packet::GetCreated ( ) const
 {
 	return created;
+}
+
+/** AddRouter
+ *  adds a router to the list of routers we have traversed through
+ *
+ *  @arg addr Address of a router
+ */
+void Packet::AddRouter ( Address addr )
+{
+	assert( route_pointer < 16 );
+	route[route_pointer] = addr;
+	route_pointer++;
 }
 

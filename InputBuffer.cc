@@ -23,6 +23,18 @@ InputBuffer::~InputBuffer ()
 	delete [] ic;
 }
 
+/** setAddr
+ *  saved the address of this router to each of the InputChannels
+ *
+ *  @arg newAddr Address of current router
+ */
+void InputBuffer::setAddr ( Address newAddr )
+{
+	for (size_t i = 0; i < channel_count; i++) {
+		ic[i].setAddr( newAddr );
+	}
+}
+
 /** setRC
  *  saved a pointer to the RouteComputation component
  *

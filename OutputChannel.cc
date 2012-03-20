@@ -60,6 +60,8 @@ void OutputChannel::sendFlit ( )
 	if ( FlitsRemaining() == 0 || 0 == available_space )
 		return;
 	assert( NULL != target );
+	if ( GetFlit()->isHead() && target->Size() != available_space )
+		return;
 	Event e = {DATA, GetFlit(), this};
 	Global_Queue.Add(e, target, Global_Time+1); 
 	available_space--;
@@ -77,6 +79,16 @@ void OutputChannel::sendFlit ( )
 void OutputChannel::setTarget ( InputChannel* t )
 {
 	target = t;
+}
+
+/** getTarget
+ *  gets the route for the current packet
+ *
+ *  @return Pointer to the target InputChannel
+ */
+InputChannel* OutputChannel::getTarget (  ) const
+{
+	return target;
 }
 
 /** setWB

@@ -59,6 +59,8 @@ void Router::SetAddr ( Address newAddress )
 	addr = newAddress;
 	pgen->SetAddr(addr);
 	RC->setAddr(addr);
+	for (size_t i=0; i < 5; i++)
+		ibuf[i]->setAddr( addr );
 }
 
 /** GetTarget
@@ -153,14 +155,14 @@ void Router::Process ( )
 			else if ( vc->isWorking() == true ) {
 				//cout << "2 ";
 				// In the process of moving packet, send individual flit
-				if (Global_Time == 29) {
-					Global_Time += 50;
-					Global_Time -= 50;
-				}
 				InputChannel* b = vc->getWB();
-				if ( b->GetPacket() == vc->GetPacket() )
-					if ( b->FlitsRemaining() > 0 && vc->FlitsRemaining() < vc->Size() ) 
-						b->sendFlit();
+				if ( b->GetPacket() == vc->GetPacket() ) {
+					if ( b->FlitsRemaining() > 0 && vc->FlitsRemaining() < vc->Size() ) {
+						//assert( b->GetFlit()->isHead() == false );
+						if ( b->GetFlit()->isHead() == false )
+							b->sendFlit();
+					}
+				}
 			}
 			else {
 				//cout << "3 ";
@@ -169,6 +171,7 @@ void Router::Process ( )
 				if ( b != NULL ) {
 					// Valid VC exists
 					assert(b->FlitsRemaining() > 0);
+					assert( b->GetFlit()->isHead() );
 					b->setTarget( vc );
 					b->sendFlit();
 					RC->Remove( b );

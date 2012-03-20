@@ -16,6 +16,7 @@ class Packet
 		bool GetHead ( ) const;
 		uint32_t GetData ( ) const;
 		uint32_t GetCreated ( ) const;
+		void AddRouter ( Address addr );
 
 	protected:
 
@@ -24,6 +25,8 @@ class Packet
 		size_t flit_count; //!< Number of flits contained in packet
 		uint64_t info;     //!< 8 bytes of information that comprise the packet
 		uint32_t created;
+		Address route[16];
+		size_t route_pointer;
 };
 
 

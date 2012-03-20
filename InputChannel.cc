@@ -5,6 +5,8 @@ InputChannel::InputChannel ( )
 	RC = NULL;
 	target = NULL;
 	wb = NULL;
+	addr.x = 10;
+	addr.y = 10;
 }
 
 InputChannel::InputChannel ( size_t entries ) : VirtualChannel( entries )
@@ -12,10 +14,22 @@ InputChannel::InputChannel ( size_t entries ) : VirtualChannel( entries )
 	RC = NULL;
 	target = NULL;
 	wb = NULL;
+	addr.x = 10;
+	addr.y = 10;
 }
 
 InputChannel::~InputChannel ()
 {
+}
+
+/** setAddr
+ *  saved the address of the router this belongs to
+ *
+ *  @arg newAddress Address of current router
+ */
+void InputChannel::setAddr ( Address newAddress )
+{
+	addr = newAddress;
 }
 
 /** setRC
@@ -42,6 +56,7 @@ void InputChannel::ProcessEvent ( Event e )
 	if ( ((Flit*)e.d)->isHead() ) {
 		// We've received a head flit
 		assert( FlitsRemaining() == 1); // No other flits can be present
+		GetPacket()->AddRouter( addr );
 
 		schedRC();
 	}
@@ -77,6 +92,16 @@ void InputChannel::sendFlit ( )
 void InputChannel::setTarget ( OutputChannel* t )
 {
 	target = t;
+}
+
+/** getTarget
+ *  gets the route for the current packet
+ *
+ *  @return Pointer to the target InputChannel
+ */
+OutputChannel* InputChannel::getTarget (  ) const
+{
+	return target;
 }
 
 /** setWB

@@ -17,11 +17,11 @@ class RouteComputation : public EventTarget
 
 	private:
 		void Insert ( InputChannel* vc, Direction d, size_t c );
-		void _Remove ( InputChannel* vc, InputChannel* arr[5][5] );
+		void _Remove ( InputChannel* vc, InputChannel* arr[5][9] );
 
 		Address addr;          //!< Address of router
-		InputChannel* ivc_xy[5][5]; //!< Pointer to InputBuffers that desire each OutputBuffer
-		InputChannel* ivc_ad[5][5]; //!< Pointer to input VC's that desire each adaptive output VC
+		InputChannel* ivc_xy[5][9]; //!< Pointer to InputBuffers that desire each OutputBuffer
+		InputChannel* ivc_ad[5][9]; //!< Pointer to input VC's that desire each adaptive output VC
 };
 
 

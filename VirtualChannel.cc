@@ -89,6 +89,7 @@ void VirtualChannel::InsertPacket ( Packet* p )
 void VirtualChannel::PopFlit ( )
 {
 	assert( buf_valid < buf_size ); // No valid flits
+	buf[buf_valid] = NULL;
 	buf_valid++;
 	buf_valid %= buf_size;
 	if ( buf_valid == buf_index ) {

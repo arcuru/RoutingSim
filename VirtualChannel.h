@@ -23,7 +23,6 @@ class VirtualChannel : public EventTarget
 		size_t buf_index;   //!< Pointer to next empty buffer space
 		size_t buf_valid;   //!< Pointer to oldest valid data
 		size_t buf_size;    //!< Size of buffer
-		size_t flits_sent;         //!< Keeps track of the number of flits sent
 		Packet* cur_packet;    //!< Saved pointer to current packet
 
 	private:

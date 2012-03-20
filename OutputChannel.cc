@@ -60,7 +60,11 @@ bool OutputChannel::sendFlit ( )
 {
 	if ( FlitsRemaining() == 0 || 0 == available_space )
 		return false;
-	assert( NULL != target );
+	if ( NULL == target ) {
+		flits_sent++;
+		PopFlit();
+		return true;
+	}
 	if ( GetFlit()->isHead() && target->Size() != available_space )
 		return false;
 	Event e = {DATA, GetFlit(), this};
@@ -143,11 +147,11 @@ bool OutputChannel::isWorking ( ) const
 {
 	if ( FlitsRemaining() > 0 )
 		return true;
+	else if ( NULL != cur_packet && flits_sent < cur_packet->GetSize() )
+		return true;
 	else if ( NULL == target )
 		return false;
 	else if ( available_space != target->Size() )
-		return true;
-	else if ( NULL != cur_packet && flits_sent < cur_packet->GetSize() )
 		return true;
 	else
 		return false;

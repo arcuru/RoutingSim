@@ -19,8 +19,9 @@ VirtualChannel::VirtualChannel ( size_t entries )
 
 VirtualChannel::~VirtualChannel ()
 {
-	if ( GetFlit()->isHead() )
-		delete cur_packet;
+	if ( FlitsRemaining() > 0 )
+		if ( GetFlit()->isHead() )
+			delete cur_packet;
 	free(buf);
 }
 

@@ -43,7 +43,8 @@ Packet::Packet ( Address destination, Address origin, size_t packet_size )
 
 Packet::~Packet ()
 {
-	delete [] flits;
+	// Too slow
+	//delete [] flits;
 }
 
 /** GetFlit

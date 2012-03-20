@@ -23,9 +23,6 @@ PacketGen::PacketGen ( Address setAddress )
 
 PacketGen::~PacketGen ()
 {
-	OutputChannel* vc = obuf->getOC( 0 );
-	if ( vc->GetPacket() != NULL )
-		delete vc->GetPacket();
 	delete ibuf;
 	delete obuf;
 }

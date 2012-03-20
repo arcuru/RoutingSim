@@ -90,10 +90,11 @@ void RouteComputation::ProcessEvent ( Event e )
 	// Route packet adaptively
 	bool xfin = false;
 	bool yfin = false;
-	size_t tmp = p->GetX();
-	if ( tmp < addr.x ) {
+	int tmp = p->GetX();
+	int addr_x = addr.x;
+	if ( tmp < addr_x ) {
 		tmp += NInfo.width/2;
-		if ( tmp < addr.x ) {
+		if ( tmp <= addr_x ) {
 			Insert( vc, EAST, 1 );
 			Insert( vc, EAST, 0 );
 		}
@@ -102,24 +103,25 @@ void RouteComputation::ProcessEvent ( Event e )
 			Insert( vc, WEST, 0 );
 		}
 	}
-	else if ( tmp > addr.x ) {
+	else if ( tmp > addr_x ) {
 		tmp -= NInfo.width/2;
-		if ( tmp > addr.x ) {
-			Insert( vc, WEST, 1 );
-			Insert( vc, WEST, 0 );
-		}
-		else {
+		if ( tmp <= addr_x ) {
 			Insert( vc, EAST, 1 );
 			Insert( vc, EAST, 0 );
+		}
+		else {
+			Insert( vc, WEST, 1 );
+			Insert( vc, WEST, 0 );
 		}
 	}
 	else
 		xfin = true;
 
 	tmp = p->GetY();
-	if ( tmp < addr.y ) {
+	int addr_y = addr.y;
+	if ( tmp < addr_y ) {
 		tmp += NInfo.height/2;
-		if ( tmp < addr.y ) {
+		if ( tmp <= addr_y ) {
 			Insert( vc, NORTH, 1 );
 			if ( xfin )
 				Insert( vc, NORTH, 0 );
@@ -130,17 +132,17 @@ void RouteComputation::ProcessEvent ( Event e )
 				Insert( vc, SOUTH, 0 );
 		}
 	}
-	else if ( tmp > addr.y ) {
+	else if ( tmp > addr_y ) {
 		tmp -= NInfo.height/2;
-		if ( tmp > addr.y ) {
-			Insert( vc, SOUTH, 1 );
-			if ( xfin )
-				Insert( vc, SOUTH, 0 );
-		}
-		else {
+		if ( tmp <= addr_y ) {
 			Insert( vc, NORTH, 1 );
 			if ( xfin )
 				Insert( vc, NORTH, 0 );
+		}
+		else {
+			Insert( vc, SOUTH, 1 );
+			if ( xfin )
+				Insert( vc, SOUTH, 0 );
 		}
 	}
 	else

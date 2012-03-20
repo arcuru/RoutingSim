@@ -32,6 +32,8 @@ void OutputChannel::ProcessEvent ( Event e )
 		case CREDIT:
 			available_space += *(size_t*)e.d;
 			delete (size_t*)e.d;
+			if ( target->Size() == available_space && cur_packet->GetSize() == flits_sent )
+				cur_packet = NULL;
 			break;
 
 		case DATA:
@@ -63,6 +65,8 @@ bool OutputChannel::sendFlit ( )
 	if ( NULL == target ) {
 		flits_sent++;
 		PopFlit();
+		if ( flits_sent == cur_packet->GetSize() )
+			cur_packet = NULL;
 		return true;
 	}
 	if ( GetFlit()->isHead() && target->Size() != available_space )

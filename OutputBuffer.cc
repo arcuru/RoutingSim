@@ -7,6 +7,7 @@ OutputBuffer::OutputBuffer ()
 	for (size_t i = 0; i < channel_count; i++) {
 		oc[i].setSize( 1 );
 	}
+	last_sent = 0;
 }
 
 OutputBuffer::OutputBuffer ( size_t entries )
@@ -16,6 +17,7 @@ OutputBuffer::OutputBuffer ( size_t entries )
 	for (size_t i = 0; i < channel_count; i++) {
 		oc[i].setSize( entries );
 	}
+	last_sent = 0;
 }
 
 OutputBuffer::~OutputBuffer ()
@@ -29,10 +31,13 @@ OutputBuffer::~OutputBuffer ()
  */
 void OutputBuffer::ProcessBuffer (  )
 {
-	for (size_t i = 0; i < channel_count; i++) {
-		if (oc[i].FlitsRemaining() != 0)
-			oc[i].sendFlit();
+	size_t j;
+	for (size_t i = last_sent+1; i < channel_count+last_sent+1; i++) {
+		j = i % channel_count;
+		if ( oc[j].sendFlit() )
+			break;
 	}
+	last_sent = j;
 	return ;
 }
 

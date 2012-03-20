@@ -54,21 +54,22 @@ void OutputChannel::ProcessEvent ( Event e )
 /** sendFlit
  *  send the head flit to the target VC if necessary
  *
+ *  @return Boolean indicating whether send was successful
  */
-void OutputChannel::sendFlit ( )
+bool OutputChannel::sendFlit ( )
 {
 	if ( FlitsRemaining() == 0 || 0 == available_space )
-		return;
+		return false;
 	assert( NULL != target );
 	if ( GetFlit()->isHead() && target->Size() != available_space )
-		return;
+		return false;
 	Event e = {DATA, GetFlit(), this};
 	Global_Queue.Add(e, target, Global_Time+1); 
 	available_space--;
 	PopFlit();
 	flits_sent++;
 	assert( flits_sent <= cur_packet->GetSize() );
-	return ;
+	return true;
 }
 
 /** SetTarget

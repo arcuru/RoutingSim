@@ -19,6 +19,7 @@ class OutputBuffer
 	private:
 		OutputChannel* oc;        //!< Pointer to virtual channels
 		size_t channel_count;      //!< Total number of virtual channels
+		size_t last_sent;         //!< Saves the channel that was most recently sent
 
 };
 

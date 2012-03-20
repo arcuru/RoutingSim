@@ -11,7 +11,7 @@ class OutputChannel : public VirtualChannel
 		~OutputChannel ( );
 
 		void ProcessEvent ( Event e );
-		void sendFlit ( );
+		bool sendFlit ( );
 		void setTarget ( InputChannel* target );
 		InputChannel* getTarget ( ) const ;
 		void setWB ( InputChannel* writeback );

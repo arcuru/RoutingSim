@@ -23,6 +23,9 @@ PacketGen::PacketGen ( Address setAddress )
 
 PacketGen::~PacketGen ()
 {
+	OutputChannel* vc = obuf->getOC( 0 );
+	if ( vc->GetPacket() != NULL )
+		delete vc->GetPacket();
 	delete ibuf;
 	delete obuf;
 }
@@ -105,12 +108,15 @@ void PacketGen::GenPacket ( )
 			vc->schedRC();
 			packets_sent++;
 		}
-		else
+		else {
 			packets_blocked++;
+			delete p;
+		}
 	}
 	else {
 	//	cout << "PacketGen OutputBuffer full" << endl;
 		packets_blocked++;
+		delete p;
 	}
 	return ;
 }
@@ -145,6 +151,7 @@ void PacketGen::Process ( )
 			assert( vc->FlitsRemaining() == 0 );
 			packets_out++;
 			packet_ejections++;
+			delete p;
 		}
 	}
 	return ;

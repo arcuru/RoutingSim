@@ -6,7 +6,7 @@ class RouteComputation : public EventTarget
 	public:
 		RouteComputation ();
 		RouteComputation ( Address a );
-		~RouteComputation ();
+		virtual ~RouteComputation ();
 
 		void setAddr ( Address a );
 		void ProcessEvent ( Event e );

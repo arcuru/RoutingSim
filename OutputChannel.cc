@@ -128,13 +128,14 @@ bool OutputChannel::isReady ( ) const
 	if ( NULL == cur_packet )
 		return true;
 	// Ejection queue
-	if ( NULL == target && FlitsRemaining() < buf_size )
+	else if ( NULL == target && FlitsRemaining() < buf_size )
 		return true;
-	if ( cur_packet->GetSize() == flits_sent && available_space == target->Size() ) {
+	else if ( cur_packet->GetSize() == flits_sent && available_space == target->Size() ) {
 		assert( FlitsRemaining() == 0 );
 		return true;
 	}
-	return false;
+	else
+		return false;
 }
 
 /** isWorking
@@ -147,7 +148,9 @@ bool OutputChannel::isWorking ( ) const
 {
 	if ( FlitsRemaining() > 0 )
 		return true;
-	else if ( NULL != cur_packet && flits_sent < cur_packet->GetSize() )
+	else if ( NULL == cur_packet )
+		return false;
+	else if ( flits_sent < cur_packet->GetSize() )
 		return true;
 	else if ( NULL == target )
 		return false;

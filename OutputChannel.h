@@ -8,7 +8,7 @@ class OutputChannel : public VirtualChannel
 	public:
 		OutputChannel ( );
 		OutputChannel ( size_t entries );
-		~OutputChannel ( );
+		virtual ~OutputChannel ( );
 
 		void ProcessEvent ( Event e );
 		bool sendFlit ( );

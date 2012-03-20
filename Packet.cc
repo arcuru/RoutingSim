@@ -43,6 +43,7 @@ Packet::Packet ( Address destination, Address origin, size_t packet_size )
 
 Packet::~Packet ()
 {
+	delete [] flits;
 }
 
 /** GetFlit
@@ -61,6 +62,7 @@ Flit* Packet::GetFlit ( size_t index ) const
  */
 size_t Packet::GetSize ( ) const
 {
+	assert( flit_count == 16 );
 	return flit_count;
 }
 
@@ -137,6 +139,8 @@ uint32_t Packet::GetCreated ( ) const
 void Packet::AddRouter ( Address addr )
 {
 	assert( route_pointer < 16 );
+	assert( addr.x < NInfo.width );
+	assert( addr.y < NInfo.height );
 	route[route_pointer] = addr;
 	route_pointer++;
 }

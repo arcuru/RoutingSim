@@ -26,6 +26,8 @@ Router::~Router ()
 	}
 	free(ibuf);
 	free(obuf);
+	delete pgen;
+	delete RC;
 }
 
 /** InitBuffers
@@ -137,7 +139,7 @@ void Router::Process ( )
 		obuf[i]->ProcessBuffer();
 	pgen->Process(); // Eject packets from the output queue
 
-	cout << "(" << addr.x << ", " << addr.y << ") ";
+	//cout << "(" << addr.x << ", " << addr.y << ") ";
 
 	// Start Receiving from a random side
 	size_t start = rand() % 5;
@@ -146,16 +148,16 @@ void Router::Process ( )
 		for (size_t k=start; k < 5+start; k++) {
 			size_t i = k % 5;
 			if ( HERE == i && 1 == j) {
-				cout << "0 ";
+				//cout << "0 ";
 				continue;
 			}
 			OutputChannel* vc = obuf[i]->getOC( j );
 			if ( vc->FlitsRemaining() == vc->Size() ) {
-				cout << "1 ";
+				//cout << "1 ";
 				continue; // This VC is full
 			}
 			else if ( vc->isWorking() == true ) {
-				cout << "2 ";
+				//cout << "2 ";
 				// In the process of moving packet, send individual flit
 				InputChannel* b = vc->getWB();
 				if ( b->GetPacket() == vc->GetPacket() ) {
@@ -167,7 +169,7 @@ void Router::Process ( )
 				}
 			}
 			else if ( vc->isReady() ) {
-				cout << "3 ";
+				//cout << "3 ";
 				// Need to see if there is a valid packet waiting to be routed here
 				InputChannel* b = RC->getNext( i, j );
 				if ( b != NULL ) {
@@ -183,7 +185,7 @@ void Router::Process ( )
 				assert(false);
 		}
 	}
-	cout << endl;
+	//cout << endl;
 
 	return ;
 }

@@ -74,6 +74,8 @@ void EventQueue::Clear ( )
 {
 	while (head) {
 		sll_t* tmp = head->next;
+		if ( head->payload.t == CREDIT )
+			delete (size_t*)head->payload.d;
 		free(head);
 		head = tmp;
 	}

@@ -54,14 +54,14 @@ int main ( int argc, char** argv )
 void RunSimulation( uint32_t simulation_end, double injection_chance )
 {
 	// Seed random number generator
-	//srand(4);
-	srand(time(NULL));
+	srand(4);
+	//srand(time(NULL));
 
 	// Initialize network settings
-	NInfo.width = 8;
-	NInfo.height = 8;
+	NInfo.width = 2;
+	NInfo.height = 2;
 	NInfo.chance = injection_chance;
-	NInfo.dest_func = RAND;
+	NInfo.dest_func = BIT_COMP;
 
 	// Create Router and packet generators
 	Router* sim = new Router[NInfo.width * NInfo.height];
@@ -97,6 +97,9 @@ void RunSimulation( uint32_t simulation_end, double injection_chance )
 	cout << injection_chance << endl;
 	packet_injections = 0;
 	packet_ejections = 0;
+
+	// Memory cleanup
+	delete [] sim;
 
 	return ;
 }

@@ -135,21 +135,17 @@ void PacketGen::Process ( )
 {
 	OutputChannel* vc = obuf->getOC( 0 );
 	if ( vc->FlitsRemaining() != 0 ) {
-		flits_received++;
-		Packet* p = vc->GetPacket();
-		assert( p->GetX() == addr.x );
-		assert( p->GetY() == addr.y );
-		if (flits_received == p->GetSize()) {
-			flits_received = 0;
-			vc->sendFlit();
-			delete p;
-			cout << "Got full packet at (" << addr.x << ", " << addr.y << ")" << endl;
+		if ( vc->GetPacket()->GetSize() == vc->FlitsRemaining() ) {
+			Packet* p = vc->GetPacket();
+			assert( p->GetX() == addr.x );
+			assert( p->GetY() == addr.y );
+			//cout << "Got full packet at (" << addr.x << ", " << addr.y << ")" << endl;
+			while ( vc->FlitsRemaining() != 0 )
+				vc->sendFlit();
+			assert( vc->FlitsRemaining() == 0 );
+			packets_out++;
+			packet_ejections++;
 		}
-		else
-			vc->sendFlit();
-		assert( vc->FlitsRemaining() == 0 );
-		packets_out++;
-		packet_ejections++;
 	}
 	return ;
 }

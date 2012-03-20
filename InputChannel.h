@@ -8,7 +8,7 @@ class InputChannel : public VirtualChannel
 	public:
 		InputChannel ( );
 		InputChannel ( size_t entries );
-		~InputChannel ( );
+		virtual ~InputChannel ( );
 
 		void setAddr ( Address newAddress );
 		void setRC ( RouteComputation* rcomp );

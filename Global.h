@@ -24,8 +24,8 @@ typedef enum {
 } Direction; //!< Cardinal direction for use in 2D Mesh
 
 typedef struct {
-	uint32_t x; //!< X address in mesh
-	uint32_t y; //!< Y address in mesh
+	uint8_t x; //!< X address in mesh
+	uint8_t y; //!< Y address in mesh
 } Address; //!< Address in 2D mesh
 
 typedef enum EventType {

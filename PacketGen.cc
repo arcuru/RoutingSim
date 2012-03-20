@@ -5,9 +5,8 @@ PacketGen::PacketGen ( )
 	ibuf = new InputBuffer(32);
 	obuf = new OutputBuffer(32);
 	packets_out = 0;
-	packets_sent = 0;
-	packets_blocked = 0;
 	flits_received = 0;
+	wait_til = 0;
 }
 
 PacketGen::PacketGen ( Address setAddress )
@@ -16,9 +15,8 @@ PacketGen::PacketGen ( Address setAddress )
 	ibuf = new InputBuffer(32);
 	obuf = new OutputBuffer(32);
 	packets_out = 0;
-	packets_sent = 0;
-	packets_blocked = 0;
 	flits_received = 0;
+	wait_til = 0;
 }
 
 PacketGen::~PacketGen ()
@@ -73,25 +71,28 @@ void PacketGen::GenPacket ( )
 {
 	// Generate destination address as a random address in the network
 	Address dest = addr;
-	while ( (dest.x == addr.x) && (dest.y == addr.y) ) {
-		switch ( NInfo.dest_func ) {
-			case RAND:	
+	switch ( NInfo.dest_func ) {
+		case RAND:	
+			while ( (dest.x == addr.x) && (dest.y == addr.y) ) {
 				dest.x = rand() % NInfo.width;
 				dest.y = rand() % NInfo.height;
-				break;
+			}
+			break;
 
-			case BIT_REVERSE:	
-				break;
+		case BIT_REVERSE:	
+			break;
 
-			case BIT_COMP:	
-				dest.x = NInfo.width - 1 - addr.x;
-				dest.y = NInfo.height - 1 - addr.y;
-				break;
+		case BIT_COMP:	
+			dest.x = NInfo.width - addr.x - 1;
+			dest.y = NInfo.height - addr.y - 1;
+			break;
 
-			default:	
-				break;
-		}
+		default:	
+			break;
 	}
+
+	if ( (dest.x == addr.x) && (dest.y == addr.y) )
+		return;
 
 	// Generate packet and load appropriate data
 	Packet* p = new Packet( dest, addr, 64 );
@@ -104,6 +105,7 @@ void PacketGen::GenPacket ( )
 			vc->InsertPacket( p );
 			vc->schedRC();
 			packets_sent++;
+			wait_til = Global_Time + p->GetSize();
 		}
 		else {
 			packets_blocked++;
@@ -125,8 +127,9 @@ void PacketGen::GenPacket ( )
  */
 void PacketGen::RandomGenPacket ( double chances )
 {
-	if (rand() < (chances * (double)RAND_MAX))
-		GenPacket();
+	if ( Global_Time >= wait_til )
+		if (rand() < (chances * (double)RAND_MAX))
+			GenPacket();
 	return ;
 }
 

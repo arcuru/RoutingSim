@@ -5,7 +5,7 @@ OutputBuffer::OutputBuffer ()
 	channel_count = 2;
 	oc = new OutputChannel[channel_count];
 	for (size_t i = 0; i < channel_count; i++) {
-		oc[i].setSize( 4 );
+		oc[i].setSize( 1 );
 	}
 }
 

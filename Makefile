@@ -7,6 +7,8 @@ SOURCES=Flit.cc \
 		Packet.cc \
 		EventQueue.cc \
 		VirtualChannel.cc \
+		OutputChannel.cc \
+		InputChannel.cc \
 		InputBuffer.cc \
 		OutputBuffer.cc \
 		RouteComputation.cc \

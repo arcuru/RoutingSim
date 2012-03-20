@@ -24,8 +24,8 @@ typedef enum {
 } Direction; //!< Cardinal direction for use in 2D Mesh
 
 typedef struct {
-	uint8_t x; //!< X address in mesh
-	uint8_t y; //!< Y address in mesh
+	uint32_t x; //!< X address in mesh
+	uint32_t y; //!< Y address in mesh
 } Address; //!< Address in 2D mesh
 
 typedef enum EventType {
@@ -59,6 +59,8 @@ extern NetworkInfo NInfo;
 #include "EventTarget.h"
 #include "EventQueue.h"
 #include "VirtualChannel.h"
+#include "OutputChannel.h"
+#include "InputChannel.h"
 #include "OutputBuffer.h"
 #include "InputBuffer.h"
 #include "RouteComputation.h"

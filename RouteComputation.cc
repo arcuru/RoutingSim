@@ -3,8 +3,6 @@
 RouteComputation::RouteComputation ()
 {
 	for (size_t i=0; i < 5; i++) {
-		ovc_xy[i] = NULL;
-		ovc_ad[i] = NULL;
 		for (size_t j = 0; j < 5; j++) {
 			ivc_xy[i][j] = NULL;
 			ivc_ad[i][j] = NULL;
@@ -16,8 +14,6 @@ RouteComputation::RouteComputation ( Address a )
 {
 	addr = a;
 	for (size_t i=0; i < 5; i++) {
-		ovc_xy[i] = NULL;
-		ovc_ad[i] = NULL;
 		for (size_t j = 0; j < 5; j++) {
 			ivc_xy[i][j] = NULL;
 			ivc_ad[i][j] = NULL;
@@ -39,20 +35,6 @@ void RouteComputation::setAddr ( Address a )
 	addr = a;
 }
 
-/** setObuf
- *  saves an OutputBuffer and corresponding direction for route computation
- *
- *  @arg edge Direction of the input OutputBuffer
- *  @arg ob   Pointer to OutputBuffer
- */
-void RouteComputation::setObuf ( Direction edge, OutputBuffer* ob )
-{
-	assert( NULL != ob );
-	assert( edge < 5 );
-	ovc_xy[edge] = ob->getVC( 0 );;
-	ovc_ad[edge] = ob->getVC( 1 );;
-}
-
 /** Insert
  *  sets up the given VirtualChannel to allow for routing in the given direction
  *  and output channel
@@ -61,7 +43,7 @@ void RouteComputation::setObuf ( Direction edge, OutputBuffer* ob )
  *  @arg d  Direction of possible route
  *  @arg c  Output channel, either XY or adaptive
  */
-void RouteComputation::Insert ( VirtualChannel* vc, Direction d, size_t c )
+void RouteComputation::Insert ( InputChannel* vc, Direction d, size_t c )
 {
 	assert( INVALID != d );
 
@@ -101,7 +83,9 @@ void RouteComputation::ProcessEvent ( Event e )
 	// Get pointer to packet corresponding to flit in buffer
 	Packet* p = ((Flit*)e.d)->getPacket();
 
-	VirtualChannel* vc = (VirtualChannel*)e.o;
+	InputChannel* vc = (InputChannel*)e.o;
+
+	//cout << "Addr: (" << addr.x << ", " << addr.y << ")" << endl;
 
 	// Route packet adaptively
 	if ( addr.x > p->GetX() ) {
@@ -150,7 +134,7 @@ void RouteComputation::ProcessEvent ( Event e )
  *  @arg c   Channel requested, either XY or adaptiver
  *  @return Pointer to valid InputBuffer
  */
-VirtualChannel* RouteComputation::getNext ( size_t dir, size_t c ) const
+InputChannel* RouteComputation::getNext ( size_t dir, size_t c ) const
 {
 	if ( 0 == c )
 		return ivc_xy[dir][0];
@@ -162,7 +146,7 @@ VirtualChannel* RouteComputation::getNext ( size_t dir, size_t c ) const
  *
  *  @arg vc Pointer to VirtualChannel that is no longer to be routed
  */
-void RouteComputation::Remove ( VirtualChannel* vc )
+void RouteComputation::Remove ( InputChannel* vc )
 {
 	_Remove( vc, ivc_xy );
 	_Remove( vc, ivc_ad );
@@ -175,7 +159,7 @@ void RouteComputation::Remove ( VirtualChannel* vc )
  *  @arg vc Pointer to VirtualChannel that is no longer to be routed
  *  @arg arr Poniter to array of VC's that it should be removed from
  */
-void RouteComputation::_Remove ( VirtualChannel* vc, VirtualChannel* arr[5][5] )
+void RouteComputation::_Remove ( InputChannel* vc, InputChannel* arr[5][5] )
 {
 	assert( NULL != vc );
 	

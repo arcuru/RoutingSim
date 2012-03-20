@@ -48,11 +48,6 @@ void Router::InitBuffers ( )
 		}
 		ibuf[i]->setRC( RC );
 	}
-	RC->setObuf( EAST, obuf[EAST] );
-	RC->setObuf( WEST, obuf[WEST] );
-	RC->setObuf( SOUTH, obuf[SOUTH] );
-	RC->setObuf( NORTH, obuf[NORTH] );
-	RC->setObuf( HERE, obuf[HERE] );
 }
 
 /** SetAddr
@@ -148,27 +143,33 @@ void Router::Process ( )
 	for (int j = 1; j >= 0; j--) {
 		for (size_t k=start; k < 5+start; k++) {
 			size_t i = k % 5;
-			VirtualChannel* vc = obuf[i]->getVC( j );
+			if ( HERE == i && 1 == j)
+				continue;
+			OutputChannel* vc = obuf[i]->getOC( j );
 			if ( vc->FlitsRemaining() == vc->Size() ) {
 				//cout << "1 ";
 				continue; // This VC is full
 			}
-			else if ( vc->GetPacket() != NULL ) {
+			else if ( vc->isWorking() == true ) {
 				//cout << "2 ";
 				// In the process of moving packet, send individual flit
-				VirtualChannel* b = vc->getWB();
-				assert( b->GetPacket() == vc->GetPacket() );
-				if ( b->FlitsRemaining() > 0 )
-					b->sendFlit();
+				if (Global_Time == 29) {
+					Global_Time += 50;
+					Global_Time -= 50;
+				}
+				InputChannel* b = vc->getWB();
+				if ( b->GetPacket() == vc->GetPacket() )
+					if ( b->FlitsRemaining() > 0 && vc->FlitsRemaining() < vc->Size() ) 
+						b->sendFlit();
 			}
 			else {
 				//cout << "3 ";
 				// Need to see if there is a valid packet waiting to be routed here
-				VirtualChannel* b = RC->getNext( i, j );
+				InputChannel* b = RC->getNext( i, j );
 				if ( b != NULL ) {
 					// Valid VC exists
 					assert(b->FlitsRemaining() > 0);
-					b->SetTarget( vc );
+					b->setTarget( vc );
 					b->sendFlit();
 					RC->Remove( b );
 				}

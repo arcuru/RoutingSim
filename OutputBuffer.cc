@@ -3,28 +3,24 @@
 OutputBuffer::OutputBuffer ()
 {
 	channel_count = 2;
-	vc = new VirtualChannel[channel_count];
+	oc = new OutputChannel[channel_count];
 	for (size_t i = 0; i < channel_count; i++) {
-		vc[i].setSize( 4 );
-		vc[i].setType( VC_OUT );
-		vc[i].setID( i );
+		oc[i].setSize( 4 );
 	}
 }
 
 OutputBuffer::OutputBuffer ( size_t entries )
 {
 	channel_count = 2;
-	vc = new VirtualChannel[channel_count];
+	oc = new OutputChannel[channel_count];
 	for (size_t i = 0; i < channel_count; i++) {
-		vc[i].setSize( entries );
-		vc[i].setType( VC_OUT );
-		vc[i].setID( i );
+		oc[i].setSize( entries );
 	}
 }
 
 OutputBuffer::~OutputBuffer ()
 {
-	delete [] vc;
+	delete [] oc;
 }
 
 /** ProcessBuffer
@@ -34,7 +30,8 @@ OutputBuffer::~OutputBuffer ()
 void OutputBuffer::ProcessBuffer (  )
 {
 	for (size_t i = 0; i < channel_count; i++) {
-		vc[i].sendFlit();
+		if (oc[i].FlitsRemaining() != 0)
+			oc[i].sendFlit();
 	}
 	return ;
 }
@@ -47,72 +44,20 @@ void OutputBuffer::ProcessBuffer (  )
 void OutputBuffer::Connect ( InputBuffer* target )
 {
 	for (size_t i = 0; i < channel_count; i++) {
-		vc[i].SetTarget( target->getVC( i ) );
+		oc[i].setTarget( target->getIC( i ) );
 	}
 	return ;
 }
 
-/** ProcessEvent
- *  overwrites Buffer::ProcessEvent for credit based flow control
- *
- *  @arg e  Event to process
- */
-/*
-void OutputBuffer::ProcessEvent ( Event e )
-{
-	if ( CREDIT == e.t ) {
-		available_space += *(uint32_t*)e.d;
-		delete (uint32_t*)e.d;
-	}
-	else {
-		if ( NULL == p ) {
-			// No packet saved yet, this must be a head flit
-			Flit* f = (Flit*)e.d;
-			assert( f->isHead() == true );
-			assert( 0 == flits_sent );
-			p = f->getPacket();
-			ib = (InputBuffer*)e.o;
-			assert( NULL != ib );
-			//cout << p->GetOriginX() << ", " << p->GetOriginY() << ", " << p->GetCreated() << endl;
-		}
-		assert( (InputBuffer*)e.o == ib ); // Make sure packet is from correct ibuf
-		Buffer::InsertFlit( (Flit*)e.d );
-	}
-}
-*/
-
-/** GetPrev
- *  returns a pointer to the InputBuffer that is currently sending to this
- *  OutputBuffer
- *
- */
-/*
-InputBuffer* OutputBuffer::GetPrev ( ) const
-{
-	return ib;
-}
-*/
-
-/** GetPacket
- *  returns a pointer to the Packet that is currently in this buffer
- *
- */
-/*
-Packet* OutputBuffer::GetP ( ) const
-{
-	return p;
-}
-*/
-
-/** getVC
+/** getOC
  *  retrieve a pointer to the requisite virtual channel
  *
  *  @arg channel  VC identifer to return
  *  @return  Pointer to virtual channel specified in input
  */
-VirtualChannel* OutputBuffer::getVC ( size_t channel ) const
+OutputChannel* OutputBuffer::getOC ( size_t channel ) const
 {
 	assert( channel < 2 );
-	return &vc[channel];
+	return &oc[channel];
 }
 

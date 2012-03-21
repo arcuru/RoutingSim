@@ -128,6 +128,9 @@ void PacketGen::RandomGenPacket ( double chances )
 			}
 		}
 	}
+	else if ( saved_p->GetCreated() < Global_Time - 16 ) // Increment if this packet had the chance to leave by now.
+		if (rand() < (chances * (double)RAND_MAX)) // And if we would have passed our chance test
+			packet_injections++;
 	return ;
 }
 

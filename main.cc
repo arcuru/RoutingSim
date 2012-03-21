@@ -22,7 +22,6 @@ int main ( int argc, char** argv )
 	cout << "Packet Ejections, ";
 	cout << "Offered Load, ";
 	cout << "Switch Throughput, ";
-	cout << "Packet Collisions, ";
 	cout << "Packet Latency, ";
 	cout << "Simulation Time, ";
 	cout << "Injection Chance" << endl;
@@ -93,7 +92,6 @@ void RunSimulation( uint32_t simulation_end, double injection_chance )
 	cout << packet_ejections << ", ";
 	cout << (((double)packet_injections)/(NInfo.width*NInfo.height))/simulation_end << ", ";
 	cout << ((16 * (double)packet_ejections)/(NInfo.width*NInfo.height))/simulation_end << ", ";
-	cout << "0" << ", ";
 	cout << (double)packet_latency / packet_ejections << ", ";
 	cout << simulation_end << ", ";
 	cout << injection_chance << endl;

@@ -6,6 +6,8 @@ uint32_t Global_Time;
 NetworkInfo NInfo;
 EventQueue Global_Queue;
 uint32_t packet_injections = 0;
+uint32_t packets_blocked = 0;
+uint32_t packets_sent = 0;
 uint32_t packet_ejections = 0;
 void RunSimulation( uint32_t simulation_end, double injection_chance );
 
@@ -58,8 +60,8 @@ void RunSimulation( uint32_t simulation_end, double injection_chance )
 	//srand(time(NULL));
 
 	// Initialize network settings
-	NInfo.width = 2;
-	NInfo.height = 2;
+	NInfo.width = 8;
+	NInfo.height = 8;
 	NInfo.chance = injection_chance;
 	NInfo.dest_func = BIT_COMP;
 
@@ -87,16 +89,15 @@ void RunSimulation( uint32_t simulation_end, double injection_chance )
 
 	cout << packet_injections << ", ";
 	cout << packet_ejections << ", ";
-	cout << ((double)packet_injections)/simulation_end << ", ";
-	cout << ((double)packet_ejections)/simulation_end << ", ";
-	uint32_t packet_collisions = 0;
-	for (int i=0; i < NInfo.width*NInfo.height; i++)
-		packet_collisions += sim[i].GetCollisions();
-	cout << packet_collisions << ", ";
+	cout << (((double)packet_injections)/(NInfo.width*NInfo.height))/simulation_end << ", ";
+	cout << ((16 * (double)packet_ejections)/(NInfo.width*NInfo.height))/simulation_end << ", ";
+	cout << "0" << ", ";
 	cout << simulation_end << ", ";
 	cout << injection_chance << endl;
 	packet_injections = 0;
 	packet_ejections = 0;
+	packets_blocked = 0;
+	packets_sent = 0;
 
 	// Memory cleanup
 	delete [] sim;

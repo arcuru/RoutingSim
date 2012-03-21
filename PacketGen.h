@@ -27,6 +27,7 @@ class PacketGen
 		uint32_t packets_out;    //!< Total packets that arrived in the ejection queue
 		uint32_t flits_received; //!< Number of flits received in the current packet
 		uint32_t wait_til;       //!< Saves next time we are allowed to try injecting a packet
+		Packet* saved_p;         //!< Generated packet that we are waiting to insert to the injection queue
 
 };
 

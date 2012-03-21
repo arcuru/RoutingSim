@@ -2,7 +2,6 @@
 
 Router::Router ( )
 {
-	packet_collision = 0;
 	RC = new RouteComputation();
 	InitBuffers();
 }
@@ -10,7 +9,6 @@ Router::Router ( )
 Router::Router ( Address setAddress )
 {
 	addr = setAddress;
-	packet_collision = 0;
 	RC = new RouteComputation();
 	SetAddr(addr);
 	InitBuffers();
@@ -74,16 +72,6 @@ void Router::SetAddr ( Address newAddress )
 InputBuffer* Router::GetTarget ( Direction edge )
 {
 	return ibuf[edge];
-}
-
-/** GetCollisions
- *  returns the total number of packet collisions observed by this router
- *
- * @return  Number of packet collisions
- */
-uint32_t Router::GetCollisions ( )
-{
-	return packet_collision;
 }
 
 /** Connect
@@ -160,8 +148,8 @@ void Router::Process ( )
 				//cout << "2 ";
 				// In the process of moving packet, send individual flit
 				InputChannel* b = vc->getWB();
-				if ( b->GetPacket() == vc->GetPacket() ) {
-					if ( b->FlitsRemaining() > 0 && vc->FlitsRemaining() < vc->Size() ) {
+				if ( b->FlitsRemaining() > 0 && vc->FlitsRemaining() < vc->Size() ) {
+					if ( b->GetFlit()->getPacket() == vc->GetPacket() ) {
 						//assert( b->GetFlit()->isHead() == false );
 						if ( b->GetFlit()->isHead() == false )
 							b->sendFlit();

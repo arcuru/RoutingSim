@@ -11,7 +11,6 @@ class Router
 		void SetAddr ( Address newAddress );
 		void Connect( Direction edge, Router* target);
 		InputBuffer* GetTarget ( Direction edge );
-		uint32_t GetCollisions ( );
 		void Process ( );
 
 	protected:
@@ -23,7 +22,6 @@ class Router
 		OutputBuffer** obuf;       //!< Output buffers situated in this router
 		PacketGen* pgen;           //!< Packet generator to handle I/O for whole network
 		Address addr;              //!< Address for this router
-		uint32_t packet_collision; //!< Count of packet collisions
 		RouteComputation* RC;      //!< Pointer to Route Computation component
 
 };

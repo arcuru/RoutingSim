@@ -7,6 +7,7 @@ PacketGen::PacketGen ( )
 	packets_out = 0;
 	flits_received = 0;
 	wait_til = 0;
+	saved_p = NULL;
 }
 
 PacketGen::PacketGen ( Address setAddress )
@@ -17,6 +18,7 @@ PacketGen::PacketGen ( Address setAddress )
 	packets_out = 0;
 	flits_received = 0;
 	wait_til = 0;
+	saved_p = NULL;
 }
 
 PacketGen::~PacketGen ()
@@ -69,6 +71,7 @@ OutputBuffer* PacketGen::GetEjection ( ) const
  */
 void PacketGen::GenPacket ( )
 {
+	assert( NULL == saved_p );
 	// Generate destination address as a random address in the network
 	Address dest = addr;
 	switch ( NInfo.dest_func ) {
@@ -95,28 +98,8 @@ void PacketGen::GenPacket ( )
 		return;
 
 	// Generate packet and load appropriate data
-	Packet* p = new Packet( dest, addr, 64 );
+	saved_p = new Packet( dest, addr, 64 );
 
-	// Add packet to output buffer
-	InputChannel* vc = ibuf->getIC( 0 );
-	packet_injections++;
-	if ( p->GetSize() <= vc->Size() - vc->FlitsRemaining() ) {
-		if ( vc->FlitsRemaining() == 0) { // For now only insert to empty buffer
-			vc->InsertPacket( p );
-			vc->schedRC();
-			packets_sent++;
-			wait_til = Global_Time + p->GetSize();
-		}
-		else {
-			packets_blocked++;
-			delete p;
-		}
-	}
-	else {
-	//	cout << "PacketGen OutputBuffer full" << endl;
-		packets_blocked++;
-		delete p;
-	}
 	return ;
 }
 
@@ -127,9 +110,15 @@ void PacketGen::GenPacket ( )
  */
 void PacketGen::RandomGenPacket ( double chances )
 {
-	if ( Global_Time >= wait_til )
-		if (rand() < (chances * (double)RAND_MAX))
-			GenPacket();
+	if ( NULL == saved_p && Global_Time >= wait_til ) {
+		if (rand() < (chances * (double)RAND_MAX)) {
+			packet_injections++;
+			InputChannel* ic = ibuf->getIC( 0 );
+			if ( ic->FlitsRemaining() <= ic->Size() - 16 )
+				GenPacket();
+		}
+		wait_til += 16;
+	}
 	return ;
 }
 
@@ -153,6 +142,15 @@ void PacketGen::Process ( )
 			packet_ejections++;
 			delete p;
 		}
+	}
+	// Insert waiting packet into injection queue
+	InputChannel* ic = ibuf->getIC( 0 );
+	if ( NULL != saved_p && ic->FlitsRemaining() == 0 ) {
+		ic->InsertPacket( saved_p );
+		ic->schedRC();
+		packets_sent++;
+		wait_til = Global_Time + saved_p->GetSize();
+		saved_p = NULL;
 	}
 	return ;
 }

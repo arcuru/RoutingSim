@@ -6,7 +6,6 @@ PacketGen::PacketGen ( )
 	obuf = new OutputBuffer(32);
 	packets_out = 0;
 	flits_received = 0;
-	wait_til = 0;
 	saved_p = NULL;
 }
 
@@ -17,7 +16,6 @@ PacketGen::PacketGen ( Address setAddress )
 	obuf = new OutputBuffer(32);
 	packets_out = 0;
 	flits_received = 0;
-	wait_til = 0;
 	saved_p = NULL;
 }
 
@@ -110,14 +108,16 @@ void PacketGen::GenPacket ( )
  */
 void PacketGen::RandomGenPacket ( double chances )
 {
-	if ( NULL == saved_p && Global_Time >= wait_til ) {
+	if ( NULL == saved_p ) {
 		if (rand() < (chances * (double)RAND_MAX)) {
 			packet_injections++;
 			InputChannel* ic = ibuf->getIC( 0 );
-			if ( ic->FlitsRemaining() <= ic->Size() - 16 )
+			if ( ic->FlitsRemaining() <= ic->Size() - 16 ) {
 				GenPacket();
+			}
+			else
+				packets_blocked++;
 		}
-		wait_til += 16;
 	}
 	return ;
 }
@@ -150,7 +150,6 @@ void PacketGen::Process ( )
 		ic->InsertPacket( saved_p );
 		ic->schedRC();
 		packets_sent++;
-		wait_til = Global_Time + saved_p->GetSize();
 		saved_p = NULL;
 	}
 	return ;

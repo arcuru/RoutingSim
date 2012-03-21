@@ -70,6 +70,8 @@ OutputBuffer* PacketGen::GetEjection ( ) const
 void PacketGen::GenPacket ( )
 {
 	assert( NULL == saved_p );
+	uint8_t tmp[] = { 0x0, 0x4, 0x2, 0x6, 0x1, 0x5, 0x3, 0x7 }; // Lookup table for 3bit BIT_REV
+
 	// Generate destination address as a random address in the network
 	Address dest = addr;
 	switch ( NInfo.dest_func ) {
@@ -80,7 +82,11 @@ void PacketGen::GenPacket ( )
 			}
 			break;
 
-		case BIT_REVERSE:	
+		case BIT_REV:
+			assert( NInfo.width <= 8 && NInfo.width > 4 ); // Only valid for 3 bytes
+			assert( NInfo.height <= 8 && NInfo.height > 4 );
+			dest.x = tmp[addr.x];
+			dest.y = tmp[addr.y];
 			break;
 
 		case BIT_COMP:	
@@ -98,6 +104,8 @@ void PacketGen::GenPacket ( )
 	// Generate packet and load appropriate data
 	saved_p = new Packet( dest, addr, 64 );
 
+	// Count this as an injection
+	packet_injections++;
 	return ;
 }
 
@@ -110,13 +118,14 @@ void PacketGen::RandomGenPacket ( double chances )
 {
 	if ( NULL == saved_p ) {
 		if (rand() < (chances * (double)RAND_MAX)) {
-			packet_injections++;
 			InputChannel* ic = ibuf->getIC( 0 );
 			if ( ic->FlitsRemaining() <= ic->Size() - 16 ) {
 				GenPacket();
 			}
-			else
+			else {
 				packets_blocked++;
+				packet_injections++; // Attempted injection
+			}
 		}
 	}
 	return ;

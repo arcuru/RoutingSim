@@ -73,5 +73,6 @@ extern uint32_t packet_injections;
 extern uint32_t packet_ejections;
 extern uint32_t packets_blocked;
 extern uint32_t packets_sent;
+extern uint32_t packet_latency;
 
 #endif

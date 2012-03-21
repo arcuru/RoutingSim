@@ -9,6 +9,7 @@ uint32_t packet_injections = 0;
 uint32_t packets_blocked = 0;
 uint32_t packets_sent = 0;
 uint32_t packet_ejections = 0;
+uint32_t packet_latency = 0;
 void RunSimulation( uint32_t simulation_end, double injection_chance );
 
 int main ( int argc, char** argv )
@@ -22,6 +23,7 @@ int main ( int argc, char** argv )
 	cout << "Offered Load, ";
 	cout << "Switch Throughput, ";
 	cout << "Packet Collisions, ";
+	cout << "Packet Latency, ";
 	cout << "Simulation Time, ";
 	cout << "Injection Chance" << endl;
 	if (argc > 1) {
@@ -92,12 +94,14 @@ void RunSimulation( uint32_t simulation_end, double injection_chance )
 	cout << (((double)packet_injections)/(NInfo.width*NInfo.height))/simulation_end << ", ";
 	cout << ((16 * (double)packet_ejections)/(NInfo.width*NInfo.height))/simulation_end << ", ";
 	cout << "0" << ", ";
+	cout << (double)packet_latency / packet_ejections << ", ";
 	cout << simulation_end << ", ";
 	cout << injection_chance << endl;
 	packet_injections = 0;
 	packet_ejections = 0;
 	packets_blocked = 0;
 	packets_sent = 0;
+	packet_latency = 0;
 
 	// Memory cleanup
 	delete [] sim;

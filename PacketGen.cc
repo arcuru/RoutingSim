@@ -140,6 +140,7 @@ void PacketGen::Process ( )
 			assert( vc->FlitsRemaining() == 0 );
 			packets_out++;
 			packet_ejections++;
+			packet_latency += Global_Time - p->GetCreated();
 			delete p;
 		}
 	}

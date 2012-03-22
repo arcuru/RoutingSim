@@ -31,7 +31,7 @@ OutputBuffer::~OutputBuffer ()
  */
 void OutputBuffer::ProcessBuffer (  )
 {
-	size_t j;
+	size_t j=last_sent;
 	for (size_t i = last_sent+1; i < channel_count+last_sent+1; i++) {
 		j = i % channel_count;
 		if ( oc[j].sendFlit() ) {

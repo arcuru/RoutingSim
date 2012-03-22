@@ -57,7 +57,7 @@ int main ( int argc, char** argv )
 	// Iterate and run tests
 	for (int i = tests; i >= 0; i--) {
 		injection_chance = ((double)i) / tests;
-		RunSimulation( simulation_end, injection_chance / 12 );
+		RunSimulation( simulation_end, injection_chance );
 		Global_Queue.Clear();
 	}
 
@@ -79,7 +79,7 @@ void RunSimulation( uint32_t simulation_end, double injection_chance )
 	//srand(time(NULL));
 	
 	// Set injection chance
-	NInfo.chance = injection_chance;
+	NInfo.chance = injection_chance / 12;
 
 	// Create Router and packet generators
 	Router* sim = new Router[NInfo.width * NInfo.height];

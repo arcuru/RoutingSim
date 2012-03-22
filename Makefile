@@ -1,5 +1,5 @@
 CC=clang++
-CFLAGS=-std=c++0x -Wall -Wextra -Werror -g -pedantic -O0
+CFLAGS=-std=c++0x -Wall -Wextra -Werror -pedantic -O4
 INCLUDE_DIR=
 LIBS=
 HEADERS=Global.h
@@ -31,6 +31,10 @@ clean:
 	rm -rf $(OBJECTS) $(TARGET)
 
 test: all
-	time ./$(TARGET) > output.txt
-	diff output.txt saved.txt
+	time ./$(TARGET) 0 1000 > rand.csv
+	time ./$(TARGET) 1 1000 > bit_rev.csv
+	time ./$(TARGET) 2 1000 > bit_comp.csv
+	diff rand.csv saved_rand.csv
+	diff bit_rev.csv saved_bit_rev.csv
+	diff bit_comp.csv saved_bit_comp.csv
 

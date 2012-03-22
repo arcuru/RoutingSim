@@ -22,7 +22,12 @@ int main ( int argc, char** argv )
 	uint32_t simulation_end = END_TIME;
 	double injection_chance = 0.6;
 
-	// Generate lots of output
+	// Initialize default network settings
+	NInfo.width = 8;
+	NInfo.height = 8;
+	NInfo.dest_func = RAND;
+
+	// Generate headers for the output
 	cout << "Packet Injections, ";
 	cout << "Packet Ejections, ";
 	cout << "Offered Load, ";
@@ -36,24 +41,27 @@ int main ( int argc, char** argv )
 	cout << "Simulation Time, ";
 	cout << "Injection Chance" << endl;
 	if (argc > 1) {
-		simulation_end = atoi(argv[1]);
+		NInfo.dest_func = (Destination_Function)atoi(argv[1]);
 		if (argc > 2) {
-			injection_chance = atof(argv[2]);
-		}
-		RunSimulation( simulation_end, injection_chance );
-	}
-	else {
-		// Set number of tests
-		uint32_t tests = 100;
-
-		// Iterate and run tests
-		for (int i = tests; i >= 0; i--) {
-			injection_chance = ((double)i) / tests;
-			RunSimulation( simulation_end, injection_chance / 12 );
-			Global_Queue.Clear();
+			simulation_end = atoi(argv[2]);
+			if (argc > 3) {
+				injection_chance = atof(argv[3]);
+				RunSimulation( simulation_end, injection_chance );
+				return EXIT_SUCCESS;
+			}
 		}
 	}
+	// Set number of tests
+	uint32_t tests = 100;
 
+	// Iterate and run tests
+	for (int i = tests; i >= 0; i--) {
+		injection_chance = ((double)i) / tests;
+		RunSimulation( simulation_end, injection_chance / 12 );
+		Global_Queue.Clear();
+	}
+
+	return EXIT_SUCCESS;
 }
 
 /** RunSimulation
@@ -69,12 +77,9 @@ void RunSimulation( uint32_t simulation_end, double injection_chance )
 	// Seed random number generator
 	srand(4);
 	//srand(time(NULL));
-
-	// Initialize network settings
-	NInfo.width = 8;
-	NInfo.height = 8;
+	
+	// Set injection chance
 	NInfo.chance = injection_chance;
-	NInfo.dest_func = BIT_COMP;
 
 	// Create Router and packet generators
 	Router* sim = new Router[NInfo.width * NInfo.height];

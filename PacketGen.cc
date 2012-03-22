@@ -95,6 +95,7 @@ void PacketGen::GenPacket ( )
 			break;
 
 		default:	
+			assert( false );
 			break;
 	}
 

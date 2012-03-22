@@ -40,9 +40,9 @@ typedef struct Event {
 } Event; //!< Event definition
 
 typedef enum {
-	RAND,
-	BIT_REV,
-	BIT_COMP
+	RAND = 0,
+	BIT_REV = 1,
+	BIT_COMP = 2
 } Destination_Function; //!< Function for generating destinations
 
 typedef struct {

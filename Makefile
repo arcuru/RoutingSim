@@ -31,10 +31,7 @@ clean:
 	rm -rf $(OBJECTS) $(TARGET)
 
 test: all
-	time ./$(TARGET) 0 1000 > rand.csv
-	time ./$(TARGET) 1 1000 > bit_rev.csv
-	time ./$(TARGET) 2 1000 > bit_comp.csv
-	diff rand.csv saved_rand.csv
-	diff bit_rev.csv saved_bit_rev.csv
-	diff bit_comp.csv saved_bit_comp.csv
+	./$(TARGET) 0 1000 > rand.csv && diff rand.csv saved_rand.csv > diff_rand.txt && echo "Finished rand." &
+	./$(TARGET) 1 1000 > bit_rev.csv && diff bit_rev.csv saved_bit_rev.csv > diff_rev.txt && echo "Finished bit reverse." &
+	./$(TARGET) 2 1000 > bit_comp.csv && diff bit_comp.csv saved_bit_comp.csv > diff_comp.txt && echo "Finished bit complement." &
 

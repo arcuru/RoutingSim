@@ -119,6 +119,14 @@ void Router::Connect( Direction edge, Router* target)
  */
 void Router::Process ( )
 {
+	// Calculate buffer utilization
+	for (size_t i=0; i < 4; i++) {
+		aibuf_util += ibuf[i]->getIC( 1 )->FlitsRemaining();
+		eibuf_util += ibuf[i]->getIC( 0 )->FlitsRemaining();
+		aobuf_util += obuf[i]->getOC( 1 )->FlitsRemaining();
+		eobuf_util += obuf[i]->getOC( 0 )->FlitsRemaining();
+	}
+
 	// Place new packet into injection queue
 	pgen->RandomGenPacket(NInfo.chance);
 
@@ -172,7 +180,7 @@ void Router::Process ( )
 		}
 	}
 	//cout << endl;
-
+	
 	return ;
 }
 

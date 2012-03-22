@@ -74,5 +74,10 @@ extern uint64_t packet_ejections;
 extern uint64_t packets_blocked;
 extern uint64_t packets_sent;
 extern uint64_t packet_latency;
+extern uint64_t link_util;
+extern uint64_t aibuf_util;
+extern uint64_t eibuf_util;
+extern uint64_t aobuf_util;
+extern uint64_t eobuf_util;
 
 #endif

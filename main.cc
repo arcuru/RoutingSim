@@ -10,6 +10,11 @@ uint64_t packets_blocked = 0;
 uint64_t packets_sent = 0;
 uint64_t packet_ejections = 0;
 uint64_t packet_latency = 0;
+uint64_t link_util = 0;
+uint64_t aibuf_util = 0;
+uint64_t eibuf_util = 0;
+uint64_t aobuf_util = 0;
+uint64_t eobuf_util = 0;
 void RunSimulation( uint32_t simulation_end, double injection_chance );
 
 int main ( int argc, char** argv )
@@ -23,6 +28,11 @@ int main ( int argc, char** argv )
 	cout << "Offered Load, ";
 	cout << "Network Throughput, ";
 	cout << "Packet Latency, ";
+	cout << "Link Utilization, ";
+	cout << "Adaptive Input Buffer Utilization, ";
+	cout << "Adaptive Output Buffer Utilization, ";
+	cout << "Escape Input Buffer Utilization, ";
+	cout << "Escape Output Buffer Utilization, ";
 	cout << "Simulation Time, ";
 	cout << "Injection Chance" << endl;
 	if (argc > 1) {
@@ -93,6 +103,11 @@ void RunSimulation( uint32_t simulation_end, double injection_chance )
 	cout << ((double)packet_injections)/simulation_end << ", ";
 	cout << ((16 * (double)packet_ejections)/(NInfo.width*NInfo.height))/simulation_end << ", ";
 	cout << (double)packet_latency / packet_ejections << ", ";
+	cout << (double)link_util / (NInfo.width * NInfo.height * 4 * simulation_end) << ", ";
+	cout << (double)aibuf_util / (NInfo.width * NInfo.height * 4 * 4 * simulation_end) << ", ";
+	cout << (double)aobuf_util / (NInfo.width * NInfo.height * 4 * 1 * simulation_end) << ", ";
+	cout << (double)eibuf_util / (NInfo.width * NInfo.height * 4 * 4 * simulation_end) << ", ";
+	cout << (double)eobuf_util / (NInfo.width * NInfo.height * 4 * 1 * simulation_end) << ", ";
 	cout << simulation_end << ", ";
 	cout << injection_chance << endl;
 	packet_injections = 0;
@@ -100,6 +115,11 @@ void RunSimulation( uint32_t simulation_end, double injection_chance )
 	packets_blocked = 0;
 	packets_sent = 0;
 	packet_latency = 0;
+	link_util = 0;
+	aibuf_util = 0;
+	eibuf_util = 0;
+	aobuf_util = 0;
+	eobuf_util = 0;
 
 	// Memory cleanup
 	delete [] sim;

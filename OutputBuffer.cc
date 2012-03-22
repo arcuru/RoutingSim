@@ -34,8 +34,10 @@ void OutputBuffer::ProcessBuffer (  )
 	size_t j;
 	for (size_t i = last_sent+1; i < channel_count+last_sent+1; i++) {
 		j = i % channel_count;
-		if ( oc[j].sendFlit() )
+		if ( oc[j].sendFlit() ) {
+			link_util++;
 			break;
+		}
 	}
 	last_sent = j;
 	return ;

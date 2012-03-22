@@ -39,7 +39,7 @@ int main ( int argc, char** argv )
 		// Iterate and run tests
 		for (int i = tests; i >= 0; i--) {
 			injection_chance = ((double)i) / tests;
-			RunSimulation( simulation_end, injection_chance / 8 );
+			RunSimulation( simulation_end, injection_chance / 12 );
 			Global_Queue.Clear();
 		}
 	}

@@ -12,7 +12,7 @@ using namespace std;
 
 #define END_TIME 1000
 
-extern uint32_t Global_Time; //!< Current time step
+extern uint64_t Global_Time; //!< Current time step
 
 typedef enum {
 	NORTH   = 0,
@@ -69,10 +69,10 @@ extern NetworkInfo NInfo;
 
 extern EventQueue Global_Queue; //!< Single global queue handling all events
 
-extern uint32_t packet_injections;
-extern uint32_t packet_ejections;
-extern uint32_t packets_blocked;
-extern uint32_t packets_sent;
-extern uint32_t packet_latency;
+extern uint64_t packet_injections;
+extern uint64_t packet_ejections;
+extern uint64_t packets_blocked;
+extern uint64_t packets_sent;
+extern uint64_t packet_latency;
 
 #endif

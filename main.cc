@@ -2,14 +2,14 @@
 
 #define IND(x,y) (((y) * NInfo.width) + (x))
 
-uint32_t Global_Time;
+uint64_t Global_Time;
 NetworkInfo NInfo;
 EventQueue Global_Queue;
-uint32_t packet_injections = 0;
-uint32_t packets_blocked = 0;
-uint32_t packets_sent = 0;
-uint32_t packet_ejections = 0;
-uint32_t packet_latency = 0;
+uint64_t packet_injections = 0;
+uint64_t packets_blocked = 0;
+uint64_t packets_sent = 0;
+uint64_t packet_ejections = 0;
+uint64_t packet_latency = 0;
 void RunSimulation( uint32_t simulation_end, double injection_chance );
 
 int main ( int argc, char** argv )

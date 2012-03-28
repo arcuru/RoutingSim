@@ -1,10 +1,13 @@
-Important Note: Commits to the repo between releases are not fully tested and may not function properly.
-
 Building and testing can be done using the included Makefile.
 
 To compile the program, run 'make' in the project directory.
 
-To test (and build if necessary) the program, run 'make test' in the project directory. This will execute the command './RoutingSim' which will run 101 tests of 1000 cycles each. Each test is unique in the chance of generating a packet during each cycle in each Packet Generating. Thus, each timestep each Packet Generator will separately choose to inject a packet or not with a chance equal to 1% times the test number (0 - 100). 
+To test (and build if necessary) the program, run 'make test' in the project directory. This will execute three commands, one for each given message pattern. Each pattern will be run 101 times for 1000 cycles each. Each test is unique in the chance of generating a packet during each cycle in each Packet Generator. Thus, each timestep each Packet Generator will separately choose to inject a packet or not with a chance equal to 1% times the test number (0 - 100) divided by the constant 12, so that saturation levels are not reached too soon since each packet is 16 flits. 
 
-Alternately, testing can be done by running './RoutingSim [cycles [chance]]'. This will run a single simulation with the provided number of cycles and the provided chance of packet injection each cycle (0.0 - 1.0).
+Alternately, testing can be done by running './RoutingSim [pattern [cycles [chance]]'. Specifying all 3 inputs will run a single instance of the simulator, executing the given number of cycles with the given pattern and injection chance (scaled as described above). Specifying less than the three inputs will run a full test of 100 different injection chances. Cycles defaults to 1000 and the message pattern defauls to uniform distribution.
+
+In specifying the pattern from the command line you need to use these integer values:
+Uniform Random = 0
+Bit Reverse    = 1
+Bit Complement = 2
 

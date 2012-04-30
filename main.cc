@@ -48,6 +48,7 @@ int main ( int argc, char** argv )
 		}
 	}
 	// Generate headers for the output
+	/*
 	cout << "Packet Injections, ";
 	cout << "Packet Ejections, ";
 	cout << "Offered Load, ";
@@ -60,6 +61,7 @@ int main ( int argc, char** argv )
 	cout << "Escape Output Buffer Utilization, ";
 	cout << "Simulation Time, ";
 	cout << "Injection Chance" << endl;
+	*/
 
 	// Set number of tests
 	uint32_t tests = 100;
@@ -166,7 +168,7 @@ void SetupMemCont ( uint32_t type )
 	switch ( type ) {
 		case 1:	
 			// Random placement
-			printf("Random placement\n");
+			printf("Random placement, ");
 	MC[0].x = 0; MC[0].y = 0;
 	MC[1].x = 1; MC[1].y = 0;
 	MC[2].x = 2; MC[2].y = 0;
@@ -179,7 +181,7 @@ void SetupMemCont ( uint32_t type )
 
 		case 2:	
 			// Single Row
-			printf("Single Row\n");
+			printf("Single Row, ");
 			MC[0].x = 0; MC[0].y = 4;
 			MC[1].x = 1; MC[1].y = 4;
 			MC[2].x = 2; MC[2].y = 4;
@@ -192,7 +194,7 @@ void SetupMemCont ( uint32_t type )
 
 		case 3:	
 			// Single Col
-			printf("Single Column\n");
+			printf("Single Column, ");
 			MC[0].x = 4; MC[0].y = 0;
 			MC[1].x = 4; MC[1].y = 1;
 			MC[2].x = 4; MC[2].y = 2;
@@ -205,7 +207,7 @@ void SetupMemCont ( uint32_t type )
 
 		case 4:	
 			// Diagonal
-			printf("Diagonal\n");
+			printf("Diagonal, ");
 			MC[0].x = 0; MC[0].y = 0;
 			MC[1].x = 1; MC[1].y = 1;
 			MC[2].x = 2; MC[2].y = 2;
@@ -218,7 +220,7 @@ void SetupMemCont ( uint32_t type )
 
 		case 5:	
 			// Split Diagonal
-			printf("Split Diagonal\n");
+			printf("Split Diagonal, ");
 			MC[0].x = 0; MC[0].y = 0;
 			MC[1].x = 1; MC[1].y = 1;
 			MC[2].x = 2; MC[2].y = 5;
@@ -231,7 +233,7 @@ void SetupMemCont ( uint32_t type )
 
 		case 6:	
 			// Unique Row, Column, and Diagonal
-			printf("Unique Row, Column, and Diagonal\n");
+			printf("Unique Row, Column, and Diagonal, ");
 			MC[0].x = 0; MC[0].y = 4;
 			MC[1].x = 1; MC[1].y = 0;
 			MC[2].x = 2; MC[2].y = 3;
@@ -244,6 +246,7 @@ void SetupMemCont ( uint32_t type )
 
 		default:	
 			printf("Invalid configuration setup.\n");
+			exit(1);
 			break;
 	}
 }

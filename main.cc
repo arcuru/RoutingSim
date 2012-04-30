@@ -29,6 +29,18 @@ int main ( int argc, char** argv )
 	NInfo.height = 8;
 	NInfo.dest_func = MEM_CONT;
 
+	// Parse arguments
+	if (argc > 1) {
+		SetupMemCont( atoi(argv[1]) );
+		if (argc > 2) {
+			simulation_end = atoi(argv[2]);
+			if (argc > 3) {
+				injection_chance = atof(argv[3]);
+				RunSimulation( simulation_end, injection_chance );
+				return EXIT_SUCCESS;
+			}
+		}
+	}
 	// Generate headers for the output
 	cout << "Packet Injections, ";
 	cout << "Packet Ejections, ";
@@ -42,17 +54,7 @@ int main ( int argc, char** argv )
 	cout << "Escape Output Buffer Utilization, ";
 	cout << "Simulation Time, ";
 	cout << "Injection Chance" << endl;
-	if (argc > 1) {
-		SetupMemCont( atoi(argv[1]) );
-		if (argc > 2) {
-			simulation_end = atoi(argv[2]);
-			if (argc > 3) {
-				injection_chance = atof(argv[3]);
-				RunSimulation( simulation_end, injection_chance );
-				return EXIT_SUCCESS;
-			}
-		}
-	}
+
 	// Set number of tests
 	uint32_t tests = 100;
 
@@ -125,8 +127,8 @@ void RunSimulation( uint32_t simulation_end, double injection_chance )
 
 	cout << packet_injections << ", ";
 	cout << packet_ejections << ", ";
-	cout << ((double)packet_injections)/simulation_end << ", ";
-	cout << ((17 * (double)packet_ejections)/8)/simulation_end << ", ";
+	cout << ((17 * (double)packet_injections)/8.0)/simulation_end << ", ";
+	cout << ((17 * (double)packet_ejections)/8.0)/simulation_end << ", ";
 	cout << (double)packet_latency / packet_ejections << ", ";
 	cout << (double)link_util / (NInfo.width * NInfo.height * 4 * simulation_end) << ", ";
 	cout << (double)aibuf_util / (NInfo.width * NInfo.height * 4 * 4 * simulation_end) << ", ";
@@ -163,6 +165,7 @@ void SetupMemCont ( uint32_t type )
 	switch ( type ) {
 		case 1:	
 			// Random placement
+			printf("Random placement\n");
 	MC[0].x = 0; MC[0].y = 0;
 	MC[1].x = 1; MC[1].y = 0;
 	MC[2].x = 2; MC[2].y = 0;
@@ -175,6 +178,7 @@ void SetupMemCont ( uint32_t type )
 
 		case 2:	
 			// Single Row
+			printf("Single Row\n");
 			MC[0].x = 0; MC[0].y = 4;
 			MC[1].x = 1; MC[1].y = 4;
 			MC[2].x = 2; MC[2].y = 4;
@@ -187,6 +191,7 @@ void SetupMemCont ( uint32_t type )
 
 		case 3:	
 			// Single Col
+			printf("Single Column\n");
 			MC[0].x = 4; MC[0].y = 0;
 			MC[1].x = 4; MC[1].y = 1;
 			MC[2].x = 4; MC[2].y = 2;
@@ -199,6 +204,7 @@ void SetupMemCont ( uint32_t type )
 
 		case 4:	
 			// Diagonal
+			printf("Diagonal\n");
 			MC[0].x = 0; MC[0].y = 0;
 			MC[1].x = 1; MC[1].y = 1;
 			MC[2].x = 2; MC[2].y = 2;
@@ -211,6 +217,7 @@ void SetupMemCont ( uint32_t type )
 
 		case 5:	
 			// Split Diagonal
+			printf("Split Diagonal\n");
 			MC[0].x = 0; MC[0].y = 0;
 			MC[1].x = 1; MC[1].y = 1;
 			MC[2].x = 2; MC[2].y = 5;
@@ -223,14 +230,15 @@ void SetupMemCont ( uint32_t type )
 
 		case 6:	
 			// Unique Row, Column, and Diagonal
-	MC[0].x = 0; MC[0].y = 0;
-	MC[1].x = 1; MC[1].y = 0;
-	MC[2].x = 2; MC[2].y = 0;
-	MC[3].x = 3; MC[3].y = 0;
-	MC[4].x = 4; MC[4].y = 0;
-	MC[5].x = 5; MC[5].y = 0;
-	MC[6].x = 6; MC[6].y = 0;
-	MC[7].x = 7; MC[7].y = 0;
+			printf("Unique Row, Column, and Diagonal\n");
+			MC[0].x = 0; MC[0].y = 4;
+			MC[1].x = 1; MC[1].y = 0;
+			MC[2].x = 2; MC[2].y = 3;
+			MC[3].x = 3; MC[3].y = 5;
+			MC[4].x = 4; MC[4].y = 7;
+			MC[5].x = 5; MC[5].y = 1;
+			MC[6].x = 6; MC[6].y = 6;
+			MC[7].x = 7; MC[7].y = 2;
 			break;
 
 		default:	

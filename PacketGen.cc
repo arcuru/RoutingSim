@@ -156,7 +156,7 @@ void PacketGen::RandomGenPacket ( double chances )
 	if ( NULL == saved_p ) {
 		if (rand() < (chances * (double)RAND_MAX)) {
 			InputChannel* ic = ibuf->getIC( 0 );
-			if ( ic->FlitsRemaining() <= ic->Size() - 16 ) {
+			if ( ic->FlitsRemaining() <= ic->Size() - 3 ) {
 				GenPacket();
 			}
 			else {

@@ -12,6 +12,7 @@ class PacketGen
 		void SetDirection ( Direction edge );
 		InputBuffer* GetInjection ( ) const;
 		OutputBuffer* GetEjection ( ) const;
+		Packet* InsertPacket ( Address dest, size_t packet_size );
 		void GenPacket ( );
 		void RandomGenPacket ( double chances );
 		void Process ( );

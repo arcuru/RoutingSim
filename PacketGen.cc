@@ -62,6 +62,26 @@ OutputBuffer* PacketGen::GetEjection ( ) const
 	return obuf;
 }
 
+/** InsertPacket
+ *  Places a packet with the given address into the saved location. Returns true
+ *  if successful, false otherwise
+ *
+ *  @arg dest Destination of packet
+ *  @arg packet_size Size of packet to send in bytes
+ *  @return Pointer to generated packet, NULL if not generated
+ */
+Packet* PacketGen::InsertPacket ( Address dest, size_t packet_size )
+{
+	// Shouldn't try to insert a packet to the current address
+	assert( (dest.x != addr.x) || (dest.y != addr.y));
+
+	// Return false if full
+	if ( NULL != saved_p )
+		return NULL;
+	saved_p = new Packet( dest, addr, packet_size );
+	return saved_p;
+}
+
 /** GenPacket
  *  creates a packet with a valid address based on saved generator
  *  address and direction. We then add it to the OutputBuffer.
@@ -103,7 +123,8 @@ void PacketGen::GenPacket ( )
 		return;
 
 	// Generate packet and load appropriate data
-	saved_p = new Packet( dest, addr, 64 );
+	Packet* p = InsertPacket( dest, 64 );
+	assert( NULL != p );
 
 	// Count this as an injection
 	packet_injections++;

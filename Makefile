@@ -1,4 +1,4 @@
-CC=g++
+CC=clang++
 CFLAGS=-std=c++0x -Wall -Wextra -Werror -pedantic -O0
 INCLUDE_DIR=
 LIBS=

@@ -190,10 +190,12 @@ void PacketGen::Process ( )
 				Address dest;
 				dest.x = p->GetOriginX();
 				dest.y = p->GetOriginY();
-				if ( NULL != InsertPacket( dest, 68 ) ) {
+				Packet* pp = InsertPacket( dest, 68 );
+				if ( NULL != pp ) {
 					while ( vc->FlitsRemaining() != 0 )
 						vc->sendFlit();
 					assert( vc->FlitsRemaining() == 0 );
+					pp->SetCreated( p->GetCreated() );
 					delete p;
 				}
 			}

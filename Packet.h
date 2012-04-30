@@ -15,6 +15,7 @@ class Packet
 		uint32_t GetOriginY ( ) const;
 		uint8_t GetHash ( ) const;
 		uint32_t GetCreated ( ) const;
+		void SetCreated ( uint32_t creation );
 		void AddRouter ( Address addr );
 
 	protected:

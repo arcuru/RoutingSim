@@ -130,6 +130,16 @@ uint32_t Packet::GetCreated ( ) const
 	return created;
 }
 
+/** SetCreated
+ *  Sets the creation time of this packet
+ *
+ *  @arg creation New creation time
+ */
+void Packet::SetCreated ( uint32_t creation )
+{
+	created = creation;
+}
+
 /** AddRouter
  *  adds a router to the list of routers we have traversed through
  *

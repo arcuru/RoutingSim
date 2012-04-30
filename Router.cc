@@ -138,10 +138,10 @@ void Router::Process ( )
 	//cout << "(" << addr.x << ", " << addr.y << ") ";
 
 	// Start Receiving from a random side
-	for (int j = 1; j >= 0; j--) {
+	for (int j = 2; j >= 0; j--) {
 		for (size_t k=0; k < 5; k++) {
 			size_t i = k % 5;
-			if ( HERE == i && 1 == j) {
+			if ( HERE == i && 0 != j) {
 				//cout << "0 ";
 				continue;
 			}

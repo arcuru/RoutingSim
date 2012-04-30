@@ -80,6 +80,7 @@ void RunSimulation( uint32_t simulation_end, double injection_chance )
 	
 	// Set injection chance
 	NInfo.chance = injection_chance / 12;
+	NInfo.adaptive = true;
 
 	// Create Router and packet generators
 	Router* sim = new Router[NInfo.width * NInfo.height];

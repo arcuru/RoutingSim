@@ -50,6 +50,7 @@ typedef struct {
 	uint8_t height; //!< Height of network (Y max + 1)
 	double chance;  //!< Chance of packet injection every cycle
 	Destination_Function dest_func;
+	bool adaptive;  //!< True if using minimally adaptive routing
 } NetworkInfo;
 
 extern NetworkInfo NInfo;

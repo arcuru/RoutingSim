@@ -2,7 +2,7 @@
 
 OutputBuffer::OutputBuffer ()
 {
-	channel_count = 2;
+	channel_count = 3;
 	oc = new OutputChannel[channel_count];
 	for (size_t i = 0; i < channel_count; i++) {
 		oc[i].setSize( 1 );
@@ -12,7 +12,7 @@ OutputBuffer::OutputBuffer ()
 
 OutputBuffer::OutputBuffer ( size_t entries )
 {
-	channel_count = 2;
+	channel_count = 3;
 	oc = new OutputChannel[channel_count];
 	for (size_t i = 0; i < channel_count; i++) {
 		oc[i].setSize( entries );
@@ -64,7 +64,7 @@ void OutputBuffer::Connect ( InputBuffer* target )
  */
 OutputChannel* OutputBuffer::getOC ( size_t channel ) const
 {
-	assert( channel < 2 );
+	assert( channel < 3 );
 	return &oc[channel];
 }
 

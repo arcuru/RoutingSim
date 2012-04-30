@@ -2,7 +2,7 @@
 
 InputBuffer::InputBuffer ()
 {
-	channel_count = 2;
+	channel_count = 3;
 	ic = new InputChannel[channel_count];
 	for (size_t i = 0; i < channel_count; i++) {
 		ic[i].setSize( 4 );
@@ -11,7 +11,7 @@ InputBuffer::InputBuffer ()
 
 InputBuffer::InputBuffer ( size_t entries )
 {
-	channel_count = 2;
+	channel_count = 3;
 	ic = new InputChannel[channel_count];
 	for (size_t i = 0; i < channel_count; i++) {
 		ic[i].setSize( entries );
@@ -68,7 +68,7 @@ void InputBuffer::WriteBack ( OutputBuffer* write_back )
  */
 InputChannel* InputBuffer::getIC ( size_t channel ) const
 {
-	assert( channel < 2 );
+	assert( channel < 3 );
 	return &ic[channel];
 }
 

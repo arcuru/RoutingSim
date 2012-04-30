@@ -9,6 +9,9 @@ class RouteComputation : public EventTarget
 		virtual ~RouteComputation ();
 
 		void setAddr ( Address a );
+		void RouteXYEscape ( InputChannel* vc, Packet* p, size_t a, size_t b );
+		void RouteXY ( InputChannel* vc, Packet* p, size_t c );
+		void RouteAdaptive ( InputChannel* vc, Packet* p, size_t c );
 		void ProcessEvent ( Event e );
 		InputChannel* getNext ( size_t dir, size_t c ) const ;
 		void Remove ( InputChannel* vc  );
@@ -21,6 +24,7 @@ class RouteComputation : public EventTarget
 
 		Address addr;          //!< Address of router
 		InputChannel* ivc_xy[5][9]; //!< Pointer to InputBuffers that desire each OutputBuffer
+		InputChannel* ivc_xya[5][9]; //!< Pointer to InputBuffers that desire each OutputBuffer
 		InputChannel* ivc_ad[5][9]; //!< Pointer to input VC's that desire each adaptive output VC
 };
 

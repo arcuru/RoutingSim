@@ -72,7 +72,9 @@ extern NetworkInfo NInfo;
 #include "Router.h"
 
 extern EventQueue Global_Queue; //!< Single global queue handling all events
-extern Router* NArray; //!< Array of Routers corresponding to the full network
+extern Router* NArray; //!< Array of Routers corresponding to the request network
+extern Router* NArray2; //!< Array of Routers corresponding to the response network
+#define IND(x,y) (((y) * NInfo.width) + (x))
 
 extern uint64_t packet_injections;
 extern uint64_t packet_ejections;

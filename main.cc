@@ -1,12 +1,11 @@
 #include "Global.h"
 
-#define IND(x,y) (((y) * NInfo.width) + (x))
-
 uint64_t Global_Time;
 Address MC[8];
 NetworkInfo NInfo;
 EventQueue Global_Queue;
 Router* NArray;
+Router* NArray2;
 uint64_t packet_injections = 0;
 uint64_t packets_blocked = 0;
 uint64_t packets_sent = 0;
@@ -92,7 +91,7 @@ void RunSimulation( uint32_t simulation_end, double injection_chance )
 	NInfo.chance = injection_chance / 12;
 	NInfo.adaptive = true;
 
-	// Create Router and packet generators
+	// Create Router and packet generators for request network
 	NArray = new Router[NInfo.width * NInfo.height];
 	for (uint8_t i=0; i < NInfo.width; i++) {
 		for (uint8_t j=0; j < NInfo.height; j++) {
@@ -104,12 +103,29 @@ void RunSimulation( uint32_t simulation_end, double injection_chance )
 			NArray[IND(i,j)].Connect( WEST, &NArray[IND((i+NInfo.width-1)%NInfo.width,j)] );
 		}
 	}
+	// Initialize response network
+	NArray2 = new Router[NInfo.width * NInfo.height];
+	for (uint8_t i=0; i < NInfo.width; i++) {
+		for (uint8_t j=0; j < NInfo.height; j++) {
+			Address addr = {i, j};
+			NArray2[IND(i,j)].SetAddr( addr );
+			NArray2[IND(i,j)].Connect( NORTH, &NArray2[IND(i,(j+1)%NInfo.height)] );
+			NArray2[IND(i,j)].Connect( EAST, &NArray2[IND((i+1)%NInfo.width,j)] );
+			NArray2[IND(i,j)].Connect( SOUTH, &NArray2[IND(i,(j+NInfo.height-1)%NInfo.height)] );
+			NArray2[IND(i,j)].Connect( WEST, &NArray2[IND((i+NInfo.width-1)%NInfo.width,j)] );
+		}
+	}
 
 	for (Global_Time = 0; Global_Time < simulation_end; Global_Time++) {
 		Global_Queue.Process(); // Process all packet movements in the queue
 		for (uint8_t i=0; i < NInfo.width; i++) {
 			for (uint8_t j=0; j < NInfo.height; j++) {
-				NArray[IND(i,j)].Process(); // Process each router for a time step
+				// Process each router in request network for a time step
+				NArray[IND(i,j)].Process();
+				// Place new packet into injection queue
+				NArray[IND(i,j)].GetPacketGen()->RandomGenPacket(NInfo.chance);
+				// Process each router in response network for a time step
+				NArray2[IND(i,j)].Process();
 			}
 		}
 	}
@@ -139,6 +155,7 @@ void RunSimulation( uint32_t simulation_end, double injection_chance )
 
 	// Memory cleanup
 	delete [] NArray;
+	delete [] NArray2;
 
 	return ;
 }

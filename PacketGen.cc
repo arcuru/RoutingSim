@@ -165,7 +165,7 @@ void PacketGen::RandomGenPacket ( double chances )
 			}
 		}
 	}
-	else if ( saved_p->GetCreated() < Global_Time - 16 ) // Increment if this packet had the chance to leave by now.
+	else if ( saved_p->GetCreated() < Global_Time - 3 ) // Increment if this packet had the chance to leave by now.
 		if (rand() < (chances * (double)RAND_MAX)) // And if we would have passed our chance test
 			packet_injections++;
 	return ;
@@ -190,7 +190,7 @@ void PacketGen::Process ( )
 				Address dest;
 				dest.x = p->GetOriginX();
 				dest.y = p->GetOriginY();
-				Packet* pp = InsertPacket( dest, 68 );
+				Packet* pp = NArray2[IND(addr.x,addr.y)].GetPacketGen()->InsertPacket( dest, 68 );
 				if ( NULL != pp ) {
 					while ( vc->FlitsRemaining() != 0 )
 						vc->sendFlit();

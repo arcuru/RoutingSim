@@ -137,9 +137,6 @@ void Router::Process ( )
 		eobuf_util += obuf[i]->getOC( 0 )->FlitsRemaining();
 	}
 
-	// Place new packet into injection queue
-	pgen->RandomGenPacket(NInfo.chance);
-
 	// Process all the output buffers
 	for (int i=0; i < 4; i++)
 		obuf[i]->ProcessBuffer();

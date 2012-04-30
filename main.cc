@@ -28,14 +28,20 @@ int main ( int argc, char** argv )
 	NInfo.width = 8;
 	NInfo.height = 8;
 	NInfo.dest_func = MEM_CONT;
+	NInfo.adaptive = true;
+
+	// Seed random number generator
+	srand(4);
+	//srand(time(NULL));
 
 	// Parse arguments
 	if (argc > 1) {
 		SetupMemCont( atoi(argv[1]) );
-		if (argc > 2) {
-			simulation_end = atoi(argv[2]);
-			if (argc > 3) {
-				injection_chance = atof(argv[3]);
+		NInfo.adaptive = (1 == atoi(argv[2])) ? true : false;
+		if (argc > 3) {
+			simulation_end = atoi(argv[3]);
+			if (argc > 4) {
+				injection_chance = atof(argv[4]);
 				RunSimulation( simulation_end, injection_chance );
 				return EXIT_SUCCESS;
 			}
@@ -78,13 +84,8 @@ int main ( int argc, char** argv )
  */
 void RunSimulation( uint32_t simulation_end, double injection_chance )
 {
-	// Seed random number generator
-	srand(4);
-	//srand(time(NULL));
-	
 	// Set injection chance
 	NInfo.chance = injection_chance / 100;
-	NInfo.adaptive = false;
 
 	// Create Router and packet generators for request network
 	NArray = new Router[NInfo.width * NInfo.height];

@@ -28,6 +28,8 @@ typedef struct {
 	uint8_t y; //!< Y address in mesh
 } Address; //!< Address in 2D mesh
 
+extern Address MC[8];
+
 typedef enum EventType {
 	DATA,   //!< Data arrival
 	CREDIT  //!< Credit arrival for flow control
@@ -42,7 +44,8 @@ typedef struct Event {
 typedef enum {
 	RAND = 0,
 	BIT_REV = 1,
-	BIT_COMP = 2
+	BIT_COMP = 2,
+	MEM_CONT = 3
 } Destination_Function; //!< Function for generating destinations
 
 typedef struct {
@@ -69,6 +72,7 @@ extern NetworkInfo NInfo;
 #include "Router.h"
 
 extern EventQueue Global_Queue; //!< Single global queue handling all events
+extern Router* NArray; //!< Array of Routers corresponding to the full network
 
 extern uint64_t packet_injections;
 extern uint64_t packet_ejections;

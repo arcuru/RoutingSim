@@ -3,8 +3,10 @@
 #define IND(x,y) (((y) * NInfo.width) + (x))
 
 uint64_t Global_Time;
+Address MC[8];
 NetworkInfo NInfo;
 EventQueue Global_Queue;
+Router* NArray;
 uint64_t packet_injections = 0;
 uint64_t packets_blocked = 0;
 uint64_t packets_sent = 0;
@@ -26,6 +28,14 @@ int main ( int argc, char** argv )
 	NInfo.width = 8;
 	NInfo.height = 8;
 	NInfo.dest_func = RAND;
+	MC[0].x = 0; MC[0].y = 0;
+	MC[1].x = 1; MC[1].y = 1;
+	MC[2].x = 2; MC[2].y = 2;
+	MC[3].x = 3; MC[3].y = 3;
+	MC[4].x = 4; MC[4].y = 4;
+	MC[5].x = 5; MC[5].y = 5;
+	MC[6].x = 6; MC[6].y = 6;
+	MC[7].x = 7; MC[7].y = 7;
 
 	// Generate headers for the output
 	cout << "Packet Injections, ";
@@ -83,15 +93,15 @@ void RunSimulation( uint32_t simulation_end, double injection_chance )
 	NInfo.adaptive = true;
 
 	// Create Router and packet generators
-	Router* sim = new Router[NInfo.width * NInfo.height];
+	NArray = new Router[NInfo.width * NInfo.height];
 	for (uint8_t i=0; i < NInfo.width; i++) {
 		for (uint8_t j=0; j < NInfo.height; j++) {
 			Address addr = {i, j};
-			sim[IND(i,j)].SetAddr( addr );
-			sim[IND(i,j)].Connect( NORTH, &sim[IND(i,(j+1)%NInfo.height)] );
-			sim[IND(i,j)].Connect( EAST, &sim[IND((i+1)%NInfo.width,j)] );
-			sim[IND(i,j)].Connect( SOUTH, &sim[IND(i,(j+NInfo.height-1)%NInfo.height)] );
-			sim[IND(i,j)].Connect( WEST, &sim[IND((i+NInfo.width-1)%NInfo.width,j)] );
+			NArray[IND(i,j)].SetAddr( addr );
+			NArray[IND(i,j)].Connect( NORTH, &NArray[IND(i,(j+1)%NInfo.height)] );
+			NArray[IND(i,j)].Connect( EAST, &NArray[IND((i+1)%NInfo.width,j)] );
+			NArray[IND(i,j)].Connect( SOUTH, &NArray[IND(i,(j+NInfo.height-1)%NInfo.height)] );
+			NArray[IND(i,j)].Connect( WEST, &NArray[IND((i+NInfo.width-1)%NInfo.width,j)] );
 		}
 	}
 
@@ -99,7 +109,7 @@ void RunSimulation( uint32_t simulation_end, double injection_chance )
 		Global_Queue.Process(); // Process all packet movements in the queue
 		for (uint8_t i=0; i < NInfo.width; i++) {
 			for (uint8_t j=0; j < NInfo.height; j++) {
-				sim[IND(i,j)].Process(); // Process each router for a time step
+				NArray[IND(i,j)].Process(); // Process each router for a time step
 			}
 		}
 	}
@@ -128,7 +138,7 @@ void RunSimulation( uint32_t simulation_end, double injection_chance )
 	eobuf_util = 0;
 
 	// Memory cleanup
-	delete [] sim;
+	delete [] NArray;
 
 	return ;
 }

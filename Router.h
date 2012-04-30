@@ -10,7 +10,8 @@ class Router
 
 		void SetAddr ( Address newAddress );
 		void Connect( Direction edge, Router* target);
-		InputBuffer* GetTarget ( Direction edge );
+		InputBuffer* GetTarget ( Direction edge ) const;
+		PacketGen* GetPacketGen ( ) const;
 		void Process ( );
 
 	protected:

@@ -4,6 +4,7 @@
 Packet::Packet ( Address destination, Address origin, size_t packet_size )
 {
 	// Make sure all data fits into header for 8x8 specific torus
+	assert( (destination.x != origin.x) || (destination.y != origin.y) );
 	assert(destination.x < 0x8);
 	assert(destination.y < 0x8);
 	assert(origin.x < 0x8);
@@ -48,6 +49,10 @@ Packet::Packet ( Address destination, Address origin, size_t packet_size )
 Packet::~Packet ()
 {
 	assert( GetHash() == CalcHash() );
+	for (size_t i = 0; i < 20; i++) {
+		route[i].x = 9;
+		route[i].y = 9;
+	}
 	// Too slow
 	//delete [] flits;
 }
@@ -132,7 +137,6 @@ uint32_t Packet::GetCreated ( ) const
  */
 void Packet::AddRouter ( Address addr )
 {
-	assert( route_pointer < flit_count );
 	assert( addr.x < NInfo.width );
 	assert( addr.y < NInfo.height );
 	route[route_pointer] = addr;

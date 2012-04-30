@@ -25,7 +25,7 @@ class Packet
 		Flit* flits;       //!< Array of flits that comprise this packet
 		size_t flit_count; //!< Number of flits contained in packet
 		uint32_t created;
-		Address route[16];
+		Address route[20];
 		size_t route_pointer;
 };
 

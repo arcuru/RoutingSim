@@ -1,5 +1,5 @@
 CC=clang++
-CFLAGS=-std=c++0x -Wall -Wextra -Werror -pedantic -O0
+CFLAGS=-std=c++0x -Wall -Wextra -Werror -pedantic -O0 -g
 INCLUDE_DIR=
 LIBS=
 HEADERS=Global.h

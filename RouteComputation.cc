@@ -3,7 +3,7 @@
 RouteComputation::RouteComputation ()
 {
 	for (size_t i=0; i < 5; i++) {
-		for (size_t j = 0; j < 9; j++) {
+		for (size_t j = 0; j < 13; j++) {
 			ivc_xy[i][j] = NULL;
 			ivc_xya[i][j] = NULL;
 			ivc_ad[i][j] = NULL;
@@ -15,7 +15,7 @@ RouteComputation::RouteComputation ( Address a )
 {
 	addr = a;
 	for (size_t i=0; i < 5; i++) {
-		for (size_t j = 0; j < 9; j++) {
+		for (size_t j = 0; j < 13; j++) {
 			ivc_xy[i][j] = NULL;
 			ivc_xya[i][j] = NULL;
 			ivc_ad[i][j] = NULL;
@@ -54,21 +54,21 @@ void RouteComputation::Insert ( InputChannel* vc, Direction d, size_t c )
 		case 0:	
 			while ( NULL != ivc_xy[d][i] )
 				i++;
-			assert( i < 9 );
+			assert( i < 13 );
 			ivc_xy[d][i] = vc;
 			break;
 
 		case 1:	
 			while ( NULL != ivc_xya[d][i] )
 				i++;
-			assert( i < 9 );
+			assert( i < 13 );
 			ivc_xya[d][i] = vc;
 			break;
 
 		case 2:	
 			while ( NULL != ivc_ad[d][i] )
 				i++;
-			assert( i < 9 );
+			assert( i < 13 );
 			ivc_ad[d][i] = vc;
 			break;
 
@@ -323,20 +323,20 @@ void RouteComputation::Remove ( InputChannel* vc )
  *  @arg vc Pointer to VirtualChannel that is no longer to be routed
  *  @arg arr Poniter to array of VC's that it should be removed from
  */
-void RouteComputation::_Remove ( InputChannel* vc, InputChannel* arr[5][9] )
+void RouteComputation::_Remove ( InputChannel* vc, InputChannel* arr[5][13] )
 {
 	assert( NULL != vc );
 	
 	for (size_t i = 0; i < 5; i++) {
 		// Search for vc
 		size_t j;
-		for (j = 0; j < 9; j++) {
+		for (j = 0; j < 13; j++) {
 			if ( NULL == arr[i][j] )
 				break;
 			if ( vc == arr[i][j] ) {
 				// Move everything above it down
 				arr[i][j] = NULL;
-				for (size_t k = j+1; k < 9; k++) {
+				for (size_t k = j+1; k < 13; k++) {
 					arr[i][k-1] = arr[i][k];
 				}
 				arr[i][8] = NULL;

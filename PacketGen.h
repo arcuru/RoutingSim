@@ -9,6 +9,7 @@ class PacketGen
 		~PacketGen ();
 
 		void SetAddr ( Address setAddress );
+		void SetConnection ( Address setAddress );
 		void SetDirection ( Direction edge );
 		InputBuffer* GetInjection ( ) const;
 		OutputBuffer* GetEjection ( ) const;
@@ -28,6 +29,7 @@ class PacketGen
 		uint32_t packets_out;    //!< Total packets that arrived in the ejection queue
 		uint32_t flits_received; //!< Number of flits received in the current packet
 		Packet* saved_p;         //!< Generated packet that we are waiting to insert to the injection queue
+		bool memcontroller;      //!< Store whether or not this PG is a memory controller
 
 };
 

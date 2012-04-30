@@ -69,9 +69,19 @@ void Router::SetAddr ( Address newAddress )
  *  @arg edge Edge of router to return
  *  @return   Target input buffer
  */
-InputBuffer* Router::GetTarget ( Direction edge )
+InputBuffer* Router::GetTarget ( Direction edge ) const
 {
 	return ibuf[edge];
+}
+
+/** GetPacketGen
+ *  Returns the packet generator
+ *
+ *  @return Pointer to the packet generator
+ */
+PacketGen* Router::GetPacketGen ( ) const
+{
+	return pgen;
 }
 
 /** Connect

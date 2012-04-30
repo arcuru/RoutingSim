@@ -7,6 +7,7 @@ PacketGen::PacketGen ( )
 	packets_out = 0;
 	flits_received = 0;
 	saved_p = NULL;
+	memcontroller = false;
 }
 
 PacketGen::PacketGen ( Address setAddress )
@@ -17,6 +18,7 @@ PacketGen::PacketGen ( Address setAddress )
 	packets_out = 0;
 	flits_received = 0;
 	saved_p = NULL;
+	memcontroller = false;
 }
 
 PacketGen::~PacketGen ()
@@ -28,6 +30,11 @@ PacketGen::~PacketGen ()
 void PacketGen::SetAddr ( Address setAddress )
 {
 	addr = setAddress;
+	memcontroller = false;
+	for (size_t i = 0; i < sizeof(MC)/sizeof(MC[0]); i++) {
+		if ( (MC[i].x == addr.x) && (MC[i].y == addr.y) )
+			memcontroller = true;
+	}
 }
 
 /** SetDirection
@@ -90,6 +97,7 @@ Packet* PacketGen::InsertPacket ( Address dest, size_t packet_size )
 void PacketGen::GenPacket ( )
 {
 	assert( NULL == saved_p );
+	assert( false == memcontroller ); // Don't generate packet if memcontroller
 	uint8_t tmp[] = { 0x0, 0x4, 0x2, 0x6, 0x1, 0x5, 0x3, 0x7 }; // Lookup table for 3bit BIT_REV
 
 	// Generate destination address as a random address in the network
@@ -114,6 +122,10 @@ void PacketGen::GenPacket ( )
 			dest.y = NInfo.height - addr.y - 1;
 			break;
 
+		case MEM_CONT:
+			dest = MC[ rand() % (sizeof(MC)/sizeof(MC[0])) ];
+			break;
+
 		default:	
 			assert( false );
 			break;
@@ -123,7 +135,7 @@ void PacketGen::GenPacket ( )
 		return;
 
 	// Generate packet and load appropriate data
-	Packet* p = InsertPacket( dest, 64 );
+	Packet* p = InsertPacket( dest, 12 );
 	assert( NULL != p );
 
 	// Count this as an injection
@@ -138,6 +150,9 @@ void PacketGen::GenPacket ( )
  */
 void PacketGen::RandomGenPacket ( double chances )
 {
+	// Don't generate packet if memcontroller
+	if ( memcontroller )
+		return;
 	if ( NULL == saved_p ) {
 		if (rand() < (chances * (double)RAND_MAX)) {
 			InputChannel* ic = ibuf->getIC( 0 );
@@ -169,13 +184,29 @@ void PacketGen::Process ( )
 			assert( p->GetX() == addr.x );
 			assert( p->GetY() == addr.y );
 			//cout << "Got full packet at (" << addr.x << ", " << addr.y << ")" << endl;
-			while ( vc->FlitsRemaining() != 0 )
-				vc->sendFlit();
-			assert( vc->FlitsRemaining() == 0 );
-			packets_out++;
-			packet_ejections++;
-			packet_latency += Global_Time - p->GetCreated();
-			delete p;
+
+			// Different functionality if this is a memory controller
+			if ( memcontroller ) {
+				Address dest;
+				dest.x = p->GetOriginX();
+				dest.y = p->GetOriginY();
+				if ( NULL != InsertPacket( dest, 68 ) ) {
+					while ( vc->FlitsRemaining() != 0 )
+						vc->sendFlit();
+					assert( vc->FlitsRemaining() == 0 );
+					delete p;
+				}
+			}
+			else {
+				while ( vc->FlitsRemaining() != 0 )
+					vc->sendFlit();
+				assert( vc->FlitsRemaining() == 0 );
+				assert( p->GetSize() == 17 );
+				packets_out++;
+				packet_ejections++;
+				packet_latency += Global_Time - p->GetCreated();
+				delete p;
+			}
 		}
 	}
 	// Insert waiting packet into injection queue

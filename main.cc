@@ -31,8 +31,8 @@ int main ( int argc, char** argv )
 	NInfo.adaptive = true;
 
 	// Seed random number generator
-	srand(4);
-	//srand(time(NULL));
+	//srand(4);
+	srand(time(NULL));
 
 	// Parse arguments
 	if (argc > 1) {

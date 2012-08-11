@@ -56,7 +56,9 @@ void InputChannel::ProcessEvent ( Event e )
 	if ( ((Flit*)e.d)->isHead() ) {
 		// We've received a head flit
 		assert( FlitsRemaining() == 1); // No other flits can be present
+#ifndef NDEBUG
 		GetPacket()->AddRouter( addr );
+#endif
 
 		schedRC();
 	}

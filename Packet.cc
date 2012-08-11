@@ -32,7 +32,6 @@ Packet::Packet ( Address destination, Address origin, size_t packet_size )
 		flits[i].setHead( false );
 	}
 	created = Global_Time;
-	route_pointer = 0;
 
 	header |= CalcHash() << 20;
 	flits[0].setData( header );
@@ -44,15 +43,15 @@ Packet::Packet ( Address destination, Address origin, size_t packet_size )
 	assert( GetOriginY() == origin.y );
 	assert( GetSize() == flit_count );
 	assert( GetHash() == CalcHash() );
+
+#ifndef NDEBUG
+	route_pointer = 0;
+#endif
 }
 
 Packet::~Packet ()
 {
 	assert( GetHash() == CalcHash() );
-	for (size_t i = 0; i < 20; i++) {
-		route[i].x = 9;
-		route[i].y = 9;
-	}
 	// Too slow
 	//delete [] flits;
 }
@@ -140,6 +139,7 @@ void Packet::SetCreated ( uint32_t creation )
 	created = creation;
 }
 
+#ifndef NDEBUG
 /** AddRouter
  *  adds a router to the list of routers we have traversed through
  *
@@ -152,6 +152,7 @@ void Packet::AddRouter ( Address addr )
 	route[route_pointer] = addr;
 	route_pointer++;
 }
+#endif
 
 /** ComputeHash
  *  calculates the hash value from the data stored in each flit

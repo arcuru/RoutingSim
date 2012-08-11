@@ -135,8 +135,12 @@ void PacketGen::GenPacket ( )
 		return;
 
 	// Generate packet and load appropriate data
+#ifdef NDEBUG
+	InsertPacket( dest, 12 );
+#else
 	Packet* p = InsertPacket( dest, 12 );
 	assert( NULL != p );
+#endif
 
 	// Count this as an injection
 	packet_injections++;

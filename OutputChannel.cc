@@ -4,16 +4,16 @@ OutputChannel::OutputChannel ( )
 {
 	available_space = 4;
 	flits_sent = 0;
-	wb = NULL;
-	target = NULL;
+	wb = nullptr;
+	target = nullptr;
 }
 
 OutputChannel::OutputChannel ( size_t entries ) : VirtualChannel( entries )
 {
 	available_space = 4;
 	flits_sent = 0;
-	wb = NULL;
-	target = NULL;
+	wb = nullptr;
+	target = nullptr;
 }
 
 OutputChannel::~OutputChannel ()
@@ -33,7 +33,7 @@ void OutputChannel::ProcessEvent ( Event e )
 			available_space += *(size_t*)e.d;
 			delete (size_t*)e.d;
 			if ( target->Size() == available_space && cur_packet->GetSize() == flits_sent )
-				cur_packet = NULL;
+				cur_packet = nullptr;
 			break;
 
 		case DATA:
@@ -62,11 +62,11 @@ bool OutputChannel::sendFlit ( )
 {
 	if ( FlitsRemaining() == 0 || 0 == available_space )
 		return false;
-	if ( NULL == target ) {
+	if ( nullptr == target ) {
 		flits_sent++;
 		PopFlit();
 		if ( flits_sent == cur_packet->GetSize() )
-			cur_packet = NULL;
+			cur_packet = nullptr;
 		return true;
 	}
 	if ( GetFlit()->isHead() && target->Size() != available_space )
@@ -129,10 +129,10 @@ InputChannel* OutputChannel::getWB ( ) const
 bool OutputChannel::isReady ( ) const
 {
 	// First time checking
-	if ( NULL == cur_packet )
+	if ( nullptr == cur_packet )
 		return true;
 	// Ejection queue
-	else if ( NULL == target && FlitsRemaining() < buf_size )
+	else if ( nullptr == target && FlitsRemaining() < buf_size )
 		return true;
 	else if ( cur_packet->GetSize() == flits_sent && available_space == target->Size() ) {
 		assert( FlitsRemaining() == 0 );
@@ -152,11 +152,11 @@ bool OutputChannel::isWorking ( ) const
 {
 	if ( FlitsRemaining() > 0 )
 		return true;
-	else if ( NULL == cur_packet )
+	else if ( nullptr == cur_packet )
 		return false;
 	else if ( flits_sent < cur_packet->GetSize() )
 		return true;
-	else if ( NULL == target )
+	else if ( nullptr == target )
 		return false;
 	else if ( available_space != target->Size() )
 		return true;

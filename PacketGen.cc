@@ -6,7 +6,7 @@ PacketGen::PacketGen ( )
 	obuf = new OutputBuffer(32);
 	packets_out = 0;
 	flits_received = 0;
-	saved_p = NULL;
+	saved_p = nullptr;
 	memcontroller = false;
 }
 
@@ -17,7 +17,7 @@ PacketGen::PacketGen ( Address setAddress )
 	obuf = new OutputBuffer(32);
 	packets_out = 0;
 	flits_received = 0;
-	saved_p = NULL;
+	saved_p = nullptr;
 	memcontroller = false;
 }
 
@@ -75,7 +75,7 @@ OutputBuffer* PacketGen::GetEjection ( ) const
  *
  *  @arg dest Destination of packet
  *  @arg packet_size Size of packet to send in bytes
- *  @return Pointer to generated packet, NULL if not generated
+ *  @return Pointer to generated packet, nullptr if not generated
  */
 Packet* PacketGen::InsertPacket ( Address dest, size_t packet_size )
 {
@@ -83,8 +83,8 @@ Packet* PacketGen::InsertPacket ( Address dest, size_t packet_size )
 	assert( (dest.x != addr.x) || (dest.y != addr.y));
 
 	// Return false if full
-	if ( NULL != saved_p )
-		return NULL;
+	if ( nullptr != saved_p )
+		return nullptr;
 	saved_p = new Packet( dest, addr, packet_size );
 	return saved_p;
 }
@@ -96,7 +96,7 @@ Packet* PacketGen::InsertPacket ( Address dest, size_t packet_size )
  */
 void PacketGen::GenPacket ( )
 {
-	assert( NULL == saved_p );
+	assert( nullptr == saved_p );
 	assert( false == memcontroller ); // Don't generate packet if memcontroller
 	uint8_t tmp[] = { 0x0, 0x4, 0x2, 0x6, 0x1, 0x5, 0x3, 0x7 }; // Lookup table for 3bit BIT_REV
 
@@ -139,7 +139,7 @@ void PacketGen::GenPacket ( )
 	InsertPacket( dest, 12 );
 #else
 	Packet* p = InsertPacket( dest, 12 );
-	assert( NULL != p );
+	assert( nullptr != p );
 #endif
 
 	// Count this as an injection
@@ -157,7 +157,7 @@ void PacketGen::RandomGenPacket ( double chances )
 	// Don't generate packet if memcontroller
 	if ( memcontroller )
 		return;
-	if ( NULL == saved_p ) {
+	if ( nullptr == saved_p ) {
 		if (rand() < (chances * (double)RAND_MAX)) {
 			InputChannel* ic = ibuf->getIC( 0 );
 			if ( ic->FlitsRemaining() <= ic->Size() - 3 ) {
@@ -195,7 +195,7 @@ void PacketGen::Process ( )
 				dest.x = p->GetOriginX();
 				dest.y = p->GetOriginY();
 				Packet* pp = NArray2[IND(addr.x,addr.y)].GetPacketGen()->InsertPacket( dest, 68 );
-				if ( NULL != pp ) {
+				if ( nullptr != pp ) {
 					while ( vc->FlitsRemaining() != 0 )
 						vc->sendFlit();
 					assert( vc->FlitsRemaining() == 0 );
@@ -217,11 +217,11 @@ void PacketGen::Process ( )
 	}
 	// Insert waiting packet into injection queue
 	InputChannel* ic = ibuf->getIC( 0 );
-	if ( NULL != saved_p && ic->FlitsRemaining() == 0 ) {
+	if ( nullptr != saved_p && ic->FlitsRemaining() == 0 ) {
 		ic->InsertPacket( saved_p );
 		ic->schedRC();
 		packets_sent++;
-		saved_p = NULL;
+		saved_p = nullptr;
 	}
 	return ;
 }

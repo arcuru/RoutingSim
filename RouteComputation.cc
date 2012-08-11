@@ -4,9 +4,9 @@ RouteComputation::RouteComputation ()
 {
 	for (size_t i=0; i < 5; i++) {
 		for (size_t j = 0; j < 13; j++) {
-			ivc_xy[i][j] = NULL;
-			ivc_xya[i][j] = NULL;
-			ivc_ad[i][j] = NULL;
+			ivc_xy[i][j] = nullptr;
+			ivc_xya[i][j] = nullptr;
+			ivc_ad[i][j] = nullptr;
 		}
 	}
 }
@@ -16,9 +16,9 @@ RouteComputation::RouteComputation ( Address a )
 	addr = a;
 	for (size_t i=0; i < 5; i++) {
 		for (size_t j = 0; j < 13; j++) {
-			ivc_xy[i][j] = NULL;
-			ivc_xya[i][j] = NULL;
-			ivc_ad[i][j] = NULL;
+			ivc_xy[i][j] = nullptr;
+			ivc_xya[i][j] = nullptr;
+			ivc_ad[i][j] = nullptr;
 		}
 	}
 }
@@ -52,21 +52,21 @@ void RouteComputation::Insert ( InputChannel* vc, Direction d, size_t c )
 	size_t i = 0;
 	switch ( c ) {
 		case 0:	
-			while ( NULL != ivc_xy[d][i] )
+			while ( nullptr != ivc_xy[d][i] )
 				i++;
 			assert( i < 13 );
 			ivc_xy[d][i] = vc;
 			break;
 
 		case 1:	
-			while ( NULL != ivc_xya[d][i] )
+			while ( nullptr != ivc_xya[d][i] )
 				i++;
 			assert( i < 13 );
 			ivc_xya[d][i] = vc;
 			break;
 
 		case 2:	
-			while ( NULL != ivc_ad[d][i] )
+			while ( nullptr != ivc_ad[d][i] )
 				i++;
 			assert( i < 13 );
 			ivc_ad[d][i] = vc;
@@ -251,8 +251,8 @@ void RouteComputation::RouteAdaptive ( InputChannel* vc, Packet* p, size_t c )
 void RouteComputation::ProcessEvent ( Event e )
 {
 	assert( DATA == e.t );
-	assert( NULL != e.d );
-	assert( NULL != e.o );
+	assert( nullptr != e.d );
+	assert( nullptr != e.o );
 	assert( ((Flit*)e.d)->isHead() );
 
 	// Get pointer to packet corresponding to flit in buffer
@@ -299,7 +299,7 @@ InputChannel* RouteComputation::getNext ( size_t dir, size_t c ) const
 
 		default:	
 			assert( false );
-			return NULL;
+			return nullptr;
 			break;
 	}
 }
@@ -325,21 +325,21 @@ void RouteComputation::Remove ( InputChannel* vc )
  */
 void RouteComputation::_Remove ( InputChannel* vc, InputChannel* arr[5][13] )
 {
-	assert( NULL != vc );
+	assert( nullptr != vc );
 	
 	for (size_t i = 0; i < 5; i++) {
 		// Search for vc
 		size_t j;
 		for (j = 0; j < 13; j++) {
-			if ( NULL == arr[i][j] )
+			if ( nullptr == arr[i][j] )
 				break;
 			if ( vc == arr[i][j] ) {
 				// Move everything above it down
-				arr[i][j] = NULL;
+				arr[i][j] = nullptr;
 				for (size_t k = j+1; k < 13; k++) {
 					arr[i][k-1] = arr[i][k];
 				}
-				arr[i][8] = NULL;
+				arr[i][8] = nullptr;
 				break;
 			}
 		}

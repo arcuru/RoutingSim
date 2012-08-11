@@ -9,7 +9,7 @@ typedef struct sll_t {
 
 EventQueue::EventQueue ()
 {
-	head = NULL;
+	head = nullptr;
 }
 
 EventQueue::~EventQueue ()
@@ -31,7 +31,7 @@ void EventQueue::Add ( Event d, EventTarget* target, uint32_t arrival )
 	n->payload = d;
 	n->t = target;
 	n->arrival = arrival;
-	n->next = NULL;
+	n->next = nullptr;
 	if (head) {
 		if (n->arrival < head->arrival) {
 			n->next = head;

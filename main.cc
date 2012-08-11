@@ -32,7 +32,7 @@ int main ( int argc, char** argv )
 
 	// Seed random number generator
 	//srand(4);
-	srand(time(NULL));
+	srand(time(nullptr));
 
 	cout << "Packet Injections, ";
 	cout << "Packet Ejections, ";

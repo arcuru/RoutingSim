@@ -2,18 +2,18 @@
 
 InputChannel::InputChannel ( )
 {
-	RC = NULL;
-	target = NULL;
-	wb = NULL;
+	RC = nullptr;
+	target = nullptr;
+	wb = nullptr;
 	addr.x = 10;
 	addr.y = 10;
 }
 
 InputChannel::InputChannel ( size_t entries ) : VirtualChannel( entries )
 {
-	RC = NULL;
-	target = NULL;
-	wb = NULL;
+	RC = nullptr;
+	target = nullptr;
+	wb = nullptr;
 	addr.x = 10;
 	addr.y = 10;
 }
@@ -70,7 +70,7 @@ void InputChannel::ProcessEvent ( Event e )
  */
 void InputChannel::sendFlit ( )
 {
-	assert( NULL != target );
+	assert( nullptr != target );
 	if (FlitsRemaining() == 0)
 		return;
 	Event e = {DATA, GetFlit(), this};
@@ -78,7 +78,7 @@ void InputChannel::sendFlit ( )
 	PopFlit();
 
 	// Now send back credit
-	if ( NULL != wb ) {
+	if ( nullptr != wb ) {
 		size_t* i = new size_t(1); //Send back 1 credit
 		Event d = {CREDIT, i, this};
 		Global_Queue.Add(d, wb, Global_Time+1); 
@@ -123,7 +123,7 @@ void InputChannel::setWB ( OutputChannel* writeback )
 void InputChannel::schedRC ( )
 {
 	assert( GetFlit()->isHead() );
-	assert( NULL != RC );
+	assert( nullptr != RC );
 
 	// Schedule route computation for next cycle
 	Event q = { DATA, GetFlit(), this };

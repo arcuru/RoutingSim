@@ -6,7 +6,7 @@ VirtualChannel::VirtualChannel ( )
 	buf_valid = SIZE_MAX;
 	buf_size = 4;
 	buf = (Flit**) malloc(sizeof(Flit*) * buf_size);
-	cur_packet = NULL;
+	cur_packet = nullptr;
 }
 
 VirtualChannel::VirtualChannel ( size_t entries )
@@ -92,7 +92,7 @@ void VirtualChannel::InsertPacket ( Packet* p )
 void VirtualChannel::PopFlit ( )
 {
 	assert( buf_valid < buf_size ); // No valid flits
-	buf[buf_valid] = NULL;
+	buf[buf_valid] = nullptr;
 	buf_valid++;
 	buf_valid %= buf_size;
 	if ( buf_valid == buf_index ) {

@@ -173,7 +173,7 @@ void Router::Process ( )
 				//cout << "3 ";
 				// Need to see if there is a valid packet waiting to be routed here
 				InputChannel* b = RC->getNext( i, j );
-				if ( b != NULL ) {
+				if ( b != nullptr ) {
 					// Valid VC exists
 					assert(b->FlitsRemaining() > 0);
 					assert( b->GetFlit()->isHead() );

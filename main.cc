@@ -34,6 +34,18 @@ int main ( int argc, char** argv )
 	//srand(4);
 	srand(time(NULL));
 
+	cout << "Packet Injections, ";
+	cout << "Packet Ejections, ";
+	cout << "Offered Load, ";
+	cout << "Network Throughput, ";
+	cout << "Packet Latency, ";
+	cout << "Link Utilization, ";
+	cout << "Adaptive Input Buffer Utilization, ";
+	cout << "Adaptive Output Buffer Utilization, ";
+	cout << "Escape Input Buffer Utilization, ";
+	cout << "Escape Output Buffer Utilization, ";
+	cout << "Simulation Time, ";
+	cout << "Injection Chance" << endl;
 	// Parse arguments
 	if (argc > 1) {
 		SetupMemCont( atoi(argv[1]) );
@@ -48,20 +60,8 @@ int main ( int argc, char** argv )
 		}
 	}
 	// Generate headers for the output
-	/*
-	cout << "Packet Injections, ";
-	cout << "Packet Ejections, ";
-	cout << "Offered Load, ";
-	cout << "Network Throughput, ";
-	cout << "Packet Latency, ";
-	cout << "Link Utilization, ";
-	cout << "Adaptive Input Buffer Utilization, ";
-	cout << "Adaptive Output Buffer Utilization, ";
-	cout << "Escape Input Buffer Utilization, ";
-	cout << "Escape Output Buffer Utilization, ";
-	cout << "Simulation Time, ";
-	cout << "Injection Chance" << endl;
-	*/
+	
+	
 
 	// Set number of tests
 	uint32_t tests = 100;

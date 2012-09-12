@@ -52,8 +52,10 @@ Packet::Packet ( Address destination, Address origin, size_t packet_size )
 Packet::~Packet ()
 {
 	assert( GetHash() == CalcHash() );
-	// Too slow
-	//delete [] flits;
+#ifndef ALLOW_MEM_LEAKS
+	// Adds ~50% to execution time
+	delete [] flits;
+#endif
 }
 
 /** GetFlit

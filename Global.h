@@ -4,6 +4,9 @@
 // Uncomment to disable assert's
 #define NDEBUG
 
+// Not allowing memory leaks results ~50% performance loss
+#define ALLOW_MEM_LEAKS
+
 #include <cstdint>
 #include <cassert>
 #include <iostream>
@@ -76,6 +79,7 @@ extern Router* NArray; //!< Array of Routers corresponding to the request networ
 extern Router* NArray2; //!< Array of Routers corresponding to the response network
 #define IND(x,y) (((y) * NInfo.width) + (x))
 
+// Global counters for data collection
 extern uint64_t packet_injections;
 extern uint64_t packet_ejections;
 extern uint64_t packets_blocked;

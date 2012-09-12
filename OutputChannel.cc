@@ -37,14 +37,11 @@ void OutputChannel::ProcessEvent ( Event e )
 			break;
 
 		case DATA:
-			if ( (VirtualChannel*)e.o != wb ) {
+			assert( FlitsRemaining() < Size() );
+			if ( ((Flit*)e.d)->isHead() ) {
 				assert( isReady() );
-				assert( ((Flit*)e.d)->isHead() );
 				assert( FlitsRemaining() == 0 );
 				wb = (InputChannel*)e.o;
-			}
-			if ( ((Flit*)e.d)->isHead() ) {
-				assert( FlitsRemaining() == 0 );
 				flits_sent = 0;
 			}
 
@@ -60,15 +57,18 @@ void OutputChannel::ProcessEvent ( Event e )
  */
 bool OutputChannel::sendFlit ( )
 {
-	if ( FlitsRemaining() == 0 || 0 == available_space )
+	if ( FlitsRemaining() == 0 )
 		return false;
 	if ( nullptr == target ) {
+		// Ejection Queue
 		flits_sent++;
 		PopFlit();
 		if ( flits_sent == cur_packet->GetSize() )
 			cur_packet = nullptr;
 		return true;
 	}
+	if ( 0 == available_space )
+		return false;
 	if ( GetFlit()->isHead() && target->Size() != available_space )
 		return false;
 	Event e = {DATA, GetFlit(), this};

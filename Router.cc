@@ -161,7 +161,7 @@ void Router::Process ( )
 				//cout << "2 ";
 				// In the process of moving packet, send individual flit
 				InputChannel* b = vc->getWB();
-				if ( b->FlitsRemaining() > 0 && vc->FlitsRemaining() < vc->Size() ) {
+				if ( b->FlitsRemaining() > 0 ) {
 					if ( b->GetFlit()->getPacket() == vc->GetPacket() ) {
 						//assert( b->GetFlit()->isHead() == false );
 						if ( b->GetFlit()->isHead() == false )

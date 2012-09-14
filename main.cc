@@ -1,4 +1,5 @@
 #include "Global.h"
+#include <iostream>
 
 uint64_t Global_Time;
 Address MC[8];

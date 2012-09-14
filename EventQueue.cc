@@ -1,4 +1,5 @@
 #include "Global.h"
+#include <cstdlib>
 
 typedef struct sll_t {
 	Event payload;    //!< Payload to deliver

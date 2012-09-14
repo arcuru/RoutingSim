@@ -1,4 +1,5 @@
 #include "Global.h"
+#include <cstdlib>
 
 VirtualChannel::VirtualChannel ( )
 {

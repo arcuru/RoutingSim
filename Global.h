@@ -9,9 +9,7 @@
 
 #include <cstdint>
 #include <cassert>
-#include <iostream>
 using namespace std;
-#include <cstdlib>
 
 #define END_TIME 1000
 

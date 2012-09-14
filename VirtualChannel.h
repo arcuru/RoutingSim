@@ -5,24 +5,24 @@ class VirtualChannel : public EventTarget
 {
 	public:
 		VirtualChannel ();
-		VirtualChannel ( size_t entries );
+		VirtualChannel ( uint8_t entries );
 		virtual ~VirtualChannel ();
 
-		void setSize ( size_t entries );
-		size_t Size ( ) const;
+		void setSize ( uint8_t entries );
+		uint8_t Size ( ) const;
 		virtual void ProcessEvent ( Event e ) = 0;
 		void InsertFlit ( Flit* p );
 		void InsertPacket ( Packet* p );
 		void PopFlit ( );
 		Flit* GetFlit ( ) const;
-		size_t FlitsRemaining ( ) const;
+		uint8_t FlitsRemaining ( ) const;
 		Packet* GetPacket ( ) const;
 
 	protected:
 		Flit** buf;         //!< Pointer to buffer space
-		size_t buf_index;   //!< Pointer to next empty buffer space
-		size_t buf_valid;   //!< Pointer to oldest valid data
-		size_t buf_size;    //!< Size of buffer
+		uint8_t buf_index;   //!< Pointer to next empty buffer space
+		uint8_t buf_valid;   //!< Pointer to oldest valid data
+		uint8_t buf_size;    //!< Size of buffer
 		Packet* cur_packet;    //!< Saved pointer to current packet
 
 	private:

@@ -3,20 +3,20 @@
 VirtualChannel::VirtualChannel ( )
 {
 	buf_index = 0;
-	buf_valid = SIZE_MAX;
+	buf_valid = UINT8_MAX;
 	buf_size = 4;
 	buf = (Flit**) malloc(sizeof(Flit*) * buf_size);
 	cur_packet = nullptr;
-	assert( buf_size < SIZE_MAX );
+	assert( buf_size < UINT8_MAX );
 }
 
-VirtualChannel::VirtualChannel ( size_t entries )
+VirtualChannel::VirtualChannel ( uint8_t entries )
 {
 	buf_index = 0;
-	buf_valid = SIZE_MAX;
+	buf_valid = UINT8_MAX;
 	buf_size = entries;
 	buf = (Flit**) malloc(sizeof(Flit*) * buf_size);
-	assert( buf_size < SIZE_MAX );
+	assert( buf_size < UINT8_MAX );
 }
 
 VirtualChannel::~VirtualChannel ()
@@ -32,11 +32,11 @@ VirtualChannel::~VirtualChannel ()
  *
  *  @arg entries New size of VC buffer
  */
-void VirtualChannel::setSize ( size_t entries )
+void VirtualChannel::setSize ( uint8_t entries )
 {
 	// Check to make sure we are't changing it after saving things into the buffer
 	assert( 0 == buf_index );
-	assert( SIZE_MAX == buf_valid );
+	assert( UINT8_MAX == buf_valid );
 
 	buf_size = entries;
 	free( buf );
@@ -48,7 +48,7 @@ void VirtualChannel::setSize ( size_t entries )
  *
  *  @return Size of virtual channel
  */
-size_t VirtualChannel::Size ( ) const
+uint8_t VirtualChannel::Size ( ) const
 {
 	return buf_size;
 }
@@ -106,7 +106,7 @@ void VirtualChannel::PopFlit ( )
 	if ( buf_valid == buf_index ) {
 		// Save something invalid to buf_valid so that we can check if there is valid data
 		// size_t type is unsigned so save largest possible value
-		buf_valid = SIZE_MAX;
+		buf_valid = UINT8_MAX;
 	}
 	return ;
 }
@@ -127,12 +127,12 @@ Flit* VirtualChannel::GetFlit ( ) const
  *
  *  @return Number of flits in the virtual channel
  */
-size_t VirtualChannel::FlitsRemaining ( ) const
+uint8_t VirtualChannel::FlitsRemaining ( ) const
 {
-	// buf_valid is set to SIZE_MAX to indicate no flits
+	// buf_valid is set to UINT8_MAX to indicate no flits
 	if ( buf_valid >= buf_size )
 		return 0;
-	size_t tmp = buf_index;
+	uint8_t tmp = buf_index;
 	if ( tmp <= buf_valid )
 		tmp += buf_size;
 	return tmp - buf_valid;

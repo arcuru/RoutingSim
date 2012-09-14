@@ -7,6 +7,7 @@ VirtualChannel::VirtualChannel ( )
 	buf_size = 4;
 	buf = (Flit**) malloc(sizeof(Flit*) * buf_size);
 	cur_packet = nullptr;
+	assert( buf_size < SIZE_MAX );
 }
 
 VirtualChannel::VirtualChannel ( size_t entries )
@@ -15,6 +16,7 @@ VirtualChannel::VirtualChannel ( size_t entries )
 	buf_valid = SIZE_MAX;
 	buf_size = entries;
 	buf = (Flit**) malloc(sizeof(Flit*) * buf_size);
+	assert( buf_size < SIZE_MAX );
 }
 
 VirtualChannel::~VirtualChannel ()
@@ -62,12 +64,15 @@ void VirtualChannel::InsertFlit ( Flit* p )
 	assert( buf_index < buf_size ); // VirtualChannel indexing invalid
 
 	if ( p->isHead() ) {
+		assert( FlitsRemaining() == 0 );
+		assert( buf_valid > buf_size );
 		cur_packet = p->getPacket();
+		buf_valid = buf_index;
 	}
+	else if ( buf_valid >= buf_size )
+		buf_valid = buf_index;
 
 	buf[buf_index] = p;
-	if ( buf_valid >= buf_size )
-		buf_valid = buf_index;
 	buf_index++;
 	buf_index %= buf_size;
 	return ;
@@ -92,10 +97,15 @@ void VirtualChannel::InsertPacket ( Packet* p )
 void VirtualChannel::PopFlit ( )
 {
 	assert( buf_valid < buf_size ); // No valid flits
+#ifndef NDEBUG
+	// Only set this for error detection while debugging 
 	buf[buf_valid] = nullptr;
+#endif
 	buf_valid++;
 	buf_valid %= buf_size;
 	if ( buf_valid == buf_index ) {
+		// Save something invalid to buf_valid so that we can check if there is valid data
+		// size_t type is unsigned so save largest possible value
 		buf_valid = SIZE_MAX;
 	}
 	return ;
@@ -119,6 +129,7 @@ Flit* VirtualChannel::GetFlit ( ) const
  */
 size_t VirtualChannel::FlitsRemaining ( ) const
 {
+	// buf_valid is set to SIZE_MAX to indicate no flits
 	if ( buf_valid >= buf_size )
 		return 0;
 	size_t tmp = buf_index;

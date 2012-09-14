@@ -32,8 +32,8 @@ int main ( int argc, char** argv )
 	NInfo.adaptive = true;
 
 	// Seed random number generator
-	//srand(4);
-	srand(time(nullptr));
+	srand(4);
+	//srand(time(nullptr));
 
 	cout << "Packet Injections, ";
 	cout << "Packet Ejections, ";

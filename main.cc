@@ -1,5 +1,8 @@
 #include "Global.h"
 #include <iostream>
+#include <cstdlib>
+
+using namespace std;
 
 uint64_t Global_Time;
 Address MC[8];
@@ -169,7 +172,7 @@ void SetupMemCont ( uint32_t type )
 	switch ( type ) {
 		case 1:	
 			// Random placement
-			printf("Random placement, ");
+			cout << "Random placement, " << endl;
 	MC[0].x = 0; MC[0].y = 0;
 	MC[1].x = 1; MC[1].y = 0;
 	MC[2].x = 2; MC[2].y = 0;
@@ -182,7 +185,7 @@ void SetupMemCont ( uint32_t type )
 
 		case 2:	
 			// Single Row
-			printf("Single Row, ");
+			cout << "Single Row, " << endl;
 			MC[0].x = 0; MC[0].y = 4;
 			MC[1].x = 1; MC[1].y = 4;
 			MC[2].x = 2; MC[2].y = 4;
@@ -195,7 +198,7 @@ void SetupMemCont ( uint32_t type )
 
 		case 3:	
 			// Single Col
-			printf("Single Column, ");
+			cout << "Single Column, " << endl;
 			MC[0].x = 4; MC[0].y = 0;
 			MC[1].x = 4; MC[1].y = 1;
 			MC[2].x = 4; MC[2].y = 2;
@@ -208,7 +211,7 @@ void SetupMemCont ( uint32_t type )
 
 		case 4:	
 			// Diagonal
-			printf("Diagonal, ");
+			cout << "Diagonal, " << endl;
 			MC[0].x = 0; MC[0].y = 0;
 			MC[1].x = 1; MC[1].y = 1;
 			MC[2].x = 2; MC[2].y = 2;
@@ -221,7 +224,7 @@ void SetupMemCont ( uint32_t type )
 
 		case 5:	
 			// Split Diagonal
-			printf("Split Diagonal, ");
+			cout << "Split Diagonal, " << endl;
 			MC[0].x = 0; MC[0].y = 0;
 			MC[1].x = 1; MC[1].y = 1;
 			MC[2].x = 2; MC[2].y = 5;
@@ -234,7 +237,7 @@ void SetupMemCont ( uint32_t type )
 
 		case 6:	
 			// Unique Row, Column, and Diagonal
-			printf("Unique Row, Column, and Diagonal, ");
+			cout << "Unique Row, Column, and Diagonal, " << endl;
 			MC[0].x = 0; MC[0].y = 4;
 			MC[1].x = 1; MC[1].y = 0;
 			MC[2].x = 2; MC[2].y = 3;
@@ -246,7 +249,7 @@ void SetupMemCont ( uint32_t type )
 			break;
 
 		default:	
-			printf("Invalid configuration setup.\n");
+			cout << "Invalid configuration setup.\n" << endl;
 			exit(1);
 			break;
 	}

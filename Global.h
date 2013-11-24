@@ -5,7 +5,7 @@
 #define NDEBUG
 
 // Not allowing memory leaks results ~50% performance loss
-//#define ALLOW_MEM_LEAKS
+#define ALLOW_MEM_LEAKS
 
 #include <cstdint>
 #include <cassert>

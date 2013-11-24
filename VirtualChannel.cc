@@ -17,6 +17,7 @@ VirtualChannel::VirtualChannel ( uint8_t entries )
 	buf_valid = UINT8_MAX;
 	buf_size = entries;
 	buf = (Flit**) malloc(sizeof(Flit*) * buf_size);
+	cur_packet = nullptr;
 	assert( buf_size < UINT8_MAX );
 }
 

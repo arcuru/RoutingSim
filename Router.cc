@@ -11,7 +11,7 @@ Router::Router ( Address setAddress )
 {
 	addr = setAddress;
 	RC = new RouteComputation();
-	SetAddr(addr);
+	this->SetAddr( addr );
 	InitBuffers();
 }
 

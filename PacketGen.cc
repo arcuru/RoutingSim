@@ -9,17 +9,19 @@ PacketGen::PacketGen ( )
 	flits_received = 0;
 	saved_p = nullptr;
 	memcontroller = false;
+	dir = INVALID;
 }
 
 PacketGen::PacketGen ( Address setAddress )
 {
-	SetAddr( setAddress );
+	this->SetAddr( setAddress );
 	ibuf = new InputBuffer(32);
 	obuf = new OutputBuffer(32);
 	packets_out = 0;
 	flits_received = 0;
 	saved_p = nullptr;
 	memcontroller = false;
+	dir = INVALID;
 }
 
 PacketGen::~PacketGen ()
@@ -137,7 +139,7 @@ void PacketGen::GenPacket ( )
 
 	// Generate packet and load appropriate data
 #ifdef NDEBUG
-	InsertPacket( dest, 12 );
+	this->InsertPacket( dest, 12 );
 #else
 	Packet* p = InsertPacket( dest, 12 );
 	assert( nullptr != p );

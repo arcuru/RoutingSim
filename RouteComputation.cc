@@ -93,30 +93,30 @@ void RouteComputation::RouteXYEscape ( InputChannel* vc, Packet* p, size_t a, si
 		tmp += NInfo.width/2;
 		if ( tmp <= addr.x ) {
 			if ( (p->GetOriginX() > addr.x) || (addr.x == NInfo.width - 1) )
-				Insert( vc, EAST, b );
+				this->Insert( vc, EAST, b );
 			else
-				Insert( vc, EAST, a );
+				this->Insert( vc, EAST, a );
 		}
 		else {
 			if ( (p->GetOriginX() < addr.x) || (addr.x == 0) )
-				Insert( vc, WEST, b );
+				this->Insert( vc, WEST, b );
 			else
-				Insert( vc, WEST, a );
+				this->Insert( vc, WEST, a );
 		}
 	}
 	else if ( tmp > addr.x ) {
 		tmp -= NInfo.width/2;
 		if ( tmp <= addr.x ) {
 			if ( (p->GetOriginX() > addr.x) || (addr.x == NInfo.width - 1) )
-				Insert( vc, EAST, b );
+				this->Insert( vc, EAST, b );
 			else
-				Insert( vc, EAST, a );
+				this->Insert( vc, EAST, a );
 		}
 		else {
 			if ( (p->GetOriginX() < addr.x) || (addr.x == 0) )
-				Insert( vc, WEST, b );
+				this->Insert( vc, WEST, b );
 			else
-				Insert( vc, WEST, a );
+				this->Insert( vc, WEST, a );
 		}
 	}
 	else {
@@ -125,30 +125,30 @@ void RouteComputation::RouteXYEscape ( InputChannel* vc, Packet* p, size_t a, si
 			tmp += NInfo.height/2;
 			if ( tmp <= addr.y ) {
 				if ( (p->GetOriginY() > addr.y) || (addr.y == NInfo.width - 1) )
-					Insert( vc, NORTH, b );
+					this->Insert( vc, NORTH, b );
 				else
-					Insert( vc, NORTH, a );
+					this->Insert( vc, NORTH, a );
 			}
 			else {
 				if ( (p->GetOriginY() < addr.y) || (addr.y == 0) )
-					Insert( vc, SOUTH, b );
+					this->Insert( vc, SOUTH, b );
 				else
-					Insert( vc, SOUTH, a );
+					this->Insert( vc, SOUTH, a );
 			}
 		}
 		else if ( tmp > addr.y ) {
 			tmp -= NInfo.height/2;
 			if ( tmp <= addr.y ) {
 				if ( (p->GetOriginY() > addr.y) || (addr.y == NInfo.width - 1) )
-					Insert( vc, NORTH, b );
+					this->Insert( vc, NORTH, b );
 				else
-					Insert( vc, NORTH, a );
+					this->Insert( vc, NORTH, a );
 			}
 			else {
 				if ( (p->GetOriginY() < addr.y) || (addr.y == 0) )
-					Insert( vc, SOUTH, b );
+					this->Insert( vc, SOUTH, b );
 				else
-					Insert( vc, SOUTH, a );
+					this->Insert( vc, SOUTH, a );
 			}
 		}
 	}
@@ -169,32 +169,32 @@ void RouteComputation::RouteXY ( InputChannel* vc, Packet* p, size_t c )
 	if ( tmp < addr.x ) {
 		tmp += NInfo.width/2;
 		if ( tmp <= addr.x )
-			Insert( vc, EAST, c );
+			this->Insert( vc, EAST, c );
 		else
-			Insert( vc, WEST, c );
+			this->Insert( vc, WEST, c );
 	}
 	else if ( tmp > addr.x ) {
 		tmp -= NInfo.width/2;
 		if ( tmp <= addr.x )
-			Insert( vc, EAST, c );
+			this->Insert( vc, EAST, c );
 		else
-			Insert( vc, WEST, c );
+			this->Insert( vc, WEST, c );
 	}
 	else {
 		tmp = p->GetY();
 		if ( tmp < addr.y ) {
 			tmp += NInfo.height/2;
 			if ( tmp <= addr.y )
-				Insert( vc, NORTH, c );
+				this->Insert( vc, NORTH, c );
 			else
-				Insert( vc, SOUTH, c );
+				this->Insert( vc, SOUTH, c );
 		}
 		else if ( tmp > addr.y ) {
 			tmp -= NInfo.height/2;
 			if ( tmp <= addr.y )
-				Insert( vc, NORTH, c );
+				this->Insert( vc, NORTH, c );
 			else
-				Insert( vc, SOUTH, c );
+				this->Insert( vc, SOUTH, c );
 		}
 	}
 }
@@ -213,32 +213,32 @@ void RouteComputation::RouteAdaptive ( InputChannel* vc, Packet* p, size_t c )
 	if ( tmp < addr.x ) {
 		tmp += NInfo.width/2;
 		if ( tmp <= addr.x )
-			Insert( vc, EAST, c );
+			this->Insert( vc, EAST, c );
 		else
-			Insert( vc, WEST, c );
+			this->Insert( vc, WEST, c );
 	}
 	else if ( tmp > addr.x ) {
 		tmp -= NInfo.width/2;
 		if ( tmp <= addr.x )
-			Insert( vc, EAST, c );
+			this->Insert( vc, EAST, c );
 		else
-			Insert( vc, WEST, c );
+			this->Insert( vc, WEST, c );
 	}
 
 	tmp = p->GetY();
 	if ( tmp < addr.y ) {
 		tmp += NInfo.height/2;
 		if ( tmp <= addr.y )
-			Insert( vc, NORTH, c );
+			this->Insert( vc, NORTH, c );
 		else
-			Insert( vc, SOUTH, c );
+			this->Insert( vc, SOUTH, c );
 	}
 	else if ( tmp > addr.y ) {
 		tmp -= NInfo.height/2;
 		if ( tmp <= addr.y )
-			Insert( vc, NORTH, c );
+			this->Insert( vc, NORTH, c );
 		else
-			Insert( vc, SOUTH, c );
+			this->Insert( vc, SOUTH, c );
 	}
 
 }
@@ -263,7 +263,7 @@ void RouteComputation::ProcessEvent ( Event e )
 	//cout << "Addr: (" << addr.x << ", " << addr.y << ")" << endl;
 
 	if ( p->GetX() == addr.x && p->GetY() == addr.y )
-		Insert( vc, HERE, 0 ); 
+		this->Insert( vc, HERE, 0 );
 	else {
 		RouteXYEscape( vc, p, 0, 1 );
 		if ( NInfo.adaptive )
@@ -279,7 +279,7 @@ void RouteComputation::ProcessEvent ( Event e )
  *  routed to the input direction and channel
  *
  *  @arg dir Direction of routing
- *  @arg c   Channel requested, either XY or adaptiver
+ *  @arg c   Channel requested, either XY or adaptive
  *  @return Pointer to valid InputBuffer
  */
 InputChannel* RouteComputation::getNext ( size_t dir, size_t c ) const
@@ -297,11 +297,13 @@ InputChannel* RouteComputation::getNext ( size_t dir, size_t c ) const
 			return ivc_ad[dir][0];
 			break;
 
-		default:	
+		default:
+			// Should never read this spot
 			assert( false );
 			return nullptr;
 			break;
 	}
+	return nullptr;
 }
 
 /** Remove

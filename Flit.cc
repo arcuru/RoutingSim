@@ -2,6 +2,8 @@
 
 Flit::Flit( )
 {
+	origin = nullptr;
+	head = false;
 	data = 0;
 }
 

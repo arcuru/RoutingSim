@@ -5,7 +5,7 @@ class EventTarget
 {
 	public:
 		EventTarget ()  {}
-		~EventTarget () {}
+		virtual ~EventTarget () {}
 
 		virtual void ProcessEvent ( Event e ) = 0;
 

@@ -1,5 +1,5 @@
 CC=g++
-CFLAGS=-std=c++0x -Wall -Wextra -pedantic -O3 -m32 -flto -fwhole-program
+CFLAGS=-std=c++0x -Wall -Wextra -pedantic -flto -fwhole-program -O3
 INCLUDE_DIR=
 LIBS=
 HEADERS=Global.h
@@ -22,7 +22,7 @@ TARGET=RoutingSim
 all: $(TARGET)
 
 $(TARGET): $(OBJECTS)
-	$(CC) -o $(TARGET) $(OBJECTS) -m32 -O3 -flto -fwhole-program
+	$(CC) -o $(TARGET) $(OBJECTS) $(CFLAGS)
 
 %.o: %.cc $(HEADERS)
 	$(CC) -c -o $@ $< $(INCLUDE_DIR) $(CFLAGS)

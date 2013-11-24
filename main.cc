@@ -173,14 +173,14 @@ void SetupMemCont ( uint32_t type )
 		case 1:	
 			// Random placement
 			cout << "Random placement, " << endl;
-	MC[0].x = 0; MC[0].y = 0;
-	MC[1].x = 1; MC[1].y = 0;
-	MC[2].x = 2; MC[2].y = 0;
-	MC[3].x = 3; MC[3].y = 0;
-	MC[4].x = 4; MC[4].y = 0;
-	MC[5].x = 5; MC[5].y = 0;
-	MC[6].x = 6; MC[6].y = 0;
-	MC[7].x = 7; MC[7].y = 0;
+			MC[0].x = 0; MC[0].y = 0;
+			MC[1].x = 1; MC[1].y = 0;
+			MC[2].x = 2; MC[2].y = 0;
+			MC[3].x = 3; MC[3].y = 0;
+			MC[4].x = 4; MC[4].y = 0;
+			MC[5].x = 5; MC[5].y = 0;
+			MC[6].x = 6; MC[6].y = 0;
+			MC[7].x = 7; MC[7].y = 0;
 			break;
 
 		case 2:	

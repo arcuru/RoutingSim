@@ -95,7 +95,7 @@ int main ( int argc, char** argv )
 void RunSimulation( uint32_t simulation_end, double injection_chance )
 {
 	// Set injection chance
-	NInfo.chance = injection_chance / 100;
+	NInfo.chance = injection_chance;
 
 	// Create Router and packet generators for request network
 	NArray = new Router[NInfo.width * NInfo.height];

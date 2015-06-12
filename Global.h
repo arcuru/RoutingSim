@@ -47,7 +47,7 @@ typedef enum {
 	BIT_REV = 1,
 	BIT_COMP = 2,
 	MEM_CONT = 3
-} Destination_Function; //!< Function for generating destinations
+} Destination_Function; //!< Defines which function is being used for generating destinations
 
 typedef struct {
 	uint8_t width;  //!< Width of network (X max + 1)
@@ -75,6 +75,8 @@ extern NetworkInfo NInfo;
 extern EventQueue Global_Queue; //!< Single global queue handling all events
 extern Router* NArray; //!< Array of Routers corresponding to the request network
 extern Router* NArray2; //!< Array of Routers corresponding to the response network
+
+// Index macro
 #define IND(x,y) (((y) * NInfo.width) + (x))
 
 // Global counters for data collection

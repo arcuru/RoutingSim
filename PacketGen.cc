@@ -103,9 +103,10 @@ void PacketGen::GenPacket ( )
 	assert( false == memcontroller ); // Don't generate packet if memcontroller
 	uint8_t tmp[] = { 0x0, 0x4, 0x2, 0x6, 0x1, 0x5, 0x3, 0x7 }; // Lookup table for 3bit BIT_REV
 
-	// Generate destination address as a random address in the network
+	// Generate destination address based on the destination function of the network
 	Address dest = addr;
 	switch ( NInfo.dest_func ) {
+		// Random generation that will never return the current router
 		case RAND:	
 			while ( (dest.x == addr.x) && (dest.y == addr.y) ) {
 				dest.x = rand() % NInfo.width;
@@ -113,6 +114,7 @@ void PacketGen::GenPacket ( )
 			}
 			break;
 
+		// Bit reverse
 		case BIT_REV:
 			assert( NInfo.width <= 8 && NInfo.width > 4 ); // Only valid for 3 bytes
 			assert( NInfo.height <= 8 && NInfo.height > 4 );
@@ -120,11 +122,14 @@ void PacketGen::GenPacket ( )
 			dest.y = tmp[addr.y];
 			break;
 
+		// Bit compose
 		case BIT_COMP:	
 			dest.x = NInfo.width - addr.x - 1;
 			dest.y = NInfo.height - addr.y - 1;
 			break;
 
+		// Memory controller lookup
+		// Chooses a random memory controller from the memory controller addresses
 		case MEM_CONT:
 			dest = MC[ rand() % (sizeof(MC)/sizeof(MC[0])) ];
 			break;

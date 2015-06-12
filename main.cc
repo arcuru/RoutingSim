@@ -4,12 +4,15 @@
 
 using namespace std;
 
+// Defining global variables
 uint64_t Global_Time;
 Address MC[8];
 NetworkInfo NInfo;
 EventQueue Global_Queue;
 Router* NArray;
 Router* NArray2;
+
+// Defining all of the counters for grabbing statistics
 uint64_t packet_injections = 0;
 uint64_t packets_blocked = 0;
 uint64_t packets_sent = 0;
@@ -20,13 +23,15 @@ uint64_t aibuf_util = 0;
 uint64_t eibuf_util = 0;
 uint64_t aobuf_util = 0;
 uint64_t eobuf_util = 0;
+
 void RunSimulation( uint32_t simulation_end, double injection_chance );
 void SetupMemCont( uint32_t type );
 
 int main ( int argc, char** argv )
 {
+	//Defining default length of simulation and chance of injection
 	uint32_t simulation_end = END_TIME;
-	double injection_chance = 0.6;
+	double injection_chance;
 
 	// Initialize default network settings
 	NInfo.width = 8;
@@ -38,18 +43,6 @@ int main ( int argc, char** argv )
 	srand(4);
 	//srand(time(nullptr));
 
-	cout << "Packet Injections, ";
-	cout << "Packet Ejections, ";
-	cout << "Offered Load, ";
-	cout << "Network Throughput, ";
-	cout << "Packet Latency, ";
-	cout << "Link Utilization, ";
-	cout << "Adaptive Input Buffer Utilization, ";
-	cout << "Adaptive Output Buffer Utilization, ";
-	cout << "Escape Input Buffer Utilization, ";
-	cout << "Escape Output Buffer Utilization, ";
-	cout << "Simulation Time, ";
-	cout << "Injection Chance" << endl;
 	// Parse arguments
 	if (argc > 1) {
 		SetupMemCont( atoi(argv[1]) );
@@ -63,8 +56,20 @@ int main ( int argc, char** argv )
 			}
 		}
 	}
+
 	// Generate headers for the output
-	
+	cout << "Packet Injections, ";
+	cout << "Packet Ejections, ";
+	cout << "Offered Load, ";
+	cout << "Network Throughput, ";
+	cout << "Packet Latency, ";
+	cout << "Link Utilization, ";
+	cout << "Adaptive Input Buffer Utilization, ";
+	cout << "Adaptive Output Buffer Utilization, ";
+	cout << "Escape Input Buffer Utilization, ";
+	cout << "Escape Output Buffer Utilization, ";
+	cout << "Simulation Time, ";
+	cout << "Injection Chance" << endl;
 	
 
 	// Set number of tests
@@ -81,8 +86,7 @@ int main ( int argc, char** argv )
 }
 
 /** RunSimulation
- *  execute a full simulation of a single router + 4 PacketGens with the
- *  provided parameters. Prints output.
+ *  executs a simulation with memory controllers
  *
  *  @args simulation_end   Total time to run the simulation
  *  @args injection_chance Chance of each Packet Generator injecting a
@@ -132,6 +136,7 @@ void RunSimulation( uint32_t simulation_end, double injection_chance )
 		}
 	}
 
+	// Print out the counter data gathered during this simulation run
 	cout << packet_injections << ", ";
 	cout << packet_ejections << ", ";
 	cout << ((17 * (double)packet_injections)/8.0)/simulation_end << ", ";
@@ -144,6 +149,8 @@ void RunSimulation( uint32_t simulation_end, double injection_chance )
 	cout << (double)eobuf_util / (NInfo.width * NInfo.height * 4 * 1 * simulation_end) << ", ";
 	cout << simulation_end << ", ";
 	cout << injection_chance << endl;
+
+	// Reset counters
 	packet_injections = 0;
 	packet_ejections = 0;
 	packets_blocked = 0;

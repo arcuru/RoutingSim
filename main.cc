@@ -36,8 +36,10 @@ int main ( int argc, char** argv )
 	// Initialize default network settings
 	NInfo.width = 8;
 	NInfo.height = 8;
-	NInfo.dest_func = MEM_CONT;
+	NInfo.dest_func = BIT_REV;
 	NInfo.adaptive = true;
+	NInfo.memcont = false;
+	//SetupMemCont( 1 );
 
 	// Seed random number generator
 	srand(4);
@@ -95,7 +97,7 @@ int main ( int argc, char** argv )
 void RunSimulation( uint32_t simulation_end, double injection_chance )
 {
 	// Set injection chance
-	NInfo.chance = injection_chance;
+	NInfo.chance = injection_chance / 3;
 
 	// Create Router and packet generators for request network
 	NArray = new Router[NInfo.width * NInfo.height];
@@ -109,16 +111,18 @@ void RunSimulation( uint32_t simulation_end, double injection_chance )
 			NArray[IND(i,j)].Connect( WEST, &NArray[IND((i+NInfo.width-1)%NInfo.width,j)] );
 		}
 	}
-	// Initialize response network
-	NArray2 = new Router[NInfo.width * NInfo.height];
-	for (uint8_t i=0; i < NInfo.width; i++) {
-		for (uint8_t j=0; j < NInfo.height; j++) {
-			Address addr = {i, j};
-			NArray2[IND(i,j)].SetAddr( addr );
-			NArray2[IND(i,j)].Connect( NORTH, &NArray2[IND(i,(j+1)%NInfo.height)] );
-			NArray2[IND(i,j)].Connect( EAST, &NArray2[IND((i+1)%NInfo.width,j)] );
-			NArray2[IND(i,j)].Connect( SOUTH, &NArray2[IND(i,(j+NInfo.height-1)%NInfo.height)] );
-			NArray2[IND(i,j)].Connect( WEST, &NArray2[IND((i+NInfo.width-1)%NInfo.width,j)] );
+	// Initialize response network if we're doing the memory controller simulation
+	if (NInfo.memcont) {
+		NArray2 = new Router[NInfo.width * NInfo.height];
+		for (uint8_t i=0; i < NInfo.width; i++) {
+			for (uint8_t j=0; j < NInfo.height; j++) {
+				Address addr = {i, j};
+				NArray2[IND(i,j)].SetAddr( addr );
+				NArray2[IND(i,j)].Connect( NORTH, &NArray2[IND(i,(j+1)%NInfo.height)] );
+				NArray2[IND(i,j)].Connect( EAST, &NArray2[IND((i+1)%NInfo.width,j)] );
+				NArray2[IND(i,j)].Connect( SOUTH, &NArray2[IND(i,(j+NInfo.height-1)%NInfo.height)] );
+				NArray2[IND(i,j)].Connect( WEST, &NArray2[IND((i+NInfo.width-1)%NInfo.width,j)] );
+			}
 		}
 	}
 
@@ -130,8 +134,10 @@ void RunSimulation( uint32_t simulation_end, double injection_chance )
 				NArray[IND(i,j)].Process();
 				// Place new packet into injection queue
 				NArray[IND(i,j)].GetPacketGen()->RandomGenPacket(NInfo.chance);
-				// Process each router in response network for a time step
-				NArray2[IND(i,j)].Process();
+				if (NInfo.memcont) {
+					// Process each router in response network for a time step
+					NArray2[IND(i,j)].Process();
+				}
 			}
 		}
 	}

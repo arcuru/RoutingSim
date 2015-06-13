@@ -2,7 +2,7 @@
 #define GLOBAL_H
 
 // Uncomment to disable assert's
-#define NDEBUG
+//#define NDEBUG
 
 // Not allowing memory leaks results ~50% performance loss
 #define ALLOW_MEM_LEAKS
@@ -52,9 +52,10 @@ typedef enum {
 typedef struct {
 	uint8_t width;  //!< Width of network (X max + 1)
 	uint8_t height; //!< Height of network (Y max + 1)
-	double chance;  //!< Chance of packet injection every cycle
-	Destination_Function dest_func;
+	double chance;  //!< Chance of packet injection every cycle (at every node)
+	Destination_Function dest_func; //!< Destination function for routing packets
 	bool adaptive;  //!< True if using minimally adaptive routing
+	bool memcont;   //!< True if this is a memory controller simulation
 } NetworkInfo;
 
 extern NetworkInfo NInfo;

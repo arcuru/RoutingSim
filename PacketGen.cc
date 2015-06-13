@@ -34,9 +34,11 @@ void PacketGen::SetAddr ( Address setAddress )
 {
 	addr = setAddress;
 	memcontroller = false;
-	for (size_t i = 0; i < sizeof(MC)/sizeof(MC[0]); i++) {
-		if ( (MC[i].x == addr.x) && (MC[i].y == addr.y) )
-			memcontroller = true;
+	if (NInfo.memcont) {
+		for (size_t i = 0; i < sizeof(MC)/sizeof(MC[0]); i++) {
+			if ( (MC[i].x == addr.x) && (MC[i].y == addr.y) )
+				memcontroller = true;
+		}
 	}
 }
 
@@ -215,7 +217,7 @@ void PacketGen::Process ( )
 				while ( vc->FlitsRemaining() != 0 )
 					vc->sendFlit();
 				assert( vc->FlitsRemaining() == 0 );
-				assert( p->GetSize() == 17 );
+				//assert( p->GetSize() == 17 ); Only true if NInfo.memcont is
 				packets_out++;
 				packet_ejections++;
 				packet_latency += Global_Time - p->GetCreated();

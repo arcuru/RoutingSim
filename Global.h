@@ -13,7 +13,7 @@ using namespace std;
 
 #define END_TIME 1000
 
-extern uint64_t Global_Time; //!< Current time step
+extern uint32_t Global_Time; //!< Current time step
 
 typedef enum {
 	NORTH   = 0,

@@ -9,7 +9,7 @@ InputChannel::InputChannel ( )
 	addr.y = 10;
 }
 
-InputChannel::InputChannel ( size_t entries ) : VirtualChannel( entries )
+InputChannel::InputChannel ( size_t entries ) : VirtualChannel( (uint8_t)entries )
 {
 	RC = nullptr;
 	target = nullptr;

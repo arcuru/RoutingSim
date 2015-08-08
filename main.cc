@@ -5,7 +5,7 @@
 using namespace std;
 
 // Defining global variables
-uint64_t Global_Time;
+uint32_t Global_Time;
 Address MC[8];
 NetworkInfo NInfo;
 EventQueue Global_Queue;

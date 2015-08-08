@@ -15,7 +15,7 @@ OutputBuffer::OutputBuffer ( size_t entries )
 	channel_count = 3;
 	oc = new OutputChannel[channel_count];
 	for (size_t i = 0; i < channel_count; i++) {
-		oc[i].setSize( entries );
+		oc[i].setSize( (uint8_t)entries );
 	}
 	last_sent = 0;
 }

@@ -14,7 +14,7 @@ InputBuffer::InputBuffer ( size_t entries )
 	channel_count = 3;
 	ic = new InputChannel[channel_count];
 	for (size_t i = 0; i < channel_count; i++) {
-		ic[i].setSize( entries );
+		ic[i].setSize( (uint8_t)entries );
 	}
 }
 

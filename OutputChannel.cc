@@ -8,7 +8,7 @@ OutputChannel::OutputChannel ( )
 	target = nullptr;
 }
 
-OutputChannel::OutputChannel ( size_t entries ) : VirtualChannel( entries )
+OutputChannel::OutputChannel ( size_t entries ) : VirtualChannel( (uint8_t)entries )
 {
 	available_space = 4;
 	flits_sent = 0;

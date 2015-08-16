@@ -9,6 +9,7 @@ VirtualChannel::VirtualChannel ( )
 	buf = (Flit**) malloc(sizeof(Flit*) * buf_size);
 	cur_packet = nullptr;
 	assert( buf_size < UINT8_MAX );
+	buf_flitcount = 0;
 }
 
 VirtualChannel::VirtualChannel ( uint8_t entries )
@@ -19,6 +20,7 @@ VirtualChannel::VirtualChannel ( uint8_t entries )
 	buf = (Flit**) malloc(sizeof(Flit*) * buf_size);
 	cur_packet = nullptr;
 	assert( buf_size < UINT8_MAX );
+	buf_flitcount = 0;
 }
 
 VirtualChannel::~VirtualChannel ()
@@ -77,6 +79,7 @@ void VirtualChannel::InsertFlit ( Flit* p )
 	buf[buf_index] = p;
 	buf_index++;
 	buf_index %= buf_size;
+	buf_flitcount++;
 	return ;
 }
 
@@ -110,6 +113,7 @@ void VirtualChannel::PopFlit ( )
 		// size_t type is unsigned so save largest possible value
 		buf_valid = UINT8_MAX;
 	}
+	buf_flitcount--;
 	return ;
 }
 
@@ -131,13 +135,7 @@ Flit* VirtualChannel::GetFlit ( ) const
  */
 uint8_t VirtualChannel::FlitsRemaining ( ) const
 {
-	// buf_valid is set to UINT8_MAX to indicate no flits
-	if ( buf_valid >= buf_size )
-		return 0;
-	uint8_t tmp = buf_index;
-	if ( tmp <= buf_valid )
-		tmp += buf_size;
-	return tmp - buf_valid;
+	return buf_flitcount;
 }
 
 /** GetPacket

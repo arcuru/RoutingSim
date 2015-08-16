@@ -24,6 +24,7 @@ class VirtualChannel : public EventTarget
 		uint8_t buf_valid;   //!< Pointer to oldest valid data
 		uint8_t buf_size;    //!< Size of buffer
 		Packet* cur_packet;    //!< Saved pointer to current packet
+		uint8_t buf_flitcount; //!< Running count of flits in VC
 
 	private:
 

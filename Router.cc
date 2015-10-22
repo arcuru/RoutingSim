@@ -17,6 +17,8 @@ Router::Router ( Address setAddress )
 
 Router::~Router ()
 {
+	assert(nullptr != ibuf);
+	assert(nullptr != obuf);
 	for (int i=0; i < 5; i++) {
 		if ( HERE != i ) {
 			delete ibuf[i];
@@ -38,6 +40,8 @@ void Router::InitBuffers ( )
 	pgen = new PacketGen( );
 	ibuf = (InputBuffer**) malloc(sizeof(InputBuffer*) * 5);
 	obuf = (OutputBuffer**) malloc(sizeof(OutputBuffer*) * 5);
+	assert(nullptr != ibuf);
+	assert(nullptr != obuf);
 	for (int i=0; i < 5; i++) {
 		if ( HERE == i ) {
 			ibuf[i] = pgen->GetInjection();

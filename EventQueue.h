@@ -1,7 +1,7 @@
 #ifndef EVENTQUEUE_H
 #define EVENTQUEUE_H
 
-struct sll_t;
+struct timedQueue_t;
 
 class EventQueue
 {
@@ -16,8 +16,8 @@ class EventQueue
 	protected:
 
 	private:
-		sll_t* head;  //!< Pointer to head of linked list
-
+        timedQueue_t* current; //!< Holder for queue of current timestep
+        timedQueue_t* next;    //!< Holder for queue of next timestep
 };
 
 #endif

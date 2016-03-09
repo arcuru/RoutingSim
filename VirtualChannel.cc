@@ -90,7 +90,7 @@ void VirtualChannel::InsertFlit ( Flit* p )
  */
 void VirtualChannel::InsertPacket ( Packet* p )
 {
-	assert( p->GetSize() <= buf_size - FlitsRemaining() );
+	assert( p->GetSize() <= (size_t) buf_size - FlitsRemaining() );
 	for (size_t i = 0; i < p->GetSize(); i++)
 		InsertFlit( p->GetFlit(i) );
 }

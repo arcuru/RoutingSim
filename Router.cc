@@ -1,7 +1,7 @@
 #include "Global.h"
 #include <cstdlib>
 
-Router::Router ( )
+Router::Router ( ) : addr()
 {
 	RC = new RouteComputation();
 	InitBuffers();

@@ -7,7 +7,7 @@ class OutputChannel : public VirtualChannel
 {
 	public:
 		OutputChannel ( );
-		OutputChannel ( size_t entries );
+		explicit OutputChannel ( size_t entries );
 		virtual ~OutputChannel ( );
 
 		void ProcessEvent ( Event e );

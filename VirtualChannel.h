@@ -5,7 +5,7 @@ class VirtualChannel : public EventTarget
 {
 	public:
 		VirtualChannel ();
-		VirtualChannel ( uint8_t entries );
+		explicit VirtualChannel ( uint8_t entries );
 		virtual ~VirtualChannel ();
 
 		void setSize ( uint8_t entries );

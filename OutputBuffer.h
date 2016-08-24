@@ -7,7 +7,7 @@ class OutputBuffer
 {
 	public:
 		OutputBuffer ();
-		OutputBuffer ( size_t entries );
+		explicit OutputBuffer ( size_t entries );
 		~OutputBuffer ();
 
 		void ProcessBuffer ( );

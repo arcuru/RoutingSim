@@ -5,7 +5,7 @@ class RouteComputation : public EventTarget
 {
 	public:
 		RouteComputation ();
-		RouteComputation ( Address a );
+		explicit RouteComputation ( Address a );
 		virtual ~RouteComputation ();
 
 		void setAddr ( Address a );

@@ -5,7 +5,7 @@ class Router
 {
 	public:
 		Router ( );
-		Router ( Address setAddress );
+		explicit Router ( Address setAddress );
 		~Router ();
 
 		void SetAddr ( Address newAddress );

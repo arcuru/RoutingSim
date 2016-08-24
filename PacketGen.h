@@ -5,7 +5,7 @@ class PacketGen
 {
 	public:
 		PacketGen ( );
-		PacketGen ( Address setAddress );
+		explicit PacketGen ( Address setAddress );
 		~PacketGen ();
 
 		void SetAddr ( Address setAddress );

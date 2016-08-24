@@ -7,7 +7,7 @@ class InputBuffer
 {
 	public:
 		InputBuffer ();
-		InputBuffer ( size_t entries );
+		explicit InputBuffer ( size_t entries );
 		~InputBuffer ();
 
 		void setAddr ( Address newAddr );

@@ -7,7 +7,7 @@ class InputChannel : public VirtualChannel
 {
 	public:
 		InputChannel ( );
-		InputChannel ( size_t entries );
+		explicit InputChannel ( size_t entries );
 		virtual ~InputChannel ( );
 
 		void setAddr ( Address newAddress );

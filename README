@@ -1,3 +1,12 @@
+# Routing Simulator
+This is a flit-level simulator for a multiprocessor interconnection network arranged in a 2D torus.
+
+It was originally created as a class assignment for benchmarking techniques for increasing the throughput for multiprocessor incerconnection networks.
+
+This code is very much C with objects.
+
+# Building
+
 Building and testing can be done using the included Makefile.
 
 To compile the program, run 'make' in the project directory.

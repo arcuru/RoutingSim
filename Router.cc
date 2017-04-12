@@ -108,7 +108,8 @@ void Router::Connect(Direction edge, Router *target) {
     ((InputBuffer *)target->GetTarget(EAST))->WriteBack(obuf[edge]);
     break;
 
-  case HERE: case INVALID:
+  case HERE:
+  case INVALID:
     assert(false); // Invalid edge value
     break;
   }

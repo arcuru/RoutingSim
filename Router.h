@@ -1,31 +1,27 @@
 #ifndef ROUTER_H
 #define ROUTER_H
 
-class Router
-{
-	public:
-		Router ( );
-		explicit Router ( Address setAddress );
-		~Router ();
+class Router {
+public:
+  Router();
+  explicit Router(Address setAddress);
+  ~Router();
 
-		void SetAddr ( Address newAddress );
-		void Connect( Direction edge, Router* target);
-		InputBuffer* GetTarget ( Direction edge ) const;
-		PacketGen* GetPacketGen ( ) const;
-		void Process ( );
+  void SetAddr(Address newAddress);
+  void Connect(Direction edge, Router *target);
+  InputBuffer *GetTarget(Direction edge) const;
+  PacketGen *GetPacketGen() const;
+  void Process();
 
-	protected:
+protected:
+private:
+  void InitBuffers();
 
-	private:
-		void InitBuffers ( );
-
-		InputBuffer** ibuf;        //!< Input buffers situated in this router
-		OutputBuffer** obuf;       //!< Output buffers situated in this router
-		PacketGen* pgen;           //!< Packet generator to handle I/O for whole network
-		Address addr;              //!< Address for this router
-		RouteComputation* RC;      //!< Pointer to Route Computation component
-
+  InputBuffer **ibuf;   //!< Input buffers situated in this router
+  OutputBuffer **obuf;  //!< Output buffers situated in this router
+  PacketGen *pgen;      //!< Packet generator to handle I/O for whole network
+  Address addr;         //!< Address for this router
+  RouteComputation *RC; //!< Pointer to Route Computation component
 };
 
 #endif
-

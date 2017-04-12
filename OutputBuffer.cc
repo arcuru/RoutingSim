@@ -1,46 +1,40 @@
 #include "Global.h"
 
-OutputBuffer::OutputBuffer ()
-{
-	channel_count = 3;
-	oc = new OutputChannel[channel_count];
-	for (size_t i = 0; i < channel_count; i++) {
-		oc[i].setSize( 1 );
-	}
-	last_sent = 0;
+OutputBuffer::OutputBuffer() {
+  channel_count = 3;
+  oc = new OutputChannel[channel_count];
+  for (size_t i = 0; i < channel_count; i++) {
+    oc[i].setSize(1);
+  }
+  last_sent = 0;
 }
 
-OutputBuffer::OutputBuffer ( size_t entries )
-{
-	channel_count = 3;
-	oc = new OutputChannel[channel_count];
-	for (size_t i = 0; i < channel_count; i++) {
-		oc[i].setSize( (uint8_t)entries );
-	}
-	last_sent = 0;
+OutputBuffer::OutputBuffer(size_t entries) {
+  channel_count = 3;
+  oc = new OutputChannel[channel_count];
+  for (size_t i = 0; i < channel_count; i++) {
+    oc[i].setSize((uint8_t)entries);
+  }
+  last_sent = 0;
 }
 
-OutputBuffer::~OutputBuffer ()
-{
-	delete [] oc;
-}
+OutputBuffer::~OutputBuffer() { delete[] oc; }
 
 /** ProcessBuffer
  *  processes the current buffer in the event that we need to do something
  *
  */
-void OutputBuffer::ProcessBuffer (  )
-{
-	size_t j=last_sent;
-	for (size_t i = last_sent+1; i < channel_count+last_sent+1; i++) {
-		j = i % channel_count;
-		if ( oc[j].sendFlit() ) {
-			link_util++;
-			break;
-		}
-	}
-	last_sent = j;
-	return ;
+void OutputBuffer::ProcessBuffer() {
+  size_t j = last_sent;
+  for (size_t i = last_sent + 1; i < channel_count + last_sent + 1; i++) {
+    j = i % channel_count;
+    if (oc[j].sendFlit()) {
+      link_util++;
+      break;
+    }
+  }
+  last_sent = j;
+  return;
 }
 
 /** Connect
@@ -48,12 +42,11 @@ void OutputBuffer::ProcessBuffer (  )
  *
  *  @arg target The connected input buffer
  */
-void OutputBuffer::Connect ( InputBuffer* target )
-{
-	for (size_t i = 0; i < channel_count; i++) {
-		oc[i].setTarget( target->getIC( i ) );
-	}
-	return ;
+void OutputBuffer::Connect(InputBuffer *target) {
+  for (size_t i = 0; i < channel_count; i++) {
+    oc[i].setTarget(target->getIC(i));
+  }
+  return;
 }
 
 /** getOC
@@ -62,9 +55,7 @@ void OutputBuffer::Connect ( InputBuffer* target )
  *  @arg channel  VC identifer to return
  *  @return  Pointer to virtual channel specified in input
  */
-OutputChannel* OutputBuffer::getOC ( size_t channel ) const
-{
-	assert( channel < 3 );
-	return &oc[channel];
+OutputChannel *OutputBuffer::getOC(size_t channel) const {
+  assert(channel < 3);
+  return &oc[channel];
 }
-

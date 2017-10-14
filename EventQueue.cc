@@ -1,6 +1,6 @@
 #include "Global.h"
 #include <cstdlib>
-#include <queue>
+#include <vector>
 
 typedef struct node_t {
   Event payload;  //!< Payload to deliver
@@ -8,9 +8,9 @@ typedef struct node_t {
 } node_t;         //!< Node of event queue
 
 typedef struct timedQueue_t {
-  std::queue<node_t *> q; //!< Queue object
-  uint32_t time;          //!< Time  of delivery
-} timedQueue_t;           //!< Struct for holding queues
+  std::vector<node_t> q; //!< Queue object
+  uint32_t time;         //!< Time  of delivery
+} timedQueue_t;          //!< Struct for holding queues
 
 EventQueue::EventQueue() {
   current = new timedQueue_t;
@@ -33,13 +33,13 @@ EventQueue::~EventQueue() {
  */
 void EventQueue::Add(Event d, EventTarget *target, uint32_t arrival) {
   assert(target);
-  node_t *tmp = new node_t;
-  tmp->payload = d;
-  tmp->t = target;
+  node_t tmp;
+  tmp.payload = d;
+  tmp.t = target;
   if (arrival == current->time)
-    current->q.push(tmp);
+    current->q.push_back(tmp);
   else if (arrival == next->time)
-    next->q.push(tmp);
+    next->q.push_back(tmp);
   else {
     // First time we've had an event with this timestep
     assert(Global_Time != current->time);
@@ -52,7 +52,7 @@ void EventQueue::Add(Event d, EventTarget *target, uint32_t arrival) {
     next->time = Global_Time + 1;
 
     assert(arrival == next->time); // Code will fail here if any event takes 2
-    next->q.push(tmp);
+    next->q.push_back(tmp);
   }
 }
 
@@ -65,11 +65,10 @@ void EventQueue::Process() {
     std::swap(current, next);
     next->time = Global_Time + 1;
   }
-  while (!current->q.empty()) {
-    node_t *tmp = current->q.front();
-    tmp->t->ProcessEvent(tmp->payload);
-    current->q.pop();
+  for (node_t tmp : current->q) {
+    tmp.t->ProcessEvent(tmp.payload);
   }
+  current->q.clear();
 }
 
 /** Clear
